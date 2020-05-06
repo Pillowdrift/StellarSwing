@@ -22,7 +22,7 @@ public class EndParticles : MonoBehaviour
 			
 			if (r < 1.0f)
 			{
-				particles[i].lifetime = 0;
+				particles[i].remainingLifetime = 0;
 				particles[i].position = transform.position;
 				particles[i].velocity = Vector3.zero;
 				continue;

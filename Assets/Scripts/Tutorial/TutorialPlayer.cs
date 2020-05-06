@@ -5,6 +5,6 @@ public class TutorialPlayer : MonoBehaviour
 {
 	void Start()
 	{
-		rigidbody.isKinematic = true;
+		GetComponent<Rigidbody>().isKinematic = true;
 	}
 }

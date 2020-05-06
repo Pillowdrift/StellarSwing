@@ -16,7 +16,7 @@ public class EndExplode : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Player")
 		{
-			float explosionForce = collision.gameObject.rigidbody.velocity.magnitude * EXPLOSION_FORCE;
+			float explosionForce = collision.gameObject.GetComponent<Rigidbody>().velocity.magnitude * EXPLOSION_FORCE;
 			Rigidbody[] segments = GetComponentsInChildren<Rigidbody>();
 			
 			foreach(Rigidbody segment in segments)

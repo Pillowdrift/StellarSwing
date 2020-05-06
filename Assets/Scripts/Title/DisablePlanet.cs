@@ -31,8 +31,8 @@ public class DisablePlanet : MonoBehaviour {
 		}
 		
 		// Now show ourselves if we need to, otherwise hide ourselves.
-		gameObject.renderer.enabled = unlocked;
-		gameObject.collider.enabled = unlocked;
+		gameObject.GetComponent<Renderer>().enabled = unlocked;
+		gameObject.GetComponent<Collider>().enabled = unlocked;
 
 		// Disable all child renderers
 		Renderer[] renderers = GetComponentsInChildren<Renderer>();

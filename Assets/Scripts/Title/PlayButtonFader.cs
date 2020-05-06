@@ -20,9 +20,9 @@ public class PlayButtonFader : MonoBehaviour {
 		fadeStartTime = Time.time + DELAY;
 		fadeTo = 1;
 		
-		Color c = renderer.material.color;
+		Color c = GetComponent<Renderer>().material.color;
 		c.a = 0;
-		renderer.material.color = c;
+		GetComponent<Renderer>().material.color = c;
 	}
 	
 	// Update is called once per frame
@@ -30,9 +30,9 @@ public class PlayButtonFader : MonoBehaviour {
 	{
 		if(Time.time > fadeStartTime)
 		{
-			Color c = renderer.material.color;
+			Color c = GetComponent<Renderer>().material.color;
 			c.a = Mathf.Lerp(c.a, fadeTo, Time.deltaTime * RATE);
-			renderer.material.color = c;
+			GetComponent<Renderer>().material.color = c;
 		}		
 	}
 	

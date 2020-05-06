@@ -25,9 +25,9 @@ public class TextFader : MonoBehaviour
 
 		if (fadeout || fadein)
 		{
-			Color c = guiText.material.color;
+			Color c = GetComponent<GUIText>().material.color;
 			c.a = Mathf.Lerp(c.a, (fadeout ? 0 : 1), Time.deltaTime * fadeRate);
-			guiText.material.color = c;
+			GetComponent<GUIText>().material.color = c;
 		}
 	}
 	
@@ -35,15 +35,15 @@ public class TextFader : MonoBehaviour
 	{
 		fadeout = true;
 		fadein = false;
-		if (collider != null)
-			collider.enabled = false;
+		if (GetComponent<Collider>() != null)
+			GetComponent<Collider>().enabled = false;
 	}
 	
 	public void FadeIn()
 	{
 		fadein = true;
 		fadeout = false;
-		if (collider != null)
-			collider.enabled = true;
+		if (GetComponent<Collider>() != null)
+			GetComponent<Collider>().enabled = true;
 	}
 }

@@ -13,7 +13,7 @@ public class SlowGlow : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		glowAmount = 0;
-		previousVelocity = transform.parent.rigidbody.velocity;
+		previousVelocity = transform.parent.GetComponent<Rigidbody>().velocity;
 	}
 	
 	// Update is called once per frame
@@ -39,13 +39,13 @@ public class SlowGlow : MonoBehaviour {
 		//glowAmmount = 1.0f;
 		
 		transform.LookAt(transform.position + previousVelocity);
-		GetComponent<ParticleSystem>().startSpeed = transform.parent.rigidbody.velocity.magnitude;
+		GetComponent<ParticleSystem>().startSpeed = transform.parent.GetComponent<Rigidbody>().velocity.magnitude;
 		GetComponent<ParticleSystem>().emissionRate = glowAmount * AMOUNT - THRESHOLD;
 		
 		//particleEmitter.Emit(Vector3.zero, previousVelosity, 1, 1, Color.white);
 		//particleEmitter.Emit(50);
 		
-		previousVelocity = transform.parent.rigidbody.velocity;
+		previousVelocity = transform.parent.GetComponent<Rigidbody>().velocity;
 	}
 	
 	public static void Score(float score)

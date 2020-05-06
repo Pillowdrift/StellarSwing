@@ -51,8 +51,8 @@ public class ScoreCalculator : MonoBehaviour
 		
 		endHeight = -endObj.transform.position.y;// player.transform.position.y - endWorldHeight;
 		
-		float kineticEnergy = 0.5f * rigidbody.mass * player.GetComponent<PlayerMovements>().startingVelocity.sqrMagnitude;
-		float maxGravEnergy = rigidbody.mass * (-Physics.gravity.y) * endHeight;	
+		float kineticEnergy = 0.5f * GetComponent<Rigidbody>().mass * player.GetComponent<PlayerMovements>().startingVelocity.sqrMagnitude;
+		float maxGravEnergy = GetComponent<Rigidbody>().mass * (-Physics.gravity.y) * endHeight;	
 		
 		maxEnergy = kineticEnergy + maxGravEnergy;
 	}
@@ -63,8 +63,8 @@ public class ScoreCalculator : MonoBehaviour
 		{
 			time += Time.deltaTime;
 			
-			float kineticEnergy = 0.5f * rigidbody.mass * rigidbody.velocity.sqrMagnitude;
-			float gpe = rigidbody.mass * (-Physics.gravity.y) * (endHeight + transform.position.y);		
+			float kineticEnergy = 0.5f * GetComponent<Rigidbody>().mass * GetComponent<Rigidbody>().velocity.sqrMagnitude;
+			float gpe = GetComponent<Rigidbody>().mass * (-Physics.gravity.y) * (endHeight + transform.position.y);		
 			//float gravitationalPotentialEnergy = rigidbody.mass * (-Physics.gravity.y) * transform.position.y;		
 			energy = kineticEnergy + gpe;
 			
@@ -75,7 +75,7 @@ public class ScoreCalculator : MonoBehaviour
 				EnergyLossParticleController.Score(energyDelta);
 				if(energyDelta > 1)
 				{
-					transform.LookAt(transform.position + rigidbody.velocity);
+					transform.LookAt(transform.position + GetComponent<Rigidbody>().velocity);
 				}
 			}
 			

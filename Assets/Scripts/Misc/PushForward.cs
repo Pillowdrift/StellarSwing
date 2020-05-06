@@ -10,7 +10,7 @@ public class PushForward : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Push the rigid body in this direction.
-		rigidbody.AddRelativeForce(Dir * Power);
+		GetComponent<Rigidbody>().AddRelativeForce(Dir * Power);
 	}
 	
 	// Update is called once per frame

@@ -32,13 +32,13 @@ public class Flash : MonoBehaviour {
 			brightTimer -= Time.deltaTime;
 			if (brightTimer < 0) {
 				// Disable the particles.
-				for (int i = 0; i < transform.GetChildCount(); ++i) {
+				for (int i = 0; i < transform.childCount; ++i) {
 					transform.GetChild(i).GetComponent<ParticleSystem>().emissionRate = 0;	
 				}
 			}
 			
 			// Set the light brightness
-			gameObject.light.intensity = (brightTimer / BrightTime) * MaxBright;
+			gameObject.GetComponent<Light>().intensity = (brightTimer / BrightTime) * MaxBright;
 		}
 	}
 }

@@ -68,7 +68,7 @@ public class LoadLevel : MonoBehaviour
 		if (button != null && !button.enabled)
 			return;
 
-		if (!enabled || !guiTexture.enabled)
+		if (!enabled || !GetComponent<GUITexture>().enabled)
 			return;
 
 		if (Time.time - creationTime < 0.5f)

@@ -35,7 +35,7 @@ public static class Tutorial
 			textBehaviour = textObject.AddComponent<TutorialText>();
 		
 		GUIScale textScaler = textObject.GetComponent<GUIScale>();
-		GUIText guitext = textObject.guiText;
+		GUIText guitext = textObject.GetComponent<GUIText>();
 		guitext.enabled = true;
 		
 		textObject.transform.position = new Vector3(x, y, 0);

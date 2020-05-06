@@ -16,7 +16,7 @@ public class VHS : MonoBehaviour
 		tap = GetComponent<Tap>();
 		recordingManager = GameObject.FindObjectOfType(typeof(RecordingManager)) as RecordingManager;
 		
-		initial = renderer.material.color;
+		initial = GetComponent<Renderer>().material.color;
 		transparent = initial;
 		transparent.a = 0;
 	}
@@ -25,12 +25,12 @@ public class VHS : MonoBehaviour
 	{
 		if (recordingManager.RecordingCount <= 0 && disableIfNoRecordings)
 		{
-			renderer.material.color = transparent;
+			GetComponent<Renderer>().material.color = transparent;
 			tap.enabled = false;
 		}
 		else
 		{
-			renderer.material.color = initial;
+			GetComponent<Renderer>().material.color = initial;
 			tap.enabled = true;
 		}
 	}

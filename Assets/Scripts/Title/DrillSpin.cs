@@ -7,6 +7,6 @@ public class DrillSpin : MonoBehaviour
 	
 	public void Update()
 	{
-		transform.Rotate(0, 0, -DRILL_SPEED * Time.deltaTime);
+		transform.Rotate(0, 0, DRILL_SPEED * Time.deltaTime);
 	}
 }

@@ -34,7 +34,7 @@ public class JukeBox : MonoBehaviour {
 	
 	void Update()
 	{
-		audio.volume = Options.MasterVolume * Options.BGMVolume;
+		GetComponent<AudioSource>().volume = Options.MasterVolume * Options.BGMVolume;
 	}
 	
 	void OnLevelWasLoaded(int levelNum)	
@@ -78,7 +78,7 @@ public class JukeBox : MonoBehaviour {
 		{
 			clip = music;
 			source.loop = true;
-			source.audio.clip = clip; 
+			source.GetComponent<AudioSource>().clip = clip; 
 			source.volume = Options.MasterVolume * Options.BGMVolume;
 			source.Play();
 		}

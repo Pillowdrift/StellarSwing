@@ -105,12 +105,12 @@ public class ThirdPersonCamera : MonoBehaviour
 	{
 		Plane nearPlane = new Plane();
 		
-		if (camera != null)
+		if (GetComponent<Camera>() != null)
 		{
 			// Get values from camera
-			float halfFov = camera.fov * Mathf.Deg2Rad / 2.0f;
-			float aspect = camera.aspect;
-			float distance = camera.nearClipPlane;
+			float halfFov = GetComponent<Camera>().fieldOfView * Mathf.Deg2Rad / 2.0f;
+			float aspect = GetComponent<Camera>().aspect;
+			float distance = GetComponent<Camera>().nearClipPlane;
 			
 			// Calculate width and height of clip plane
 			float halfHeight = distance * Mathf.Tan(halfFov);

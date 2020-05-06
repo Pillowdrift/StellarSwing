@@ -14,9 +14,9 @@ public class Fader : MonoBehaviour
 	{
 		if (fadeout || fadein)
 		{
-			Color c = renderer.material.color;
+			Color c = GetComponent<Renderer>().material.color;
 			c.a = Mathf.Lerp(c.a, (fadeout ? 0 : 1), Time.deltaTime * fadeRate);
-			renderer.material.color = c;
+			GetComponent<Renderer>().material.color = c;
 		}
 	}
 	
@@ -24,15 +24,15 @@ public class Fader : MonoBehaviour
 	{
 		fadeout = true;
 		fadein = false;
-		if (collider != null)
-			collider.enabled = false;
+		if (GetComponent<Collider>() != null)
+			GetComponent<Collider>().enabled = false;
 	}
 	
 	public void FadeIn()
 	{
 		fadein = true;
 		fadeout = false;
-		if (collider != null)
-			collider.enabled = true;
+		if (GetComponent<Collider>() != null)
+			GetComponent<Collider>().enabled = true;
 	}
 }

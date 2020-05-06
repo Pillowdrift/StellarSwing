@@ -35,22 +35,22 @@ public class PlayerMiningScript : MonoBehaviour
 	void StartMining ()
 	{
 		// Enable the particle emmitter
-		transform.FindChild ("Mining").gameObject.SendMessage ("EnableParticles", true);	
-		transform.FindChild ("EndBeam").gameObject.SendMessage ("StartMining");
+		transform.Find ("Mining").gameObject.SendMessage ("EnableParticles", true);	
+		transform.Find ("EndBeam").gameObject.SendMessage ("StartMining");
 
 		mining = true;
 		count = true;
 		SoundManager.Play ("drill");
 		
 		// Set the glow
-		transform.FindChild ("Glow").gameObject.renderer.material.SetColor ("_TintColor", Color.white);
+		transform.Find ("Glow").gameObject.GetComponent<Renderer>().material.SetColor ("_TintColor", Color.white);
 	}	
 	
 	// Stop mining
 	void EndMining ()
 	{
-		transform.FindChild ("Mining").gameObject.SendMessage ("EnableParticles", false);
-		transform.FindChild ("EndBeam").gameObject.SendMessage ("EndMining");
+		transform.Find ("Mining").gameObject.SendMessage ("EnableParticles", false);
+		transform.Find ("EndBeam").gameObject.SendMessage ("EndMining");
 
 		mining = false;
 		SoundManager.StopAll ();

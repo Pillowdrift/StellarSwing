@@ -31,7 +31,7 @@ public class Dasher : MonoBehaviour
 	
 	void OnTriggerEnter(Collider collider)
 	{
-		Rigidbody body = collider.rigidbody;
+		Rigidbody body = collider.GetComponent<Rigidbody>();
 		
 		if (body != null)
 		{

@@ -15,7 +15,7 @@ public class GUIButtonFade : MonoBehaviour
 	void Start()
 	{
 		// Enable guiTexture (but keep it faded out if button disabled)
-		guiTexture.enabled = true;
+		GetComponent<GUITexture>().enabled = true;
 		
 		// Set initial alpha to minimum
 		SetAlpha(normalAlpha);
@@ -30,35 +30,35 @@ public class GUIButtonFade : MonoBehaviour
 	
 	void Update()
 	{
-		if (guiTexture != null && button != null)
+		if (GetComponent<GUITexture>() != null && button != null)
 		{
 			// Fade in if pressed
-			if (button.enabled && InputManager.held && guiTexture.HitTest(InputManager.currentPosition))
+			if (button.enabled && InputManager.held && GetComponent<GUITexture>().HitTest(InputManager.currentPosition))
 			{
-				Color col = guiTexture.color;
+				Color col = GetComponent<GUITexture>().color;
 				col.a = Mathf.Lerp(col.a, pressedAlpha, RealTime.realDeltaTime * fadeRate);
-				guiTexture.color = col;
+				GetComponent<GUITexture>().color = col;
 			}
 			// Fade in if enabled
 			else if (button.enabled && GetAlpha() < normalAlpha)
 			{
-				Color col = guiTexture.color;
+				Color col = GetComponent<GUITexture>().color;
 				col.a = Mathf.Lerp(col.a, normalAlpha, RealTime.realDeltaTime * fadeRate);
-				guiTexture.color = col;
+				GetComponent<GUITexture>().color = col;
 				
 			}
 			// Fade out if disabled
 			else if (!button.enabled)
 			{
-				Color col = guiTexture.color;
+				Color col = GetComponent<GUITexture>().color;
 				col.a = Mathf.Lerp(col.a, 0.0f, RealTime.realDeltaTime * fadeRate);
-				guiTexture.color = col;
+				GetComponent<GUITexture>().color = col;
 			}
 			
-			if (guiTexture.color.a < ALPHA_MIN)
-				guiTexture.enabled = false;
+			if (GetComponent<GUITexture>().color.a < ALPHA_MIN)
+				GetComponent<GUITexture>().enabled = false;
 			else
-				guiTexture.enabled = true;
+				GetComponent<GUITexture>().enabled = true;
 		}
 		
 		/*bool fadeToMin = true;
@@ -85,13 +85,13 @@ public class GUIButtonFade : MonoBehaviour
 	
 	void SetAlpha(float a)
 	{
-		Color col = guiTexture.color;
+		Color col = GetComponent<GUITexture>().color;
 		col.a = a;
-		guiTexture.color = col;
+		GetComponent<GUITexture>().color = col;
 	}
 	
 	float GetAlpha()
 	{
-		return guiTexture.color.a;
+		return GetComponent<GUITexture>().color.a;
 	}
 }

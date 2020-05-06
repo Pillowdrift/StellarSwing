@@ -50,14 +50,14 @@ public class EndDeathScript : MonoBehaviour
 		{
 			// Move death warning under player
 			Vector3 position = player.transform.position;
-			position.y = transform.position.y + collider.bounds.extents.y;
+			position.y = transform.position.y + GetComponent<Collider>().bounds.extents.y;
 			playerWarning.transform.position = position;
 			
 			// Fade its transparency on player distance
-			Color colour = playerWarning.renderer.material.color;
+			Color colour = playerWarning.GetComponent<Renderer>().material.color;
 			float dist = (player.transform.position - playerWarning.transform.position).magnitude;
 			colour.a = minDistanceForWarning / dist;
-			playerWarning.renderer.material.color = colour;
+			playerWarning.GetComponent<Renderer>().material.color = colour;
 		}
 	}
 	
@@ -112,12 +112,12 @@ public class EndDeathScript : MonoBehaviour
 				SoundManager.Play("crash");
 				
 				// Disable renderers if exploding
-				player.renderer.enabled = false;
-				player.transform.FindChild("Shield").renderer.enabled = false;
+				player.GetComponent<Renderer>().enabled = false;
+				player.transform.Find("Shield").GetComponent<Renderer>().enabled = false;
 			}
 			
 			// Disable default camera controller until level restarts
-			ThirdPersonCamera cameraController = Camera.mainCamera.GetComponent<ThirdPersonCamera>();
+			ThirdPersonCamera cameraController = Camera.main.GetComponent<ThirdPersonCamera>();
 			if (cameraController != null)
 				cameraController.enabled = false;
 			
@@ -146,9 +146,9 @@ public class EndDeathScript : MonoBehaviour
 		
 		// Reset player
 		player.BroadcastMessage("Reload");
-		player.renderer.enabled = true;
+		player.GetComponent<Renderer>().enabled = true;
 		
 		// Lerp camera back to start transform
-		Camera.mainCamera.SendMessage("LerpToStartPos");
+		Camera.main.SendMessage("LerpToStartPos");
 	}
 }

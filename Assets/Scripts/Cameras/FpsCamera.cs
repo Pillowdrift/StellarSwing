@@ -40,9 +40,9 @@ public class FpsCamera : MonoBehaviour
 	{
 		AddPitchYaw(ref lookat, transform.position - CamTarget.GetTarget());
 		
-		if(player.rigidbody.velocity.magnitude > 1)
+		if(player.GetComponent<Rigidbody>().velocity.magnitude > 1)
 		{
-			AddPitchYaw(ref target, -player.rigidbody.velocity);		
+			AddPitchYaw(ref target, -player.GetComponent<Rigidbody>().velocity);		
 		}	
 		
 //		if(Input.GetMouseButton(0) && player.rigidbody.velocity.magnitude > 1)

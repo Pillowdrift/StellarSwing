@@ -16,10 +16,10 @@ public class PlanetFader : MonoBehaviour
 			fadeout = true;
 		}
 		
-		Color c = renderer.material.color;
+		Color c = GetComponent<Renderer>().material.color;
 		c.a = Mathf.Lerp(c.a, (fadeout ? 0 : 1), Time.deltaTime * fadeRate);
 		if (!fadeout && c.a > 0.95f)
 			c.a = 1.0f;
-		renderer.material.color = c;
+		GetComponent<Renderer>().material.color = c;
 	}
 }

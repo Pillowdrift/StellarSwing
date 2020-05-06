@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerMovements : MonoBehaviour
 {
-	public float Speed { get { return rigidbody.velocity.magnitude; } }
+	public float Speed { get { return GetComponent<Rigidbody>().velocity.magnitude; } }
 	
 	const float FORCE_APPLIED = 500F;
 	const float SPEEDLOSS_THRERSHHERLD = 1.8f;
@@ -22,15 +22,15 @@ public class PlayerMovements : MonoBehaviour
 	
 	public void Go()
 	{
-		rigidbody.velocity = transform.rotation * startingVelocity;
+		GetComponent<Rigidbody>().velocity = transform.rotation * startingVelocity;
 		lastSpeed = startingVelocity.magnitude;
 	}
 	
 	public void Reload()
 	{
-		rigidbody.isKinematic = false;
-		rigidbody.velocity = Vector3.zero;
-		rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+		GetComponent<Rigidbody>().isKinematic = false;
+		GetComponent<Rigidbody>().velocity = Vector3.zero;
+		GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 		Physics.gravity = new Vector3 (0, -40, 0);
 	}
 	
@@ -65,10 +65,10 @@ public class PlayerMovements : MonoBehaviour
 					
 					Quaternion a = Quaternion.Euler(0, angle, 0);
 						
-					Vector3 outvec = a * rigidbody.velocity;
+					Vector3 outvec = a * GetComponent<Rigidbody>().velocity;
 					
-					outvec.y = rigidbody.velocity.y;
-					rigidbody.velocity = outvec;
+					outvec.y = GetComponent<Rigidbody>().velocity.y;
+					GetComponent<Rigidbody>().velocity = outvec;
 					
 					transform.rotation *= a;
 					
@@ -79,24 +79,24 @@ public class PlayerMovements : MonoBehaviour
 	
 	void FixedUpdate()
 	{
-		if(!LevelState.Dead && !LevelState.HasFinished && !rigidbody.isKinematic)
+		if(!LevelState.Dead && !LevelState.HasFinished && !GetComponent<Rigidbody>().isKinematic)
 		{
 			float speedloss = Mathf.Clamp01(((90.0f - Mathf.Abs(angleChange)) / 90.0f) + (SPEEDLOSS_THRERSHHERLD * Time.deltaTime));
 			
 			angleChange = 0.0f;
 			
-			Vector3 vel = rigidbody.velocity;
-			vel *= speedloss;
-			vel.y = rigidbody.velocity.y;
-			rigidbody.velocity = vel;	
+			Vector3 vel = GetComponent<Rigidbody>().velocity;
+			//vel *= speedloss;
+			vel.y = GetComponent<Rigidbody>().velocity.y;
+			GetComponent<Rigidbody>().velocity = vel;	
 
 		}
 	}
 	
 	public float SpeedLost()
 	{
-		float score = lastSpeed - rigidbody.velocity.magnitude;
-		lastSpeed = rigidbody.velocity.magnitude;
+		float score = lastSpeed - GetComponent<Rigidbody>().velocity.magnitude;
+		lastSpeed = GetComponent<Rigidbody>().velocity.magnitude;
 	
 		//return (score > 0) ? score : 0;
 		return -score;

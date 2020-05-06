@@ -35,7 +35,7 @@ public class LerpPos : MonoBehaviour
 			
 			if ((transform.position - position).sqrMagnitude < 0.001f)
 			{
-				ThirdPersonCamera cameraController = Camera.mainCamera.GetComponent<ThirdPersonCamera>();
+				ThirdPersonCamera cameraController = Camera.main.GetComponent<ThirdPersonCamera>();
 				if (cameraController != null)
 					cameraController.enabled = false;
 				

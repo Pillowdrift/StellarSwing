@@ -29,13 +29,13 @@ public static class Helper
 	{
 		ClipPlanePoints clipPlanePoints = new ClipPlanePoints();
 		
-		if (Camera.mainCamera != null)
+		if (Camera.main != null)
 		{
 			// Get values from camera
-			Transform transform = Camera.mainCamera.transform;
-			float halfFov = Camera.mainCamera.fov * Mathf.Deg2Rad / 2.0f;
-			float aspect = Camera.mainCamera.aspect;
-			float distance = Camera.mainCamera.nearClipPlane;
+			Transform transform = Camera.main.transform;
+			float halfFov = Camera.main.fieldOfView * Mathf.Deg2Rad / 2.0f;
+			float aspect = Camera.main.aspect;
+			float distance = Camera.main.nearClipPlane;
 			
 			// Calculate width and height of clip plane
 			float halfHeight = distance * Mathf.Tan(halfFov);

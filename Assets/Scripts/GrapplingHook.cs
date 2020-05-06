@@ -78,9 +78,9 @@ public class GrapplingHook : MonoBehaviour
 		localTouches = new List<TouchData>();
 		
 		// Find the shield
-		shield = (GameObject)transform.FindChild("Shield").gameObject;
+		shield = (GameObject)transform.Find("Shield").gameObject;
 		
-		theCamera = GameObject.Find("TheCamera").camera;
+		theCamera = GameObject.Find("TheCamera").GetComponent<Camera>();
 		
 		ropeObject = GameObject.Find("Rope");
 		rope = ropeObject.GetComponent<LineRenderer>();
@@ -107,8 +107,8 @@ public class GrapplingHook : MonoBehaviour
 			if (gameObject.tag != "Ungrappleable" &&
 			    gameObject.tag != "Planet" &&
 			    LayerMask.LayerToName(gameObject.layer) != "Ignore Raycast" &&
-			    gameObject.collider != null &&
-				gameObject.collider.isTrigger == false)
+			    gameObject.GetComponent<Collider>() != null &&
+				gameObject.GetComponent<Collider>().isTrigger == false)
 			{
 				grappleable.Add(gameObject);
 			}
@@ -192,14 +192,14 @@ public class GrapplingHook : MonoBehaviour
 			{
 				GameObject realObject = targetedObject;
 				
-				realObject.renderer.material.SetColor("_OutlineColor", Color.red);
+				realObject.GetComponent<Renderer>().material.SetColor("_OutlineColor", Color.red);
 			}
 			
 			if (targetedObjectPrev != null)
 			{
 				GameObject realObject = targetedObjectPrev;
 				
-				realObject.renderer.material.SetColor("_OutlineColor", Color.white);
+				realObject.GetComponent<Renderer>().material.SetColor("_OutlineColor", Color.white);
 			}
 		}
 
@@ -237,7 +237,7 @@ public class GrapplingHook : MonoBehaviour
 		if(rope.enabled)
 		{
 			// Point.
-			shield.renderer.enabled = true;
+			shield.GetComponent<Renderer>().enabled = true;
 			
 			// Get the last point on the grapple.
 			shield.transform.LookAt(grapples[grapples.Count - 1].gameObject.transform.position);
@@ -264,7 +264,7 @@ public class GrapplingHook : MonoBehaviour
 		}
 		else
 		{
-			shield.renderer.enabled = false;
+			shield.GetComponent<Renderer>().enabled = false;
 		}
 		
 		if (!ControlManager.MouseOnGUI)
@@ -520,7 +520,7 @@ public class GrapplingHook : MonoBehaviour
 		
 		// Update spring joint
 		springJoint.maxDistance = grappleData.maxDistance;		
-		springJoint.connectedBody = gameObject.rigidbody;
+		springJoint.connectedBody = gameObject.GetComponent<Rigidbody>();
 		
 		// Update grapple position and parent it so it follows moving objects
 		grapple.transform.position = grappleData.gameObject.transform.position;
@@ -584,7 +584,7 @@ public class GrapplingHook : MonoBehaviour
 		}
 		else
 		{
-			grappleData.gameObject.transform.LookAt(grapples[grapples.Count - 1].gameObject.transform, -rigidbody.velocity);
+			grappleData.gameObject.transform.LookAt(grapples[grapples.Count - 1].gameObject.transform, -GetComponent<Rigidbody>().velocity);
 			
 			grappleData.offset = hit.normal * GrappleExtrusion;
 		}

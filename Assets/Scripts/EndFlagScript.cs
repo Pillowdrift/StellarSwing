@@ -107,8 +107,8 @@ public class EndFlagScript : MonoBehaviour
 			
 			//freeze the player
 			LevelState.Dead = true;
-			collider.rigidbody.velocity = Vector3.zero;
-			collider.rigidbody.isKinematic = true;
+			collider.GetComponent<Rigidbody>().velocity = Vector3.zero;
+			collider.GetComponent<Rigidbody>().isKinematic = true;
 			
 			//make the player face the thing it hit
 			collider.transform.LookAt(collider.transform.position + collision.contacts[0].normal, collider.transform.up);
@@ -117,7 +117,7 @@ public class EndFlagScript : MonoBehaviour
 			player.SendMessage("StartMining");			
 			
 			// Switch to a camera that looks at the end thingy.
-			ZoomOuterizer zout = Camera.mainCamera.GetComponent<ZoomOuterizer>();
+			ZoomOuterizer zout = Camera.main.GetComponent<ZoomOuterizer>();
 			if (zout != null)
 				zout.ZoomOut(ZoomOut, ZoomOutTimer);
 			
@@ -325,25 +325,26 @@ public class EndFlagScript : MonoBehaviour
 		
 		if (worldBeaten)
 		{
+			// todo: achieves?
 			if (LevelSelectGUI.currentLevel.world == 1)
 			{
-				GameCenterSingleton.Instance.AddAchievementProgress("w_1_o", 100.0f);
+				//GameCenterSingleton.Instance.AddAchievementProgress("w_1_o", 100.0f);
 			}
 			if (LevelSelectGUI.currentLevel.world == 2)
 			{
-				GameCenterSingleton.Instance.AddAchievementProgress("w_2_o", 100.0f);
+				//GameCenterSingleton.Instance.AddAchievementProgress("w_2_o", 100.0f);
 			}
 			if (LevelSelectGUI.currentLevel.world == 3)
 			{
-				GameCenterSingleton.Instance.AddAchievementProgress("w_3_o", 100.0f);
+				//GameCenterSingleton.Instance.AddAchievementProgress("w_3_o", 100.0f);
 			}
 			if (LevelSelectGUI.currentLevel.world == 4)
 			{
-				GameCenterSingleton.Instance.AddAchievementProgress("w_4_o", 100.0f);
+				//GameCenterSingleton.Instance.AddAchievementProgress("w_4_o", 100.0f);
 			}
 			if (LevelSelectGUI.currentLevel.world == 5)
 			{
-				GameCenterSingleton.Instance.AddAchievementProgress("w_5_o", 100.0f);
+				//GameCenterSingleton.Instance.AddAchievementProgress("w_5_o", 100.0f);
 			}
 		}
 		

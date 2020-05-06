@@ -25,6 +25,6 @@ public class GUIScale : MonoBehaviour {
 		}*/
 		float widthScale = (float)Screen.width / WIDTH;
 		
-		guiText.fontSize = (int)(32.0f * widthScale);
+		GetComponent<GUIText>().fontSize = (int)(32.0f * widthScale);
 	}
 }

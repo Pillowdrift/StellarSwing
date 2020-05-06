@@ -16,8 +16,8 @@ public class ZoomOuterizer : MonoBehaviour {
 		zoomingOutVal = _val;
 		zoomingOutTime = _time;
 		zoomingOutTimer = _time;
-		originalCameraPosition = Camera.mainCamera.transform.position;
-		Camera.mainCamera.GetComponent<ThirdPersonCamera>().enabled = false;
+		originalCameraPosition = Camera.main.transform.position;
+		Camera.main.GetComponent<ThirdPersonCamera>().enabled = false;
 	}
 	
 	// Use this for initialization
@@ -33,8 +33,8 @@ public class ZoomOuterizer : MonoBehaviour {
 			if (zoomingOutTimer < 0) {
 				zoomingOut = false;
 			}			
-			Camera.mainCamera.transform.position = originalCameraPosition;
-			Camera.mainCamera.transform.Translate(new Vector3(0, 0, -(1-(zoomingOutTimer / zoomingOutTime)) * zoomingOutVal));
+			Camera.main.transform.position = originalCameraPosition;
+			Camera.main.transform.Translate(new Vector3(0, 0, -(1-(zoomingOutTimer / zoomingOutTime)) * zoomingOutVal));
 		}
 	}
 }

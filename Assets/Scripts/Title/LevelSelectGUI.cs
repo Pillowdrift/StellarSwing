@@ -115,7 +115,7 @@ public class LevelSelectGUI : MonoBehaviour
 		{
 			GameObject.Find(worldToShow).SendMessage("OnMouseDown", SendMessageOptions.DontRequireReceiver);
 			GameObject.Find(worldToShow).SendMessage("OnMouseUp", SendMessageOptions.DontRequireReceiver);
-			Camera.mainCamera.GetComponent<ScrollingCamera>().FinishImmediate();
+			Camera.main.GetComponent<ScrollingCamera>().FinishImmediate();
 			RotateToLevel(levelToShow);
 			
 			if (worldTransition)
@@ -137,8 +137,8 @@ public class LevelSelectGUI : MonoBehaviour
 		// Disable GUI elements
 		Tap.enableBack = false;
 		playButton.active = false;
-		GameObject.Find("WorldSelectObo").renderer.enabled = false;
-		GameObject.Find("Select World").renderer.enabled = false;
+		GameObject.Find("WorldSelectObo").GetComponent<Renderer>().enabled = false;
+		GameObject.Find("Select World").GetComponent<Renderer>().enabled = false;
 		highscoresButton.active = false;
 		
 		// Work out which world is next
@@ -166,10 +166,10 @@ public class LevelSelectGUI : MonoBehaviour
 		Tap.enableBack = true;
 		playButton.active = true;
 		highscoresButton.active = true;
-		GameObject.Find("WorldSelectObo").renderer.enabled = true;
-		GameObject.Find("Select World").renderer.enabled = true;
-		GameObject.Find("ReturnButton").renderer.enabled = true;
-		GameObject.Find("ReturnButton").collider.enabled = true;
+		GameObject.Find("WorldSelectObo").GetComponent<Renderer>().enabled = true;
+		GameObject.Find("Select World").GetComponent<Renderer>().enabled = true;
+		GameObject.Find("ReturnButton").GetComponent<Renderer>().enabled = true;
+		GameObject.Find("ReturnButton").GetComponent<Collider>().enabled = true;
 		
 		//returnButton.renderer.material.color = oldColour;
 	}
@@ -223,12 +223,12 @@ public class LevelSelectGUI : MonoBehaviour
 					{
 						GameObject obj = levelObjects[i];
 						
-						if (obj.renderer.material.color.a == 0)
+						if (obj.GetComponent<Renderer>().material.color.a == 0)
 							Destroy(obj);
 						
 						Color white = Color.white;
-						white.a = obj.renderer.material.color.a;
-						obj.renderer.material.color = white;
+						white.a = obj.GetComponent<Renderer>().material.color.a;
+						obj.GetComponent<Renderer>().material.color = white;
 						
 						float dd = (obj.transform.position - scrollingCamera.NodePos).sqrMagnitude;
 						
@@ -255,8 +255,8 @@ public class LevelSelectGUI : MonoBehaviour
 					}
 					
 					Color green = Color.green;
-					green.a = closest.renderer.material.color.a;
-					closest.renderer.material.color = green;
+					green.a = closest.GetComponent<Renderer>().material.color.a;
+					closest.GetComponent<Renderer>().material.color = green;
 					
 					// Set that level as the current level
 					currentLevel = levels.levels[closestId];
@@ -265,7 +265,7 @@ public class LevelSelectGUI : MonoBehaviour
 					//if (Tap.enableButtons)
 					if (menuState == MenuState.LEVEL_SELECT)
 					{
-						Vector3 closestPosition = Camera.mainCamera.WorldToViewportPoint(levelObjects[closestId].transform.position);
+						Vector3 closestPosition = Camera.main.WorldToViewportPoint(levelObjects[closestId].transform.position);
 						GUIController.ShowText("LevelNameText", levels.levels[closestId].name, closestPosition.x, closestPosition.y);
 						
 						// Show the stars for this level.
@@ -366,12 +366,12 @@ public class LevelSelectGUI : MonoBehaviour
 					maxLevel = levels.levels.Length;
 				
 				// Get direction from planet to camera
-				Vector3 camDir = currentPlanet.transform.position - Camera.mainCamera.transform.position;
+				Vector3 camDir = currentPlanet.transform.position - Camera.main.transform.position;
 				camDir.Normalize();
 				
 				// Create gameobjects to represent levels
 				rotationStep = 360.0f / levels.levels.Length;
-				Vector3 offset = Vector3.forward * currentPlanet.collider.bounds.extents.z * 1.1f;
+				Vector3 offset = Vector3.forward * currentPlanet.GetComponent<Collider>().bounds.extents.z * 1.1f;
 				
 				for (int i = 0; i < levels.levels.Length; ++i)
 				{
@@ -393,14 +393,14 @@ public class LevelSelectGUI : MonoBehaviour
 					level.transform.rotation *= Quaternion.Euler(90, 0, 0);
 					level.transform.localScale = 0.01f * Vector3.one;
 					level.tag = "Planet";
-					level.renderer.material = instance.levelMaterial;
+					level.GetComponent<Renderer>().material = instance.levelMaterial;
 					levelObjects.Add(level);
 					
 					// Initialise level object
 					level.name = levels.levels[i].name;
 					level.transform.parent = currentPlanet.transform;
-					level.renderer.material.shader = Shader.Find("Transparent/Diffuse");
-					level.renderer.material.color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
+					level.GetComponent<Renderer>().material.shader = Shader.Find("Transparent/Diffuse");
+					level.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.1f);
 					
 					// Fade object in
 					Fader fader = level.AddComponent<Fader>();

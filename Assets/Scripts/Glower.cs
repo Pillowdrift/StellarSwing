@@ -17,7 +17,7 @@ public class Glower : MonoBehaviour
 		
 		Material mat = null;
 		
-		foreach (Material material in renderer.materials)
+		foreach (Material material in GetComponent<Renderer>().materials)
 		{
 			if (material.name == matname || material.name == matname + " (Instance)")
 			{

@@ -93,7 +93,7 @@ public class AnimatedSprite : MonoBehaviour {
 		Mesh mesh = meshFilter.mesh;
 		
 		// Set the texture.
-		gameObject.renderer.material.mainTexture = current.texture;
+		gameObject.GetComponent<Renderer>().material.mainTexture = current.texture;
 		
 		// Set the uvs.
 		Vector2[] uvs = new Vector2[4];

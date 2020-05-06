@@ -25,11 +25,11 @@ public class TickBox : MonoBehaviour {
 	void Update () {
 		if (Value)
 		{
-			renderer.material.mainTexture = On;
+			GetComponent<Renderer>().material.mainTexture = On;
 		}
 		else
 		{
-			renderer.material.mainTexture = Off;
+			GetComponent<Renderer>().material.mainTexture = Off;
 		}
 	}
 }

@@ -7,16 +7,16 @@ public class ShowHighscoresButton : MonoBehaviour
 	{
 		if (LevelSelectGUI.menuState == LevelSelectGUI.MenuState.LEVEL_SELECT && LevelSelectGUI.currentLevel != null && LevelSelectGUI.currentLevel.highscores)
 		{
-			renderer.enabled = true;
-			collider.enabled = true;
+			GetComponent<Renderer>().enabled = true;
+			GetComponent<Collider>().enabled = true;
 		}
 		else
 		{
-			renderer.enabled = false;
-			collider.enabled = false;
+			GetComponent<Renderer>().enabled = false;
+			GetComponent<Collider>().enabled = false;
 		}
 		
-		GameObject.Find("HighscoresArea").guiTexture.enabled = HighScoresGUI.enable;			
+		GameObject.Find("HighscoresArea").GetComponent<GUITexture>().enabled = HighScoresGUI.enable;			
 	}
 	
 	void OnMouseDown()

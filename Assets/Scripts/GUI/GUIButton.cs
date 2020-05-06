@@ -5,7 +5,7 @@ public class GUIButton : MonoBehaviour
 {
 	void Update()
 	{
-		if (guiTexture.HitTest(InputManager.currentPosition))
+		if (GetComponent<GUITexture>().HitTest(InputManager.currentPosition))
 		{
 			if (InputManager.released)
 			{

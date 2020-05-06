@@ -95,14 +95,14 @@ public class GameRecorder : MonoBehaviour
 			}
 			
 			GUIController.HideText("Text");
-			Camera.mainCamera.GetComponent<ThirdPersonCamera>().enabled = true;
+			Camera.main.GetComponent<ThirdPersonCamera>().enabled = true;
 			Playback(current);
 		}
 	}
 	
-	void FixedUpdate()
+	void LateUpdate()
 	{
-		if (!recording || GameObject.Find("Player").renderer.enabled == false)
+		if (!recording || GameObject.Find("Player").GetComponent<Renderer>().enabled == false)
 			lineRenderer.enabled = false;
 		else
 			lineRenderer.enabled = true;
@@ -143,10 +143,10 @@ public class GameRecorder : MonoBehaviour
 			if (time < current.score.time)
 			{
 				transform.position = current.GetPosition(time);
-				if (!rigidbody.isKinematic)
-					rigidbody.velocity = current.GetVelocity(time);
+				if (!GetComponent<Rigidbody>().isKinematic)
+					GetComponent<Rigidbody>().velocity = current.GetVelocity(time);
 				
-				transform.LookAt(transform.position + rigidbody.velocity);
+				transform.LookAt(transform.position + GetComponent<Rigidbody>().velocity);
 				
 				if (current.IsGrappling(time) && current.GetGrapplePos(lastTime) != current.GetGrapplePos(time))
 				{
@@ -297,6 +297,6 @@ public class GameRecorder : MonoBehaviour
 			linePoints.Enqueue(transform.position);
 		}
 		
-		current.Add(transform.position, rigidbody.velocity, grappleScript.IsGrappling(), grappleScript.GetPos());
+		current.Add(transform.position, GetComponent<Rigidbody>().velocity, grappleScript.IsGrappling(), grappleScript.GetPos());
 	}
 }

@@ -15,6 +15,6 @@ public class MoveMeshUV : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		float offset = Time.time * 0.5f;
-		renderer.material.mainTextureOffset = new Vector2(offset, 0);
+		GetComponent<Renderer>().material.mainTextureOffset = new Vector2(offset, 0);
 	}
 }

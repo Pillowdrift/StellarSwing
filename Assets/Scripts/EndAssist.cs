@@ -19,7 +19,7 @@ public class EndAssist : MonoBehaviour
 	// Point the player towards the target
 	void Update()
 	{
-		if(rigidbody.isKinematic)
+		if(GetComponent<Rigidbody>().isKinematic)
 			return;
 		
 		//Calculate the direction we want to face on a 2D plane
@@ -31,7 +31,7 @@ public class EndAssist : MonoBehaviour
 		targetDir.Normalize();	
 		
 		//Calculate the direction are going on a 2D plane
-		Vector3 playerDir = rigidbody.velocity;
+		Vector3 playerDir = GetComponent<Rigidbody>().velocity;
 		playerDir.y = 0;
 		float player2DSpd = playerDir.magnitude; // save our 2D speed
 		playerDir.Normalize();
@@ -44,8 +44,8 @@ public class EndAssist : MonoBehaviour
 		playerDir *= player2DSpd;
 		
 		// add back the Y velosity
-		playerDir.y = rigidbody.velocity.y;
+		playerDir.y = GetComponent<Rigidbody>().velocity.y;
 		
-		rigidbody.velocity = playerDir;
+		GetComponent<Rigidbody>().velocity = playerDir;
 	}
 }

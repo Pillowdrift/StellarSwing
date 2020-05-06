@@ -40,7 +40,7 @@ public class EnterHyperspace : MonoBehaviour
 		}
 		
 		// At first give a short push.
-		rigidbody.AddForce(Vector3.forward * PushPower);
+		GetComponent<Rigidbody>().AddForce(Vector3.forward * PushPower);
 		
 		StartCoroutine("DoWarp");
 	}
@@ -62,9 +62,9 @@ public class EnterHyperspace : MonoBehaviour
 			if (transform.localScale.magnitude > 0.1f)
 				transform.localScale *= ShrinkSpeed;
 			else
-				renderer.enabled = false;
+				GetComponent<Renderer>().enabled = false;
 			
-			rigidbody.AddForce(transform.forward * ShrinkPushPower);
+			GetComponent<Rigidbody>().AddForce(transform.forward * ShrinkPushPower);
 			
 			// Wait a frame
 			yield return 0;

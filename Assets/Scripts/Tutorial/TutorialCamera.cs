@@ -78,7 +78,7 @@ public class TutorialCamera : MonoBehaviour
 		GameObject player = GameObject.Find("Player");
 		if (player != null)
 		{
-			player.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 		}
 		
 		if (parent != null)
@@ -315,7 +315,7 @@ public class TutorialCamera : MonoBehaviour
 			GameObject player = GameObject.Find("Player");
 			if (player != null)
 			{
-				player.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+				player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
 			}
 			
 			// Disable tutorial camera

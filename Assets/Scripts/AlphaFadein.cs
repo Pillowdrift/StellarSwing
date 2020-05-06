@@ -26,8 +26,8 @@ public class AlphaFadein : MonoBehaviour
 			
 		float alpha = Mathf.Lerp(min, max, coeff);
 		
-		Color col = renderer.material.color;
+		Color col = GetComponent<Renderer>().material.color;
 		col.a = alpha;
-		renderer.material.color = col;
+		GetComponent<Renderer>().material.color = col;
 	}
 }

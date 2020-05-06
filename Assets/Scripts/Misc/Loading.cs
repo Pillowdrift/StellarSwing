@@ -22,10 +22,10 @@ public class Loading : MonoBehaviour
 	
 	void Start()
 	{
-		Camera.mainCamera.GetComponent<GUILayer>().enabled = false;
+		Camera.main.GetComponent<GUILayer>().enabled = false;
 		circleLerp = 0;
 		
-		srtatingFov = Camera.mainCamera.fov;
+		srtatingFov = Camera.main.fieldOfView;
 		// Orient with camera
 		//transform.position = Camera.mainCamera.transform.position + Camera.mainCamera.transform.forward * 10.0f;
 		//transform.rotation = Camera.mainCamera.transform.rotation;
@@ -42,7 +42,7 @@ public class Loading : MonoBehaviour
 	{
 		if (transition == Transition.FOV && circleLerp < 1)
 		{				
-			Camera.mainCamera.fov = Mathf.Lerp(srtatingFov, 180.0f, 1 - Mathf.Sqrt(1-(circleLerp*circleLerp)));		
+			Camera.main.fieldOfView = Mathf.Lerp(srtatingFov, 180.0f, 1 - Mathf.Sqrt(1-(circleLerp*circleLerp)));		
 			circleLerp += Time.deltaTime * RATE;			
 		}
 		else if (nextLevel != "")

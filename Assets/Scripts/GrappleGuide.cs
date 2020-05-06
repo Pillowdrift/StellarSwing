@@ -7,7 +7,7 @@ public class GrappleGuide : MonoBehaviour
 	
 	public void Start()
 	{
-		Physics.IgnoreCollision(collider, GameObject.Find("Player").collider);
+		Physics.IgnoreCollision(GetComponent<Collider>(), GameObject.Find("Player").GetComponent<Collider>());
 	}
 	
 	public Vector3 GrappleTo()

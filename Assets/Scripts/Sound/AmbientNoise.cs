@@ -20,19 +20,19 @@ public class AmbientNoise : MonoBehaviour
 	
 	void Update()
 	{
-		audio.volume = Options.SFXVolume;
-		transform.position = Camera.mainCamera.transform.position;
+		GetComponent<AudioSource>().volume = Options.SFXVolume;
+		transform.position = Camera.main.transform.position;
 	}
 	
 	public static void Play()
 	{
-		if (instance != null && !instance.audio.isPlaying)
-			instance.audio.Play();
+		if (instance != null && !instance.GetComponent<AudioSource>().isPlaying)
+			instance.GetComponent<AudioSource>().Play();
 	}
 	
 	public static void Stop()
 	{
 		if (instance != null)
-			instance.audio.Stop();
+			instance.GetComponent<AudioSource>().Stop();
 	}
 }

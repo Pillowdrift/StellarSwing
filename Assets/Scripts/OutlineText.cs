@@ -35,12 +35,12 @@ public class OutlineText
 
         Destroy(newText.GetComponent<OutlineText>());
 
-        Vector2 pixelOffset = newText.guiText.pixelOffset;
+        Vector2 pixelOffset = newText.GetComponent<GUIText>().pixelOffset;
         pixelOffset.x += x;
         pixelOffset.y += y;
-        newText.guiText.pixelOffset = pixelOffset;
+        newText.GetComponent<GUIText>().pixelOffset = pixelOffset;
 
-        newText.guiText.color = color;
+        newText.GetComponent<GUIText>().color = color;
 
         return newText;
     }
@@ -49,13 +49,13 @@ public class OutlineText
     {
         for (int i = 0; i < children.Count; ++i)
         {
-            children[i].guiText.text = guiText.text;
-            children[i].guiText.enabled = guiText.enabled;
-            children[i].transform.position = guiText.transform.position + new Vector3(0.0f, 0.0f, -1.0f);
+            children[i].GetComponent<GUIText>().text = GetComponent<GUIText>().text;
+            children[i].GetComponent<GUIText>().enabled = GetComponent<GUIText>().enabled;
+            children[i].transform.position = GetComponent<GUIText>().transform.position + new Vector3(0.0f, 0.0f, -1.0f);
 
             Color col = color;
-            col.a = guiText.material.color.a;
-            children[i].guiText.material.color = col;
+            col.a = GetComponent<GUIText>().material.color.a;
+            children[i].GetComponent<GUIText>().material.color = col;
         }
     }
 
@@ -69,10 +69,10 @@ public class OutlineText
         children.Clear();
 
         // Update prefab
-        prefab.guiText.text = guiText.text;
-        prefab.guiText.enabled = guiText.enabled;
+        prefab.GetComponent<GUIText>().text = GetComponent<GUIText>().text;
+        prefab.GetComponent<GUIText>().enabled = GetComponent<GUIText>().enabled;
 
-        if (guiText != null)
+        if (GetComponent<GUIText>() != null)
         {
             int offset = 1 * thickness;
 

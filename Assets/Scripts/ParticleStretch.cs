@@ -6,13 +6,14 @@ public class ParticleStretch : MonoBehaviour
 	public const float STRETCHSCALE = 0.1f;
 	public const float LERPSPEED = 1.0f;
 	
-	private ParticleRenderer particleRenderer;
+	//private ParticleRenderer particleRenderer;
 	
 	void Start()
 	{
-		particleRenderer = GetComponent<ParticleRenderer>();
+		//particleRenderer = GetComponent<ParticleRenderer>();
 	}
 	
+	/*
 	void FixedUpdate()
 	{
 		float length = Camera.mainCamera.velocity.magnitude;
@@ -31,4 +32,5 @@ public class ParticleStretch : MonoBehaviour
 						   LERPSPEED * RealTime.realDeltaTime);
 		}
 	}
+	*/
 }

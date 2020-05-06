@@ -120,7 +120,7 @@ public class LevelStart : MonoBehaviour
 						//clickpos = InputManager.currentPosition;
 					}
 					
-					playerMovements.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+					playerMovements.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
 					
 					// Apply initial velocity
 					playerMovements.Go();
@@ -156,7 +156,7 @@ public class LevelStart : MonoBehaviour
 				}
 				else if (!LevelState.Dead)
 				{
-					playerMovements.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+					playerMovements.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 				}
 				
 				// Reload and start level if reload is enabled
@@ -192,7 +192,7 @@ public class LevelStart : MonoBehaviour
 	
 	void EnableCameraController()
 	{
-		ThirdPersonCamera tpc = camera.GetComponent<ThirdPersonCamera>();
+		ThirdPersonCamera tpc = GetComponent<Camera>().GetComponent<ThirdPersonCamera>();
 		tpc.enabled = true;	
 	}
 }

@@ -55,7 +55,7 @@ public class ControlManager : MonoBehaviour
 	//		if (rect != null && rect.Contains(InputManager.currentPosition))
 //				return true;
 			
-			guiLayer = Camera.mainCamera.GetComponent<GUILayer>();
+			guiLayer = Camera.main.GetComponent<GUILayer>();
 			
 			if (guiLayer != null)
 			{
@@ -64,10 +64,10 @@ public class ControlManager : MonoBehaviour
 				if (element != null)
 				{
 					// If this isn't text
-					if (element.guiText == null && element.enabled)
+					if (element.GetComponent<GUIText>() == null && element.enabled)
 					{
 						// If invisible, false
-						if (element.guiTexture != null && element.guiTexture.color.a <= 0.0f)
+						if (element.GetComponent<GUITexture>() != null && element.GetComponent<GUITexture>().color.a <= 0.0f)
 							return false;
 						
 						return true;

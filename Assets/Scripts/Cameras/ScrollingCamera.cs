@@ -86,10 +86,10 @@ public class ScrollingCamera : MonoBehaviour
 			transform.position = Vector3.Slerp(current.transform.position, next.transform.position, coefficient);
 			transform.rotation = Quaternion.Lerp(current.transform.rotation, next.transform.rotation, coefficient);
 			transform.localScale = defaultScale * Mathf.Lerp(current.objectScale, next.objectScale, coefficient);
-			if (camera != null)
-				camera.orthographicSize = Mathf.Lerp(current.size, next.size, coefficient);
+			if (GetComponent<Camera>() != null)
+				GetComponent<Camera>().orthographicSize = Mathf.Lerp(current.size, next.size, coefficient);
 			else
-				Camera.mainCamera.orthographicSize = Mathf.Lerp(current.size, next.size, coefficient);
+				Camera.main.orthographicSize = Mathf.Lerp(current.size, next.size, coefficient);
 		}
 	}
 	
@@ -108,7 +108,7 @@ public class ScrollingCamera : MonoBehaviour
 		tempObjects.Add(tempNode);
 		CameraNode node = tempNode.AddComponent<CameraNode>();
 		node.time = 0;
-		node.size = Camera.mainCamera.orthographicSize;
+		node.size = Camera.main.orthographicSize;
 		node.transform.position = transform.position;
 		node.transform.rotation = transform.rotation;
 		

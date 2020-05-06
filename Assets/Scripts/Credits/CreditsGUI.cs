@@ -65,7 +65,7 @@ public class CreditsGUI : MonoBehaviour
 	void Start()
 	{
 		initialPosition = textObj.transform.position;
-		textObj.guiText.text = credits;
+		textObj.GetComponent<GUIText>().text = credits;
 	}
 	
 	// Update is called once per frame

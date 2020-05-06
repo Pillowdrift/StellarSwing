@@ -21,7 +21,7 @@ public class Riser : MonoBehaviour {
 	// Kill the Riser after a while
 	void Awake()
 	{	
-		color = renderer.material.GetColor("_TintColor");
+		color = GetComponent<Renderer>().material.GetColor("_TintColor");
 	}
 	
 	// Update is called once per frame
@@ -37,6 +37,6 @@ public class Riser : MonoBehaviour {
 		transform.Translate(new Vector3(0, 1, 0) * UpSpeed * Time.deltaTime);
 		
 		// Fade out the alpha.
-		renderer.material.SetColor("_TintColor", color * (1 - (timer / LifeTime)));
+		GetComponent<Renderer>().material.SetColor("_TintColor", color * (1 - (timer / LifeTime)));
 	}
 }

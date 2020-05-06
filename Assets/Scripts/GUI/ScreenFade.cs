@@ -16,9 +16,9 @@ public class ScreenFade : MonoBehaviour
 	
 	void Start()
 	{
-		Color col = guiTexture.color;
+		Color col = GetComponent<GUITexture>().color;
 		col.a = 0;
-		guiTexture.color = col;
+		GetComponent<GUITexture>().color = col;
 	}
 	
 	void Update()
@@ -26,10 +26,10 @@ public class ScreenFade : MonoBehaviour
 		if (fading)
 		{
 			// Interpolate towards colour
-			Color col = guiTexture.color;
+			Color col = GetComponent<GUITexture>().color;
 			col = Color.Lerp(col, fadeColour, fadeSpeed * Time.deltaTime);
 			amountFaded += Time.deltaTime * Mathf.Abs(fadeSpeed);
-			guiTexture.color = col;
+			GetComponent<GUITexture>().color = col;
 			
 			// Stop when target colour reached
 			if (amountFaded >= 1.0f)
@@ -45,7 +45,7 @@ public class ScreenFade : MonoBehaviour
 		if (fadeTexture == null)
 			CreateTexture();
 		
-		fadeObject.guiTexture.color = colour;
+		fadeObject.GetComponent<GUITexture>().color = colour;
 	}
 	
 	public static void FadeTo(Color colour, float speed)
@@ -89,10 +89,10 @@ public class ScreenFade : MonoBehaviour
 		fadeTexture.SetPixel(0, 0, Color.white);
 		
 		// Add texture to fadeObject's guiTexture
-		fadeObject.guiTexture.texture = fadeTexture;
+		fadeObject.GetComponent<GUITexture>().texture = fadeTexture;
 		
 		// Centre and scale to fullscreen
-		fadeObject.guiTexture.transform.position = new Vector3(0.5f, 0.5f, 0.0f);
+		fadeObject.GetComponent<GUITexture>().transform.position = new Vector3(0.5f, 0.5f, 0.0f);
 	}
 	
 	private static bool ColourEqual(Color a, Color b)

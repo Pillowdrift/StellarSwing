@@ -12,7 +12,7 @@ public class Billboard : MonoBehaviour
 	
 	void Update()
 	{
-		transform.LookAt(transform.position - Camera.mainCamera.transform.forward, Camera.mainCamera.transform.up);
+		transform.LookAt(transform.position - Camera.main.transform.forward, Camera.main.transform.up);
 		transform.rotation *= initialRotation;
 	}
 }

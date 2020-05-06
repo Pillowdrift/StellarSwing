@@ -46,7 +46,7 @@ public class SoundManager : MonoBehaviour
 	{
 		if (source == null)
 		{
-			source = Camera.mainCamera.audio;
+			source = Camera.main.GetComponent<AudioSource>();
 		}
 		
 		if (source != null)
