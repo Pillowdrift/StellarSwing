@@ -53,7 +53,9 @@ public class Settings : MonoBehaviour
     }
   }
 
-  public static GameSettings Current { get; private set; } = GameSettings.Default;
+  public static bool Current_InitiallyLoaded = false;
+
+  public static GameSettings Current { get; private set; }
 
   public static GameSettings New = Current;
 
@@ -337,6 +339,14 @@ public class Settings : MonoBehaviour
 
   public void Start()
   {
+    // If we didn't initialise Current yet do it here
+    // We do this because we can't access the resolution in a static constructor
+    if (!Current_InitiallyLoaded)
+    {
+      Current_InitiallyLoaded = true;
+      Current = GameSettings.Default;
+    }
+
     Debug.Log("Loading settings");
     Current = Load();
     New = Current;
