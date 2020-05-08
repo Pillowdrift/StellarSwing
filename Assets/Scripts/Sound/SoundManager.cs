@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour
 	public static void Play(string name)
 	{
 		// Play at volume set in Options
-		Play(name, Options.MasterVolume * Options.SFXVolume);
+		Play(name, Settings.Current.MasterVolume * Settings.Current.SoundVolume);
 	}
 	
 	public static void Play(string name, float volume)

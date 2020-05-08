@@ -303,7 +303,7 @@ public class TutorialCamera : MonoBehaviour
 			skipButton.enabled = false;
 			
 			// Get rid of mainCamera tag
-			tag = "";
+			tag = "Untagged";
 			
 			// Unfreeze camera
 			{

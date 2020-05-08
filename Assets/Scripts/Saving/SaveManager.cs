@@ -16,16 +16,10 @@ public class SaveManager : MonoBehaviour
 		if (save == null)
 		{
 			save = Save.Read(saveFilename);
-			
-			// Initialise new save
-			if (save == null)
-			{
-				Create();
-			}
-		}
-	}
-	
-	public static void Create()
+    }
+  }
+
+  public static void Create()
 	{
 		save = new Save();
 		save.filename = saveFilename;

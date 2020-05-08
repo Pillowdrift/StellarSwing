@@ -11,11 +11,14 @@ public class EndBeam : MonoBehaviour
 	
 	LineRenderer beam;
 
+	Renderer endObjectRenderer;
+
 	// Use this for initialization
 	void Start()
 	{
 		beam = gameObject.GetComponent<LineRenderer>();
 		fadeout = false;
+		endObjectRenderer = GameObject.Find("EndObject").GetComponent<Renderer>();
 	}
 	
 	// Update is called once per frame
@@ -35,6 +38,8 @@ public class EndBeam : MonoBehaviour
 		
 		beam.SetColors(new Color(1, 1, 1, a), new Color(1, 1, 1, a));
 		beam.SetWidth(a * 10.0f, a * 10.0f);
+
+		endObjectRenderer.material.SetFloat("_Amount", 0.7f * (1.0f - a));
 		
 		fadeTimer += Time.deltaTime;
 	}

@@ -34,13 +34,22 @@ public class JukeBox : MonoBehaviour {
 	
 	void Update()
 	{
-		GetComponent<AudioSource>().volume = Options.MasterVolume * Options.BGMVolume;
+		GetComponent<AudioSource>().volume = Settings.Current.MasterVolume * Settings.Current.MusicVolume;
 	}
-	
-	void OnLevelWasLoaded(int levelNum)	
+
+	void OnLevelWasLoaded(int levelNum)
 	{
+		StartCoroutine(SwitchMusic());
+	}
+
+	IEnumerator SwitchMusic()
+	{
+		yield return new WaitForEndOfFrame();
 		switch (Application.loadedLevelName)
 		{
+    case "Title_new":
+			Play(SoundManager.sounds["Title"]);
+      break;
 		case "Tutorial 1":
 			Play(SoundManager.sounds["World 1"]);
 			break;
@@ -79,7 +88,7 @@ public class JukeBox : MonoBehaviour {
 			clip = music;
 			source.loop = true;
 			source.GetComponent<AudioSource>().clip = clip; 
-			source.volume = Options.MasterVolume * Options.BGMVolume;
+			source.volume = Settings.Current.MasterVolume * Settings.Current.MusicVolume;
 			source.Play();
 		}
 	}
@@ -87,6 +96,7 @@ public class JukeBox : MonoBehaviour {
 	// Play some music.
 	public void Play(AudioClip music)
 	{
+		Debug.Log("Playing " + music.name);
 		if (clip == music)
 			return;
 		

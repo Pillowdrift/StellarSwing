@@ -8,8 +8,8 @@ public class Options : MonoBehaviour
 {
 	private const string optionsfile = "settings.txt";
 	
-	private const float ORIGINAL_WIDTH = 1024;
-	private const float ORIGINAL_HEIGHT = 768;
+	private const float ORIGINAL_WIDTH = 1280;
+	private const float ORIGINAL_HEIGHT = 720;
 	
 	private readonly int[] AA_LEVELS = { 0, 2, 4, 8 };
 	

@@ -6,10 +6,10 @@ using System.IO;
 
 public class GameRecorder : MonoBehaviour
 {
-	public const int fps = 20;
+	public const int fps = 60;
 	
 	public const bool enableLine = true;
-	public const float maxLineTime = 0.2f;
+	public const float maxLineTime = 0.15f;
 	
 	public static bool IsRecording { get { return recording; } }
 	
@@ -21,6 +21,8 @@ public class GameRecorder : MonoBehaviour
 	
 	public static bool playingBack = false;
 	public static bool standalone = false;
+
+	public Material lineMaterial;
 	
 	private static bool recording = false;
 	private static bool playback = false;
@@ -43,6 +45,8 @@ public class GameRecorder : MonoBehaviour
 	private static Color lineColour = Color.white;
 	
 	private float time = 0.0f;
+
+	private readonly Vector3 offset = Vector3.zero;// new Vector3(0.0f, -0.05f, -0.39f);
 	
 	void Awake()
 	{
@@ -54,11 +58,11 @@ public class GameRecorder : MonoBehaviour
 			GameObject obj = new GameObject("Trail renderer");
 			linePoints = new Queue<Vector3>();
 			lineRenderer = obj.AddComponent<LineRenderer>();
-			lineRenderer.material.shader = Shader.Find("Particles/Additive");
+			lineRenderer.material = lineMaterial;
 			lineRenderer.SetColors(Color.clear, lineColour);
 			points = 1;
 			lineRenderer.SetVertexCount(points);
-			lineRenderer.SetWidth(0.3f, 0.3f);
+			lineRenderer.SetWidth(0.6f, 1.2f);
 			lineRenderer.enabled = true;
 		}
 	}
@@ -125,7 +129,7 @@ public class GameRecorder : MonoBehaviour
 		}
 		
 		if (enableLine && linePoints.Count > 0)
-			lineRenderer.SetPosition(i, transform.position);
+			lineRenderer.SetPosition(i, transform.position + offset);
 		
 		if (playback && current != null)
 		{
@@ -294,9 +298,9 @@ public class GameRecorder : MonoBehaviour
 		
 		if (enableLine)
 		{
-			linePoints.Enqueue(transform.position);
+			linePoints.Enqueue(transform.position + offset);
 		}
 		
-		current.Add(transform.position, GetComponent<Rigidbody>().velocity, grappleScript.IsGrappling(), grappleScript.GetPos());
+		current.Add(transform.position + offset, GetComponent<Rigidbody>().velocity, grappleScript.IsGrappling(), grappleScript.GetPos());
 	}
 }

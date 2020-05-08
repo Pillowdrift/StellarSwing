@@ -17,7 +17,7 @@ public class PlayerMovements : MonoBehaviour
 	void Start()
 	{
 		lastSpeed = 0;
-		sensitivityX = Options.Sensitivity;
+		sensitivityX = Settings.Current.TurningSensitivity;
 	}
 	
 	public void Go()

@@ -20,7 +20,7 @@ public class AmbientNoise : MonoBehaviour
 	
 	void Update()
 	{
-		GetComponent<AudioSource>().volume = Options.SFXVolume;
+		GetComponent<AudioSource>().volume = Settings.Current.SoundVolume;
 		transform.position = Camera.main.transform.position;
 	}
 	
