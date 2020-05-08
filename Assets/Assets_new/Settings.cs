@@ -53,7 +53,7 @@ public class Settings : MonoBehaviour
     }
   }
 
-  public static GameSettings Current { get; private set; }
+  public static GameSettings Current { get; private set; } = GameSettings.Default;
 
   public static GameSettings New = Current;
 
