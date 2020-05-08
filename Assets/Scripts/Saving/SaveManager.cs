@@ -168,17 +168,21 @@ public class SaveManager : MonoBehaviour
 			{
 				int worldUnlocked = nextLevel.world;
 				int levelUnlocked = nextLevel.number;
-				
+
 				if (worldUnlocked > save.worldUnlocked)
 				{					
 					save.worldUnlocked = worldUnlocked;
 					save.levelUnlocked = levelUnlocked;
+
+          Debug.Log("Unlocked world " + worldUnlocked + " level " + levelUnlocked);
 					
 					LoadLevel.JustUnlocked = true;
 				}
 				else if (levelUnlocked > save.levelUnlocked)
 				{
 					save.levelUnlocked = levelUnlocked;
+
+          Debug.Log("Unlocked world " + worldUnlocked + " level " + levelUnlocked);
 					
 					LoadLevel.JustUnlocked = true;
 				}
