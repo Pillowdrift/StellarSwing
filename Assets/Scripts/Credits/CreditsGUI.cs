@@ -39,24 +39,35 @@ public class CreditsGUI : MonoBehaviour
 
   // rate of scrolling
   private const float rate = 0.1f;
+
+	private bool canSkip = false;
 	
 	// Use this for initialization
 	void Start()
 	{
-		initialPosition = textObj.transform.position;
-		textObj.GetComponent<GUIText>().text = credits;
+		WaitAndAllowSkip();
+		//initialPosition = textObj.transform.position;
+		//textObj.GetComponent<GUIText>().text = credits;
+	}
+
+	void WaitAndAllowSkip() => StartCoroutine(WaitAndAllowSkip_());
+
+	IEnumerator WaitAndAllowSkip_()
+	{
+		yield return new WaitForSeconds(5.0f);
+		canSkip = true;
 	}
 	
 	// Update is called once per frame
 	void Update()
 	{
-		textObj.transform.Translate(0, rate * Time.deltaTime, 0);
+		//textObj.transform.Translate(0, rate * Time.deltaTime, 0);
 		
-		if (textObj.transform.position.y > 5.0f)
-			textObj.transform.position = initialPosition;
+		//if (textObj.transform.position.y > 5.0f)
+			//textObj.transform.position = initialPosition;
 		
 		// tap to get to menu
-		if (Input.GetMouseButton(0))
+		if (canSkip && Input.GetMouseButton(0))
 		{
 			if (SaveManager.save != null &&
 				SaveManager.save.worldUnlocked == 5)
@@ -68,11 +79,11 @@ public class CreditsGUI : MonoBehaviour
 				LevelSelectGUI.worldToShow = "World5";
 				LevelSelectGUI.levelToShow = 0;
 				LevelSelectGUI.worldTransition = true;
-				Application.LoadLevel("Title");
+				Application.LoadLevel("Title_new");
 			}
 			else
 			{
-				Loading.Load("Title");
+				Loading.Load("Title_new");
 			}
 		}
 	}
