@@ -18,6 +18,8 @@ public class PlayerMovements : MonoBehaviour
 	{
 		lastSpeed = 0;
 		sensitivityX = Settings.Current.TurningSensitivity;
+		if (sensitivityX < 0.3f)
+			sensitivityX = 0.3f;
 	}
 	
 	public void Go()

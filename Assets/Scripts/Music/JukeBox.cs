@@ -34,7 +34,7 @@ public class JukeBox : MonoBehaviour {
 	
 	void Update()
 	{
-		GetComponent<AudioSource>().volume = Settings.Current.MasterVolume * Settings.Current.MusicVolume;
+		GetComponent<AudioSource>().volume = Settings.Current.MasterVolume * Settings.Current.MusicVolume * GUIController.MusicVolumeModifier;
 	}
 
 	void OnLevelWasLoaded(int levelNum)

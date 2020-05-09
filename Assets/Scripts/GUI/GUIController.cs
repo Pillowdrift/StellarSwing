@@ -5,6 +5,10 @@ using System.Collections.Generic;
 public class GUIController : MonoBehaviour
 {
 	public static bool LevelStarted { get; set; }
+
+	private const float PausedVolumeModifier = 0.1f;
+
+	public static float MusicVolumeModifier = 1.0f;
 	
 	public static void EndLevel(bool won)
 	{
@@ -25,6 +29,8 @@ public class GUIController : MonoBehaviour
 	
 	public static void GUILevelPlay()
 	{
+		MusicVolumeModifier = 1.0f;
+
 		GUIController.HideText("Paused");
 		GUIController.HideText("LevelName");
 		
@@ -72,6 +78,8 @@ public class GUIController : MonoBehaviour
 	
 	public static void GUILevelPause()
 	{
+		MusicVolumeModifier = PausedVolumeModifier;
+
 		GUIController.ShowText("LevelName");
 		GUIController.ShowText("Paused", "Paused");
 		

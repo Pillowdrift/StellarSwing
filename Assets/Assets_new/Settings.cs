@@ -18,6 +18,7 @@ public class Settings : MonoBehaviour
     // General settings
     public bool TutorialEnabled;
     public float TurningSensitivity;
+    public bool ReleaseUngrapple;
 
     // Graphics settings
     public DisplayModes DisplayMode;
@@ -38,6 +39,7 @@ public class Settings : MonoBehaviour
           // General
           TutorialEnabled = true,
           TurningSensitivity = 1.0f,
+          ReleaseUngrapple = true,
           // Graphics
           DisplayMode = DisplayModes.Fullscreen,
           Resolution = (Screen.currentResolution.width, Screen.currentResolution.height),
@@ -62,6 +64,7 @@ public class Settings : MonoBehaviour
   // Gui stuff
   public Toggle tutorialToggle;
   public Slider sensitivitySlider;
+  public Toggle releaseUngrapple;
   public Dropdown displayModeDropdown;
   public Dropdown resolutionDropdown;
   public Dropdown antialiasingDropdown;
@@ -109,6 +112,7 @@ public class Settings : MonoBehaviour
 		{
 			w.WriteLine("TutorialEnabled=" + values.TutorialEnabled);
 			w.WriteLine("TurningSensitivity=" + values.TurningSensitivity);
+			w.WriteLine("ReleaseUngrapple=" + values.ReleaseUngrapple);
 			w.WriteLine("DisplayMode=" + values.DisplayMode);
 			w.WriteLine("Resolution=" + values.Resolution);
 			w.WriteLine("AALevel=" + values.AALevel);
@@ -153,6 +157,12 @@ public class Settings : MonoBehaviour
               Debug.LogWarning("Failed to parse turningSensitivity " + line);
             else
               values.TurningSensitivity = turningSensitivity;
+            break;
+          case "ReleaseUngrapple":
+            if (!bool.TryParse(value, out bool releaseUngrapple))
+              Debug.LogWarning("Failed to parse releaseUngrapple " + line);
+            else
+              values.ReleaseUngrapple = releaseUngrapple;
             break;
           case "DisplayMode":
             if (!GameSettings.DisplayModes.TryParse(value, out GameSettings.DisplayModes displayMode))
@@ -236,6 +246,7 @@ public class Settings : MonoBehaviour
     // General
     tutorialToggle.isOn = values.TutorialEnabled;
     sensitivitySlider.value = values.TurningSensitivity;
+    releaseUngrapple.isOn = values.ReleaseUngrapple;
 
     // Graphics
     PopulateDisplayMode(values, displayModeDropdown);
@@ -378,6 +389,13 @@ public class Settings : MonoBehaviour
   {
     Debug.Log("Setting turning sensitivity: " + sensitivity);
     New.TurningSensitivity = sensitivity;
+    UpdateConfirmButtonState();
+  }
+
+  public void SetReleaseUngrapple(bool enabled)
+  {
+    Debug.Log("Setting release ungrapple: " + enabled);
+    New.ReleaseUngrapple = enabled;
     UpdateConfirmButtonState();
   }
 

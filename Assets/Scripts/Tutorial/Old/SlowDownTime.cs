@@ -44,13 +44,14 @@ public class SlowDownTime : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		float target = 0.05f;
 		if (activated)
 		{
-			Time.timeScale = Mathf.Lerp(Time.timeScale, 0.0f, LERPSPEED * RealTime.realDeltaTime);
+			Time.timeScale = Mathf.Lerp(Time.timeScale, target, LERPSPEED * RealTime.realDeltaTime);
 			if (Time.timeScale < 0.15f)
 			{
 				if (Time.timeScale < 0.1f)					
-						Time.timeScale = 0;
+						Time.timeScale = target;
 			}
 		}
 	}

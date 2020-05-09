@@ -10,18 +10,20 @@ public class NewGame : MonoBehaviour
 
   public Image modalBlocker;
 
+  private MainMenuController MainMenu;
+
   public void Start()
   {
     animation = GetComponent<Animation>();
     modalBlocker = GameObject.Find("ModalBlocker").GetComponent<Image>();
+    MainMenu = FindObjectOfType<MainMenuController>();
   }
 
   public void StartNewGame()
   {
     if (SaveManager.save == null)
     {
-      SaveManager.Create();
-      SceneManager.LoadScene("Title");
+      ReallyStartNewGame();
     }
     else
     {
@@ -30,11 +32,18 @@ public class NewGame : MonoBehaviour
     }
   }
 
-  public void ConfirmDialog()
+  public void ReallyStartNewGame()
   {
     SaveManager.Create();
+    MainMenu.ShowLevelSelect();
+    FindObjectOfType<SimpleLevelSelector>().Start();
+    //SceneManager.LoadScene("Title");
+  }
+
+  public void ConfirmDialog()
+  {
     CancelDialog();
-    SceneManager.LoadScene("Title");
+    ReallyStartNewGame();
   }
 
   public void CancelDialog()

@@ -65,6 +65,7 @@ public class Loading : MonoBehaviour
 	{
 		nextLevel = name;
 		transition = transitionToUse;
-		Application.LoadLevelAdditive(LOADING_SCENE);
+		//Application.LoadLevelAdditive(LOADING_SCENE);
+    Application.LoadLevel(name);
 	}
 }

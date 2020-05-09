@@ -3,14 +3,27 @@ using System.Collections;
 
 public class SlideOnObjects : MonoBehaviour
 {
+	TutorialCamera tutorialCamera;
+
+	void Awake()
+	{
+		tutorialCamera = FindObjectOfType<TutorialCamera>();
+	}
+
 	void EnableTutorial()
 	{
-		GUIController.ShowText("Tutorial", "Land on objects to slide across them");
+		if (!tutorialCamera.TutorialsEnabled())
+			return;
+
+		tutorialCamera.ShowTutorialText("Land on objects to slide across them", false);
+
+		//GUIController.ShowText("Tutorial", "Land on objects to slide across them");
 	}
 	
 	void DisableTutorial()
 	{
-		GUIController.HideText("TutorialText");
+		//GUIController.HideText("TutorialText");
+		tutorialCamera.HideTutorial();
 		
 		Time.timeScale = 1.0f;
 	}

@@ -9,26 +9,38 @@ public class DragToTurn : MonoBehaviour
 	const float SWIPE_DISTANCE = 0.25f;
 	const float SWIPE_DURATION = 3.0f;
 	float time = 0;
+
+	TutorialCamera tutorialCamera;
+	void Awake()
+	{
+		tutorialCamera = FindObjectOfType<TutorialCamera>();
+	}
 	
 	void EnableTutorial()
 	{
 		GUIController.DisableButtons();
-		GUIController.ShowText("TutorialText");
+		tutorialCamera.ShowTutorialText("Drag to alter your trajectory", false);
+		//GUIController.ShowText("TutorialText");
 		
 		finger.enabled = true;
 		
-		Time.timeScale = 0.0f;
+		//Time.timeScale = 0.0f;
 		tutorialEnabled = true;
+
+		SendMessage("ActivateSlowDown");
 	}
 	
 	void DisableTutorial()
 	{
 		GUIController.GUILevelPlay();
-		GUIController.HideText("TutorialText");
+		//GUIController.HideText("TutorialText");
+		tutorialCamera.HideTutorial();
 		GUIController.DisableImage("DragIcon");
 		
-		Time.timeScale = 1.0f;
+		//Time.timeScale = 1.0f;
 		tutorialEnabled = false;
+
+		SendMessage("DeactivateSlowDown");
 	}
 	
 	void HideDrag()

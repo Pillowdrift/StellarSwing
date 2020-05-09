@@ -111,8 +111,10 @@ public class LevelStart : MonoBehaviour
 				{
 					if (!reload)
 					{
+						Debug.Log("Reloading");
 						foreach (GameObject gameObject in GameObject.FindObjectsOfType(typeof(GameObject)))
 						{
+							Debug.Log(gameObject.name);
 							gameObject.BroadcastMessage("Reload", SendMessageOptions.DontRequireReceiver);
 						}
 						

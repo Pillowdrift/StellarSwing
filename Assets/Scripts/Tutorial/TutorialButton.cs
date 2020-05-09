@@ -35,8 +35,6 @@ public class TutorialButton : MonoBehaviour
 				tutCamera.Prev();
 				break;
 			case TutorialAction.SKIP:
-				GameRecorder.StopPlayback();
-				GameObject.Find("Player").SendMessage("Reload");
 				tutCamera.Skip();
 				break;
 			}

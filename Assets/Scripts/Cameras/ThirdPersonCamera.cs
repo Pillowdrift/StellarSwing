@@ -49,6 +49,10 @@ public class ThirdPersonCamera : MonoBehaviour
 	void Update()
 	{
 		Quaternion targetRot = transform.rotation;
+
+		// Don't run if we're running the tutorial
+		if (TutorialCamera.Enabled())
+			return;
 		
 		// Stop if we have no target.
 		if (target == null)

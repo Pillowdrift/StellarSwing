@@ -130,12 +130,14 @@ public class EndFlagScript : MonoBehaviour
 	{
 		Debug.Log("Level finished!");
 
+		/*
 		// If this is a tutorial level, skip to the real level so scores and stuff are right
 		if (tutorialCam != null)
 		{
 			LevelSelectGUI.currentLevel = Levels.GetLevel(tutorialCam.level);
 			Debug.Log("In tutorial: skipping to level " + LevelSelectGUI.currentLevel.name);
 		}
+		*/
 		
 		// Update save
 		// Don't save if we are replaying a recording.

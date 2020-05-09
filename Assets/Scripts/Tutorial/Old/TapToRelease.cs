@@ -4,6 +4,13 @@ using System.Collections;
 public class TapToRelease : MonoBehaviour
 {
 	private GrapplingHook grapplingHook;
+
+	TutorialCamera tutorialCamera;
+
+	void Awake()
+	{
+    tutorialCamera = FindObjectOfType<TutorialCamera>();
+	}
 	
 	void Start()
 	{
@@ -12,15 +19,20 @@ public class TapToRelease : MonoBehaviour
 	
 	void EnableTutorial()
 	{
+		if (!tutorialCamera.TutorialsEnabled())
+			return;
+
+		tutorialCamera.ShowTutorialText("Click again anywhere to release", false);
+
 		GUIController.DisableButtons();
 		
 #if UNITY_ANDROID || UNITY_IPHONE
-		GUIController.ShowText("Tutorial", "Tap again anywhere to release");
+		//GUIController.ShowText("Tutorial", "Tap again anywhere to release");
 #else
-		GUIController.ShowText("Tutorial", "Click again anywhere to release");
+		//GUIController.ShowText("Tutorial", "Click again anywhere to release");
 #endif
 		
-		GUIController.EnableImage("Tap2");
+		//GUIController.EnableImage("Tap2");
 		
 		GameObject.Find("Player").GetComponent<GrapplingHook>().currentTutorial = gameObject;
 		
@@ -29,9 +41,14 @@ public class TapToRelease : MonoBehaviour
 	
 	void DisableTutorial()
 	{
+		if (!tutorialCamera.TutorialsEnabled())
+			return;
+
+		tutorialCamera.HideTutorial();
+
 		GUIController.GUILevelPlay();
-		GUIController.HideText("Tutorial");
-		GUIController.DisableImage("Tap2");
+		//GUIController.HideText("Tutorial");
+		//GUIController.DisableImage("Tap2");
 		
 		SendMessage("DeactivateSlowDown");
 	}

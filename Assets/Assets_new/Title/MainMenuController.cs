@@ -7,15 +7,18 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-  private enum MainMenuState
+  public enum MainMenuState
   {
     Between,
     Title,
     Menu,
-    Options
+    Options,
+    LevelSelect
   }
 
-  private MainMenuState menuState = MainMenuState.Title;
+  public static MainMenuState NextStateToLoad = MainMenuState.Between;
+
+  private MainMenuState menuState = MainMenuState.Between;
 
   private Animation animation;
 
@@ -26,6 +29,62 @@ public class MainMenuController : MonoBehaviour
     animation = GetComponent<Animation>();
     modalBlocker = GameObject.Find("ModalBlocker").GetComponent<Image>();
   }
+
+  protected void Start()
+  {
+    switch (NextStateToLoad)
+    {
+      case MainMenuState.LevelSelect:
+        ShowPageInstant("MenuToLevelSelect", NextStateToLoad);
+        break;
+      case MainMenuState.Menu:
+        ShowPageInstant("TitleToMenu", NextStateToLoad);
+        break;
+      case MainMenuState.Options:
+        ShowPageInstant("MenuToOptions", NextStateToLoad);
+        break;
+      default:
+        StartCoroutine(PlayAnimation(animation, "Title_Intro", false, () =>
+        {
+          menuState = MainMenuState.Title;
+        }));
+        break;
+    }
+  }
+
+  private void ShowPageInstant(string anim, MainMenuState state)
+  {
+    Debug.Log("Showing " + state + " instantly");
+
+    var fadeObject = GameObject.Find("FadeImage");
+    if (fadeObject != null)
+      fadeObject.GetComponent<Image>().color = Color.black;
+
+    menuState = MainMenuState.Between;
+    StartCoroutine(PlayAnimation(animation, anim, false, () =>
+    {
+      menuState = state;
+    }));
+  }
+
+  public void ShowLevelSelect()
+  {
+    menuState = MainMenuState.Between;
+    StartCoroutine(PlayAnimation(animation, "MenuToLevelSelect", false, () =>
+    {
+      menuState = MainMenuState.LevelSelect;
+    }));
+  }
+
+  public void HideLevelSelect()
+  {
+    menuState = MainMenuState.Between;
+    StartCoroutine(PlayAnimation(animation, "MenuToLevelSelect", true, () =>
+    {
+      menuState = MainMenuState.Menu;
+    }));
+  }
+
 
   protected void Update()
   {
@@ -112,7 +171,7 @@ public class MainMenuController : MonoBehaviour
   public static IEnumerator PlayAnimation(Animation animation, string name, bool reverse, Action complete)
   {
     Debug.Log($"Playing animation {name} " + (reverse ? "forwards" : "Backwards"));
-    animation[name].speed = reverse ? -1.0f : 1.0f;
+    animation[name].speed = (reverse ? -1.0f : 1.0f) / Time.timeScale;
     animation[name].time = reverse ? animation[name].length : 0.0f;
     animation.Play(name);
     while (animation.isPlaying)

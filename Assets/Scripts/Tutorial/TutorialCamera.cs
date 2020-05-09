@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.UI;
+using System;
 
 public class TutorialCamera : MonoBehaviour
 {
@@ -16,8 +18,14 @@ public class TutorialCamera : MonoBehaviour
 	}
 	
 	public string level;
-	public GameObject parent;
-	
+
+	public Text TutorialTextbox;
+
+	internal static void ResetShownTutorials()
+	{
+		tutorialsShown.Clear();
+	}
+
 	private List<TutorialPoint> points;
 	
 	private Vector3 lastPosition;
@@ -30,9 +38,11 @@ public class TutorialCamera : MonoBehaviour
 	
 	private int index = 0;
 	
-	private GUIButton nextButton;
-	private GUIButton lastButton;
-	private GUIButton skipButton;
+	public Button nextButton;
+	public Button lastButton;
+	public Button skipButton;
+
+	public Animation animation;
 	
 	private GameObject theCamera;
 	
@@ -41,38 +51,89 @@ public class TutorialCamera : MonoBehaviour
 	private bool moving = false;
 	
 	private bool init = false;
+
+	private static HashSet<string> tutorialsShown = new HashSet<string>();
+
+	public bool tutorialDialogUp = false;
+
+	public void ShowTutorialText(string text, bool withButtons)
+	{
+		if (text == "")
+		{
+			HideTutorial();
+			return;
+		}
+
+		if (!tutorialDialogUp)
+      StartCoroutine(MainMenuController.PlayAnimation(animation, "ShowTutorial", false, () => { }));
+		tutorialDialogUp = true;
+    TutorialTextbox.text = text;
+
+		nextButton.transform.parent.gameObject.active = withButtons;
+		lastButton.transform.parent.gameObject.active = withButtons;
+		skipButton.gameObject.active = withButtons;
+	}
+
+	public void HideTutorial()
+	{
+		if (tutorialDialogUp)
+      StartCoroutine(MainMenuController.PlayAnimation(animation, "ShowTutorial", true, () => { }));
+		tutorialDialogUp = false;
+	}
+
+	private bool autoStartTutorial = true;
+
+	public bool TutorialsEnabled() { return Settings.Current.TutorialEnabled; }
+
+	private bool HasPoints()
+	{
+		return transform.parent?.gameObject.GetComponentsInChildren<TutorialPoint>().Length > 0;
+	}
 		
 	public IEnumerator Start()
 	{
+		if (!TutorialsEnabled() || !autoStartTutorial || !HasPoints())
+		{
+			autoStartTutorial = false;
+			this.enabled = false;
+			yield break;
+		}
+
+		var levelName = Application.loadedLevelName;
+		if (tutorialsShown.Contains(levelName))
+			yield break;
+		tutorialsShown.Add(levelName);
+
 		tutorialEnabled = true;
 		
 		points = new List<TutorialPoint>();
 		
-		nextButton = GameObject.Find("TutorialNext").GetComponent<GUIButton>();
-		lastButton = GameObject.Find("TutorialBack").GetComponent<GUIButton>();
-		skipButton = GameObject.Find("TutorialSkip").GetComponent<GUIButton>();
+		//nextButton = GameObject.Find("TutorialNext").GetComponent<GUIButton>();
+		//lastButton = GameObject.Find("TutorialBack").GetComponent<GUIButton>();
+		//skipButton = GameObject.Find("TutorialSkip").GetComponent<GUIButton>();
 		
-		lastButton.enabled = false;
-		nextButton.enabled = false;
-		skipButton.enabled = false;
+		lastButton.interactable = false;
+		nextButton.interactable = false;
+		skipButton.interactable = false;
 		
+		// Disable camera
+		theCamera = GameObject.Find("TheCamera");		
+
 		if (level != "")
 		{
 			//Application.LoadLevelAdditive(level);
 			//StartCoroutine(LoadDummyLevel(level));
 			AsyncOperation async = Application.LoadLevelAdditiveAsync(level);
 			yield return async;
+
+      if (theCamera != null)		
+      {
+        theCamera.active = false;
+      }
 		}
 		
-		nextButton.enabled = true;
-		skipButton.enabled = true;
-		
-		// Disable camera
-		theCamera = GameObject.Find("TheCamera");
-		if (theCamera != null)		
-		{
-			theCamera.active = false;
-		}
+		nextButton.interactable = true;
+		skipButton.interactable = true;
 		
 		// Freeze player
 		GameObject player = GameObject.Find("Player");
@@ -81,22 +142,22 @@ public class TutorialCamera : MonoBehaviour
 			player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 		}
 		
-		if (parent != null)
+		if (transform.parent?.gameObject != null)
 		{
-			LoadPoints(parent);
+			LoadPoints(transform.parent?.gameObject);
 		}
 		
 		init = true;
 		
-		//Tutorial.ShowText("Tap", "Tap to continue", 0, TextAlignment.Center, TextAnchor.LowerLeft, 0.0f, 0.0f);
+		//Tutorial.ShowText("Click", "Click to continue", 0, TextAlignment.Center, TextAnchor.LowerLeft, 0.0f, 0.0f);
 	}
-	
+
 	IEnumerator LoadDummyLevel(string level)
 	{
 		// Wait a frame
 		yield return null;
 		
-		GameObject.Find("Player").AddComponent<TutorialPlayer>();
+		//GameObject.Find("Player").AddComponent<TutorialPlayer>();
 	}
 	
 	public void Update()
@@ -106,14 +167,14 @@ public class TutorialCamera : MonoBehaviour
 		
 		// Show or hide buttons
 		if (index > 0)
-			lastButton.enabled = true;
+			lastButton.interactable = true;
 		else
-			lastButton.enabled = false;
+			lastButton.interactable = false;
 		
 		if (index < points.Count-1)
-			nextButton.enabled = true;
+			nextButton.interactable = true;
 		else
-			nextButton.enabled = false;
+			nextButton.interactable = false;
 		
 		// Update lerp coefficient
 		currentLerpCoeff += Time.deltaTime;
@@ -129,7 +190,9 @@ public class TutorialCamera : MonoBehaviour
 			
 			if (index < points.Count)
 			{
-				Tutorial.ShowText(points[index].textName, points[index].text, 0, TextAlignment.Center, TextAnchor.MiddleCenter, points[index].textX, points[index].textY);
+				ShowTutorialText(points[index].text.Trim(), true);
+        //TutorialTextbox.text = points[index].text.Trim();
+				//Tutorial.ShowText(points[index].textName, points[index].text, 0, TextAlignment.Center, TextAnchor.MiddleCenter, points[index].textX, points[index].textY);
 			}
 		}
 		
@@ -138,8 +201,8 @@ public class TutorialCamera : MonoBehaviour
 		
 		if (!float.IsNaN(newRot.x))
 		{
-			transform.position = newPos;
-			transform.rotation = newRot;
+			theCamera.transform.position = newPos;
+			theCamera.transform.rotation = newRot;
 		}
 	}
 	
@@ -171,10 +234,16 @@ public class TutorialCamera : MonoBehaviour
 	
 	public void Skip()
 	{
+    GameRecorder.StopPlayback();
+    GameObject.Find("Player").SendMessage("Reload");
+
+		HideTutorial();
+    //StartCoroutine(MainMenuController.PlayAnimation(animation, "ShowTutorial", true, () => { }));
+
 		// Disable buttons
-		lastButton.enabled = false;
-		nextButton.enabled = false;
-		skipButton.enabled = false;
+		lastButton.interactable = false;
+		nextButton.interactable = false;
+		skipButton.interactable = false;
 		
 		// Load final point
 		EndPoint();
@@ -202,15 +271,15 @@ public class TutorialCamera : MonoBehaviour
 			nextPosition = lastPosition;
 			nextRotation = lastRotation;
 			
-			transform.position = nextPosition;
-			transform.rotation = nextRotation;
+			theCamera.transform.position = nextPosition;
+			theCamera.transform.rotation = nextRotation;
 		}
 	}
 	
 	private void NextPoint()
 	{
-		transform.position = nextPosition;
-		transform.rotation = nextRotation;
+		theCamera.transform.position = nextPosition;
+		theCamera.transform.rotation = nextRotation;
 		
 		lastPosition = nextPosition;
 		lastRotation = nextRotation;
@@ -231,8 +300,8 @@ public class TutorialCamera : MonoBehaviour
 	
 	private void PreviousPoint()
 	{
-		transform.position = nextPosition;
-		transform.rotation = nextRotation;
+		theCamera.transform.position = nextPosition;
+		theCamera.transform.rotation = nextRotation;
 				
 		lastPosition = nextPosition;
 		lastRotation = nextRotation;
@@ -259,8 +328,8 @@ public class TutorialCamera : MonoBehaviour
 		// Set up interpolation
 		currentLerpCoeff = 0.0f;
 		
-		lastPosition = transform.position;
-		lastRotation = transform.rotation;
+		lastPosition = theCamera.transform.position;
+		lastRotation = theCamera.transform.rotation;
 		
 		nextPosition = points[index].transform.position;
 		nextRotation = points[index].transform.rotation;
@@ -277,6 +346,11 @@ public class TutorialCamera : MonoBehaviour
 	private void StartEvent()
 	{
 		HandleEvent(points[index].startEvent);
+    ShowTutorialText(points[index].text.Trim(), true);
+		//TutorialTextbox.text = points[index].text.Trim();
+		if (index == points.Count - 1)
+			HideTutorial();
+      //StartCoroutine(MainMenuController.PlayAnimation(animation, "ShowTutorial", true, () => { }));
 	}
 	
 	private void HandleEvent(TutorialEvent tutorialEvent)
@@ -293,21 +367,19 @@ public class TutorialCamera : MonoBehaviour
 			LoadLevel.LoadALevel("next");
 			break;
 		case TutorialEvent.START_PLAYER:
-			GameRecorder.StopPlayback();
-			
 			tutorialEnabled = false;
 			
 			// Disable buttons
-			lastButton.enabled = false;
-			nextButton.enabled = false;
-			skipButton.enabled = false;
+			lastButton.interactable = false;
+			nextButton.interactable = false;
+			skipButton.interactable = false;
 			
 			// Get rid of mainCamera tag
-			tag = "Untagged";
+			//tag = "Untagged";
 			
 			// Unfreeze camera
 			{
-				theCamera.active = true;
+				//theCamera.active = true;
 				theCamera.GetComponent<LevelStart>().Start();
 			}
 			
@@ -317,9 +389,10 @@ public class TutorialCamera : MonoBehaviour
 			{
 				player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
 			}
-			
-			// Disable tutorial camera
-			gameObject.active = false;
+
+      // Disable tutorial camera
+      //gameObject.active = false;
+      this.enabled = false;
 			break;
 		case TutorialEvent.PLAY_RECORDING:
 			string test = "Recordings/" + points[index].recordingName;
