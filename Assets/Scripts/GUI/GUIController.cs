@@ -6,7 +6,7 @@ public class GUIController : MonoBehaviour
 {
 	public static bool LevelStarted { get; set; }
 
-	private const float PausedVolumeModifier = 0.1f;
+	private const float PausedVolumeModifier = 1.0f;
 
 	public static float MusicVolumeModifier = 1.0f;
 	

@@ -165,6 +165,15 @@ public class MainMenuController : MonoBehaviour
 
   public void Exit()
   {
+    var fade = GameObject.Find("FadeImage")?.GetComponent<Image>();
+    fade.color = Color.black;
+    fade.CrossFadeAlpha(1.0f, 1.0f, true);
+    StartCoroutine(ExitCoroutine(1.0f));
+  }
+
+  public IEnumerator ExitCoroutine(float seconds)
+  {
+    yield return new WaitForSeconds(seconds);
     Application.Quit();
   }
 
