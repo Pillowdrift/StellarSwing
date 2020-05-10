@@ -74,6 +74,7 @@ public class EnterHyperspace : MonoBehaviour
 		LevelSelectGUI.worldToShow = "World" + (nextWorld - 1);
 		LevelSelectGUI.levelToShow = 0;
 		LevelSelectGUI.worldTransition = true;
+		MainMenuController.NextStateToLoad = MainMenuController.MainMenuState.LevelSelect;
 		Application.LoadLevel("Title_new");
 #else
 		LevelSelectGUI.worldToShow = "World" + (nextWorld);

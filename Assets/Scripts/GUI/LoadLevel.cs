@@ -154,7 +154,9 @@ public class LoadLevel : MonoBehaviour
 					LevelSelectGUI.levelToShow = level.number;
 				}
 			}
-			
+
+			if (levelToLoad == "Title_new")
+				MainMenuController.NextStateToLoad = MainMenuController.MainMenuState.LevelSelect;
 			Loading.Load(levelToLoad);
 			LevelStart.started = false;
 			Time.timeScale = 1.0f;
