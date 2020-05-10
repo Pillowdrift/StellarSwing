@@ -12,6 +12,8 @@ public class LoadLevel : MonoBehaviour
 	private float creationTime = 0;
 	
 	private bool pressed = false;
+
+	public bool DontChangeMusic = false;
 	
 	void Start()
 	{
@@ -50,13 +52,14 @@ public class LoadLevel : MonoBehaviour
 		return false;
 	}
 	
-	void ButtonPressed()
+	public void ButtonPressed()
 	{
 		if (pressed)
 			return;
 		
 		GameRecorder.Reset();
-		
+
+		JukeBox.DontChangeMusic = true;
 		LoadALevel(level);
 		pressed = true;
 	}
@@ -68,7 +71,8 @@ public class LoadLevel : MonoBehaviour
 		if (button != null && !button.enabled)
 			return;
 
-		if (!enabled || !GetComponent<GUITexture>().enabled)
+		//if (!enabled || !GetComponent<GUITexture>()?.enabled)
+		if (!enabled)
 			return;
 
 		if (Time.time - creationTime < 0.5f)

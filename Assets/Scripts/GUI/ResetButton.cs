@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ResetButton : MonoBehaviour
 {
-	void ButtonPressed()
+	public void ButtonPressed()
 	{
 		if (GameRecorder.playingBack)
 		{

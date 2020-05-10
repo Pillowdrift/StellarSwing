@@ -32,9 +32,13 @@ public class EndDeathScript : MonoBehaviour
 	private GameObject playerWarning;
 	
 	private GrapplingHook grapplingHook;
+
+	private Animator MainGUI;
 	
 	void Start()
 	{
+		MainGUI = GameObject.Find("MainGUI").GetComponent<Animator>();
+
 		hasFinished = false;
 		
 		player = GameObject.Find("Player");
@@ -79,6 +83,8 @@ public class EndDeathScript : MonoBehaviour
 		
 		if (collided.tag == "Player" && !LevelState.Dead)
 		{
+			MainGUI.Play("RestartLevel");
+
 			// Disable text
 			GUIController.DisableTexts();
 			

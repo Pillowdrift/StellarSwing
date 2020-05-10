@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class ControlManager : MonoBehaviour
 {
@@ -51,9 +52,11 @@ public class ControlManager : MonoBehaviour
 	{
 		get
 		{
-//			UnityEngine.Rect rect = GUILayoutUtility.GetLastRect();
-	//		if (rect != null && rect.Contains(InputManager.currentPosition))
-//				return true;
+			//			UnityEngine.Rect rect = GUILayoutUtility.GetLastRect();
+			//		if (rect != null && rect.Contains(InputManager.currentPosition))
+			//				return true;
+			if (EventSystem.current.IsPointerOverGameObject())
+				return true;
 			
 			guiLayer = Camera.main.GetComponent<GUILayer>();
 			

@@ -262,10 +262,10 @@ public class GUIController : MonoBehaviour
 	{
 		GameObject obj = GameObject.Find(buttonName);
 		
-		obj.layer = 0;
-		
 		if (obj == null)
 			return;
+
+		obj.layer = 0;
 		
 		GUIButton button = obj.GetComponent<GUIButton>();
 		
@@ -277,10 +277,10 @@ public class GUIController : MonoBehaviour
 	{
 		GameObject obj = GameObject.Find(buttonName);
 		
-		obj.layer = LayerMask.NameToLayer("Ignore Raycast");
-		
 		if (obj == null)
 			return;
+
+		obj.layer = LayerMask.NameToLayer("Ignore Raycast");
 		
 		GUIButton button = obj.GetComponent<GUIButton>();
 		

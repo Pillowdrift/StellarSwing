@@ -24,9 +24,21 @@ public class LevelStart : MonoBehaviour
 	private static bool start = false;
 	
 	private static bool persistClick = false;
+
+	private TutorialCamera tutorialCamera;
+
+	private Animator MainGUI;
+
+	private IEnumerator ShowStartText()
+	{
+		yield return new WaitForEndOfFrame();
+    tutorialCamera.ShowTutorialText("Click anywhere to begin", false, "Level Start");
+	}
 	
 	public void Start()
 	{
+		tutorialCamera = FindObjectOfType<TutorialCamera>();
+		MainGUI = GameObject.Find("MainGUI").GetComponent<Animator>();
 		if (TutorialCamera.Enabled())
 		{
 			enabled = false;
@@ -54,11 +66,13 @@ public class LevelStart : MonoBehaviour
 			
 				if (LevelSelectGUI.currentLevel != null)
 					GUIController.ShowText("LevelName", LevelSelectGUI.currentLevel.name);
-				
+
 #if UNITY_ANDROID || UNITY_IPHONE
 				GUIController.ShowText("Text", "Tap to begin");
 #else
-				GUIController.ShowText("Text", "Click to begin");
+				//GUIController.ShowText("Text", "Click to begin");
+				//tutorialCamera.ShowTutorialText("Click to begin", false);
+				StartCoroutine(ShowStartText());
 #endif
 				
 				GUIController.GUILevelPause();
@@ -142,10 +156,13 @@ public class LevelStart : MonoBehaviour
 					GameRecorder.playingBack = false;
 					GameRecorder.StartRecording();
 					GUIController.HideText("Text");
+					tutorialCamera.HideTutorial();
 					GUIController.GUILevelPlay();
 					GUIController.LevelStarted = true;
 					ControlManager.Disabled = false;
 					ScoreCalculator.Reset();
+					Debug.Log("Playing start level");
+          MainGUI.Play("StartLevel");
 					
 					// Try to grapple
 					if (persistClick)

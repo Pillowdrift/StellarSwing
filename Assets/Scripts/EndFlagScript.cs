@@ -98,6 +98,7 @@ public class EndFlagScript : MonoBehaviour
 		if (collider.gameObject.tag == "Player" && !LevelState.Dead && !LevelState.HasFinished)
 		{
 			GUIController.HideText("Tutorial");
+      GameObject.Find("MainGUI").GetComponent<Animator>().Play("EndLevel");
 			
 			// Set flag so this doesn't run more than once
 			LevelState.HasFinished = true;

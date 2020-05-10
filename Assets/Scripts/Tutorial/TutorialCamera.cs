@@ -19,6 +19,7 @@ public class TutorialCamera : MonoBehaviour
 	
 	public string level;
 
+	public Text TutorialHeading;
 	public Text TutorialTextbox;
 
 	internal static void ResetShownTutorials()
@@ -58,6 +59,11 @@ public class TutorialCamera : MonoBehaviour
 
 	public void ShowTutorialText(string text, bool withButtons)
 	{
+		ShowTutorialText(text, withButtons, "Tutorial");
+	}
+
+	public void ShowTutorialText(string text, bool withButtons, string titleText)
+	{
 		if (text == "")
 		{
 			HideTutorial();
@@ -67,6 +73,7 @@ public class TutorialCamera : MonoBehaviour
 		if (!tutorialDialogUp)
       StartCoroutine(MainMenuController.PlayAnimation(animation, "ShowTutorial", false, () => { }));
 		tutorialDialogUp = true;
+		TutorialHeading.text = titleText;
     TutorialTextbox.text = text;
 
 		nextButton.transform.parent.gameObject.active = withButtons;
@@ -83,11 +90,12 @@ public class TutorialCamera : MonoBehaviour
 
 	private bool autoStartTutorial = true;
 
-	public bool TutorialsEnabled() { return Settings.Current.TutorialEnabled; }
+	public bool TutorialsEnabled() { return !Settings.Current.TutorialEnabled; }
 
 	private bool HasPoints()
 	{
-		return transform.parent?.gameObject.GetComponentsInChildren<TutorialPoint>().Length > 0;
+		return FindObjectsOfType<TutorialPoint>().Length > 0;
+		//return transform.parent?.gameObject.GetComponentsInChildren<TutorialPoint>().Length > 0;
 	}
 		
 	public IEnumerator Start()
@@ -255,7 +263,7 @@ public class TutorialCamera : MonoBehaviour
 	
 	public void LoadPoints(GameObject list)
 	{
-		points = new List<TutorialPoint>(list.GetComponentsInChildren<TutorialPoint>());
+		points = new List<TutorialPoint>(FindObjectsOfType<TutorialPoint>());
 		points.Sort();
 			
 		if (points.Count > 0)

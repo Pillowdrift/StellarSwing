@@ -23,8 +23,8 @@ public class SaveManager : MonoBehaviour
 	{
 		save = new Save();
 		save.filename = saveFilename;
-		save.worldUnlocked = 4;
-		save.levelUnlocked = 9;
+		save.worldUnlocked = 1;
+		save.levelUnlocked = 1;
 		save.Write();
 	}
 	
@@ -113,8 +113,11 @@ public class SaveManager : MonoBehaviour
 	
 	public static bool GotWinStar(Level level)
 	{
+		if (level == null)
+			return false;
+
 		// If our unlocked level is greater than this, we've beaten it
-		if (save.worldUnlocked > level.world || (save.worldUnlocked == level.world && save.levelUnlocked > level.number))
+		if (save != null && save.worldUnlocked > level.world || (save.worldUnlocked == level.world && save.levelUnlocked > level.number))
 			return true;
 		else
 			return false;

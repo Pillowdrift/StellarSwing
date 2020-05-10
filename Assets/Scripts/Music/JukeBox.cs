@@ -9,6 +9,8 @@ public class JukeBox : MonoBehaviour {
 	
 	// The AudioSource to play.
 	public AudioClip clip;
+
+	public static bool DontChangeMusic = false;
 	
 	// Create a static instance.
 	void Awake()
@@ -48,7 +50,8 @@ public class JukeBox : MonoBehaviour {
 		switch (Application.loadedLevelName)
 		{
     case "Title_new":
-			Play(SoundManager.sounds["Title"]);
+			if (!DontChangeMusic)
+        Play(SoundManager.sounds["Title"]);
       break;
 		case "Tutorial 1":
 			Play(SoundManager.sounds["World 1"]);
@@ -96,9 +99,10 @@ public class JukeBox : MonoBehaviour {
 	// Play some music.
 	public void Play(AudioClip music)
 	{
-		Debug.Log("Playing " + music.name);
-		if (clip == music)
+		if (clip != null && clip == music)
 			return;
+
+		Debug.Log("Playing " + music.name);
 		
 		if (music != null && music.name.Contains("I am, therefore I shall be"))
 		{
