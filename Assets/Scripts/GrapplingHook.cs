@@ -84,7 +84,7 @@ public class GrapplingHook : MonoBehaviour
 		
 		ropeObject = GameObject.Find("Rope");
 		rope = ropeObject.GetComponent<LineRenderer>();
-		//rope.SetWidth(0.25f, 0.25f);
+		rope.SetWidth(0.40f, 0.40f);
 		rope.enabled = false;
 		
 		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
