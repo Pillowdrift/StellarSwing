@@ -35,17 +35,17 @@ public class SimpleLevelSelector : MonoBehaviour
         if (level.world == SaveManager.save.worldUnlocked && level.number > SaveManager.save.levelUnlocked)
           continue;
 
-        string lvl = $"{level.world}-{level.number}";
-        Debug.Log("Loading level " + lvl);
+        Debug.Log("Loading level " + level.name);
 
         var newTile = GameObject.Instantiate(LevelTemplate, transform);
         newTile.SetActive(true);
 
-        newTile.name = lvl;
-        newTile.GetComponentInChildren<Text>().text = lvl;
+        string displayName = (level.name == $"World {level.world} Level {level.number}" ? $"{level.world}-{level.number}" : level.name);
 
-        string sceneName = $"World {level.world} Level {level.number}";
-        newTile.GetComponent<Button>().onClick.AddListener(() => { LevelSelectGUI.currentLevel = level; SceneManager.LoadScene(sceneName); });
+        newTile.name = level.name;
+        newTile.GetComponentInChildren<Text>().text = displayName;
+
+        newTile.GetComponent<Button>().onClick.AddListener(() => { LevelSelectGUI.currentLevel = level; SceneManager.LoadScene(level.name); });
 
         created.Add(newTile);
       }

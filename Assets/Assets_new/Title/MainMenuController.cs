@@ -13,7 +13,9 @@ public class MainMenuController : MonoBehaviour
     Title,
     Menu,
     Options,
-    LevelSelect
+    LevelSelect,
+    Stats,
+    Unlocks,
   }
 
   public static MainMenuState NextStateToLoad = MainMenuState.Between;
@@ -157,6 +159,67 @@ public class MainMenuController : MonoBehaviour
       }));
     }
   }
+
+  public void ShowStats()
+  {
+    if (modalBlocker.raycastTarget)
+      return;
+
+    if (menuState == MainMenuState.LevelSelect)
+    {
+      menuState = MainMenuState.Between;
+      StartCoroutine(PlayAnimation(animation, "LevelSelectToStats", false, () =>
+      {
+        menuState = MainMenuState.Stats;
+      }));
+    }
+  }
+
+  public void CloseStats()
+  {
+    if (modalBlocker.raycastTarget)
+      return;
+
+    if (menuState == MainMenuState.Stats)
+    {
+      menuState = MainMenuState.Between;
+      StartCoroutine(PlayAnimation(animation, "LevelSelectToStats", true, () =>
+      {
+        menuState = MainMenuState.LevelSelect;
+      }));
+    }
+  }
+
+  public void ShowUnlocks()
+  {
+    if (modalBlocker.raycastTarget)
+      return;
+
+    if (menuState == MainMenuState.LevelSelect)
+    {
+      menuState = MainMenuState.Between;
+      StartCoroutine(PlayAnimation(animation, "LevelSelectToUnlocks", false, () =>
+      {
+        menuState = MainMenuState.Unlocks;
+      }));
+    }
+  }
+
+  public void CloseUnlocks()
+  {
+    if (modalBlocker.raycastTarget)
+      return;
+
+    if (menuState == MainMenuState.Unlocks)
+    {
+      menuState = MainMenuState.Between;
+      StartCoroutine(PlayAnimation(animation, "LevelSelectToUnlocks", true, () =>
+      {
+        menuState = MainMenuState.LevelSelect;
+      }));
+    }
+  }
+
 
   public void ShowCredits()
   {
