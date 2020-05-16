@@ -160,7 +160,7 @@ public class LoadLevel : MonoBehaviour
 			}
 
 			if (levelToLoad == "Title_new")
-				MainMenuController.NextStateToLoad = MainMenuController.MainMenuState.LevelSelect;
+				MainMenuController.NextStateToLoad = MainMenuController.MainMenuState.WorldSelect;
 			Loading.Load(levelToLoad);
 			LevelStart.started = false;
 			Time.timeScale = 1.0f;
