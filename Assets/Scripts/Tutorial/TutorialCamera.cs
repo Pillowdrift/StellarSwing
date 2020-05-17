@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class TutorialCamera : MonoBehaviour
 {
@@ -90,7 +91,7 @@ public class TutorialCamera : MonoBehaviour
 
 	private bool autoStartTutorial = true;
 
-	public bool TutorialsEnabled() { return !Settings.Current.TutorialEnabled; }
+	public bool TutorialsEnabled() { return Settings.Current.TutorialEnabled; }
 
 	private bool HasPoints()
 	{
@@ -100,6 +101,12 @@ public class TutorialCamera : MonoBehaviour
 		
 	public IEnumerator Start()
 	{
+		if (SceneManager.GetActiveScene().name == "Title_new")
+		{
+			gameObject.SetActive(false);
+			yield break;
+		}
+
 		if (!TutorialsEnabled() || !autoStartTutorial || !HasPoints())
 		{
 			autoStartTutorial = false;

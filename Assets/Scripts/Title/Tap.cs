@@ -116,7 +116,7 @@ public class Tap : MonoBehaviour
 					GUIController.DisableStars();
 					
 					PlayButtonFader.FadeOut();
-					Camera.main.gameObject.SendMessage("SetNodes", location);
+					//Camera.main.gameObject.SendMessage("SetNodes", location);
 					
 					Options.enableGUI = false;
 					

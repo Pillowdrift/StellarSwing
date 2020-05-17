@@ -316,6 +316,7 @@ public class LevelSelectGUI : MonoBehaviour
 	
 	public static void SetPlanet(GameObject planet)
 	{
+		return;
 		if (levelObjects == null)
 			levelObjects = new List<GameObject>();
 		

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GrapplingHook : MonoBehaviour
 {
@@ -75,6 +76,12 @@ public class GrapplingHook : MonoBehaviour
 	// Use this for initialization
 	void Awake()
 	{
+		if (SceneManager.GetActiveScene().name == "Title_new")
+		{
+			gameObject.SetActive(false);
+			return;
+		}
+
 		localTouches = new List<TouchData>();
 		
 		// Find the shield

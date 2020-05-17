@@ -22,15 +22,20 @@ public class MainMenuController : MonoBehaviour
 
   public static MainMenuState NextStateToLoad = MainMenuState.Between;
 
+  public GameObject LevelCompletePrefab;
+  public AudioClip LevelCompleteSound;
+
+  // Used if the screen to show is the level select, shows the next level with an unlock animation
+  public static bool UnlockNextWorld = false;
+  public static bool UnlockNextLevel = false;
+
   private MainMenuState menuState = MainMenuState.Between;
 
   private Animation animation;
-
   private Animator worldAnimator;
-
   private Animation levelAnimation;
-
   private Image modalBlocker;
+  private AudioSource source;
 
   private static int worldSelected = 1;
   private static bool worldCurrentlySelected = false;
@@ -39,14 +44,33 @@ public class MainMenuController : MonoBehaviour
   protected void Awake()
   {
     animation = GetComponent<Animation>();
+    source = GetComponent<AudioSource>();
     worldAnimator = GameObject.Find("Worlds").GetComponent<Animator>();
     modalBlocker = GameObject.Find("ModalBlocker").GetComponent<Image>();
     levelAnimation = GameObject.Find("FullLevelSelect/Levels").GetComponent<Animation>();
+
+    // World select stuff
+    worldSelected = MaxWorld();
+    Debug.Log("Showing world " + worldSelected);
+
     UpdateWorldSelectButtons();
-    FlushWorldSelectAnimation();
-    if (worldCurrentlySelected)
-      NextStateToLoad = MainMenuState.LevelSelect;
+    FlushWorldSelectAnimation(true);
     FadeWorlds();
+
+    if (worldCurrentlySelected)
+      NextStateToLoad = UnlockNextWorld ? MainMenuState.WorldSelect : MainMenuState.LevelSelect;
+
+    if (UnlockNextWorld)
+    {
+      StartCoroutine(UnlockNextWorldNow());
+    }
+    else if (UnlockNextLevel)
+    {
+      StartCoroutine(UnlockNextLevelNow());
+    }
+
+    UnlockNextLevel = false;
+    UnlockNextWorld = false;
   }
 
   protected void Start()
@@ -55,6 +79,7 @@ public class MainMenuController : MonoBehaviour
     {
       case MainMenuState.LevelSelect:
         ShowPageInstant("WorldToLevelSelect", NextStateToLoad);
+        LoadPreview(false, worldSelected, levelSelected);
         break;
       case MainMenuState.WorldSelect:
         ShowPageInstant("MenuToWorldSelect", NextStateToLoad);
@@ -279,12 +304,15 @@ public class MainMenuController : MonoBehaviour
     Application.Quit();
   }
 
-  public static IEnumerator PlayAnimation(Animation animation, string name, bool reverse, Action complete)
+  public static IEnumerator PlayAnimation(Animation animation, string name, bool reverse, Action complete, bool instant = false)
   {
     Debug.Log($"Playing animation {name} " + (reverse ? "forwards" : "Backwards"));
     Debug.Log(animation);
     animation[name].speed = (reverse ? -1.0f : 1.0f) / Time.timeScale;
-    animation[name].time = reverse ? animation[name].length : 0.0f;
+    if (instant)
+      animation[name].time = reverse ? 0.0f : animation[name].length;
+    else
+      animation[name].time = reverse ? animation[name].length : 0.0f;
     animation.Play(name);
     while (animation.isPlaying)
     {
@@ -293,10 +321,25 @@ public class MainMenuController : MonoBehaviour
     complete();
   }
 
-  public void FlushWorldSelectAnimation()
+  public void FlushWorldSelectAnimation(bool init = false)
   {
     worldAnimator.SetInteger("World", worldSelected);
     worldAnimator.SetBool("WorldSelected", worldCurrentlySelected);
+
+    if (init)
+    {
+      Debug.Log($"Instant loading!! {worldCurrentlySelected}");
+      worldAnimator.Play(worldCurrentlySelected ? $"World{worldSelected}Selected" : $"World{worldSelected}");
+
+      if (menuState == MainMenuState.LevelSelect)
+      {
+        menuState = MainMenuState.Between;
+        StartCoroutine(PlayAnimation(animation, "WorldToLevelSelect", false, () =>
+        {
+          menuState = MainMenuState.LevelSelect;
+        }, true));
+      }
+    }
   }
 
   public void UpdateWorldSelectButtons()
@@ -308,20 +351,26 @@ public class MainMenuController : MonoBehaviour
     }
     else
     {
-      GameObject.Find("FullLevelSelect/Next/Tap Area").GetComponent<Button>().interactable = (worldSelected < MinWorld());
-      GameObject.Find("FullLevelSelect/Previous/Tap Area").GetComponent<Button>().interactable = (worldSelected > MaxWorld());
+      GameObject.Find("FullLevelSelect/Next/Tap Area").GetComponent<Button>().interactable = (worldSelected < MaxWorld());
+      GameObject.Find("FullLevelSelect/Previous/Tap Area").GetComponent<Button>().interactable = (worldSelected > MinWorld());
     }
 
     GameObject.Find("CurrentWorld/Caption").GetComponent<Text>().text = $"World {worldSelected}";
-    GameObject.Find("CurrentLevel/Caption").GetComponent<Text>().text = CurLevel().name;
+    GameObject.Find("CurrentLevel/Caption").GetComponent<Text>().text = $"Level {levelSelected}";
   }
 
-  public void NextWorld()
+  public void NextWorld(bool force = false)
   {
+    if (menuState == MainMenuState.Between && force == false)
+      return;
+
     // These act as level select if a world is selected
     if (worldCurrentlySelected && levelSelected < MaxLevel())
     {
+      int oldLevel = levelSelected;
       levelSelected++;
+      LoadPreview(false, worldSelected, oldLevel);
+      LoadPreview(true, worldSelected, levelSelected);
       StartCoroutine(PlayAnimation(levelAnimation, "NextLevel", false, () => { }));
     }
     else if (!worldCurrentlySelected && worldSelected < MaxWorld())
@@ -335,10 +384,16 @@ public class MainMenuController : MonoBehaviour
 
   public void PrevWorld()
   {
+    if (menuState == MainMenuState.Between)
+      return;
+
     // These act as level select if a world is selected
     if (worldCurrentlySelected && levelSelected > MinLevel())
     {
+      int oldLevel = levelSelected;
       levelSelected--;
+      LoadPreview(false, worldSelected, levelSelected);
+      LoadPreview(true, worldSelected, oldLevel);
       StartCoroutine(PlayAnimation(levelAnimation, "NextLevel", true, () => { }));
     }
     else if (!worldCurrentlySelected && worldSelected > MinWorld())
@@ -350,17 +405,35 @@ public class MainMenuController : MonoBehaviour
     UpdateWorldSelectButtons();
   }
 
+  private void LoadPreview(bool next, int world, int number)
+  {
+    var level = GetLevel(world, number);
+    Text label = GameObject.Find(next ? "NextLevel/LevelPreview/Text" : "CurLevel/LevelPreview/Text").GetComponent<Text>();
+    label.text = $"World {world} - Level {number}";
+    if (level != null && level.PreviewImage != null)
+    {
+      Image image = GameObject.Find(next ? "NextLevel/LevelPreview/PreviewImage" : "CurLevel/LevelPreview/PreviewImage").GetComponent<Image>();
+      image.sprite = level.PreviewImage;
+    }
+  }
+
   public void SelectWorld()
   {
+    if (menuState == MainMenuState.Between)
+      return;
+
     // These act as level select if a world is selected
     if (worldCurrentlySelected)
     {
-      SceneManager.LoadScene(CurLevel().name);
+      var lvl = CurLevel();
+      LevelSelectGUI.currentLevel = lvl;
+      SceneManager.LoadScene(lvl.name);
     }
     else
     {
       worldCurrentlySelected = true;
-      levelSelected = 1;
+      levelSelected = MaxLevel();
+      LoadPreview(false, worldSelected, levelSelected);
       FlushWorldSelectAnimation();
       UpdateWorldSelectButtons();
 
@@ -389,6 +462,12 @@ public class MainMenuController : MonoBehaviour
     return res;
   }
 
+  private Level GetLevel(int world, int level)
+  {
+    var levels = GameObject.Find($"World{worldSelected}").GetComponent<Levels>().levels;
+    return levels.SingleOrDefault(lvl => lvl.world == world && lvl.number == level);
+  }
+
   private Level CurLevel()
   {
     var levels = GameObject.Find($"World{worldSelected}").GetComponent<Levels>().levels;
@@ -402,7 +481,11 @@ public class MainMenuController : MonoBehaviour
 
   public int MaxWorld()
   {
-    return SaveManager.save.worldUnlocked;
+    if (SaveManager.save == null)
+      return 1;
+    var res = SaveManager.save.worldUnlocked;
+    Debug.Log("Max world: " + res);
+    return res;
   }
 
   public void FadeWorlds()
@@ -414,7 +497,7 @@ public class MainMenuController : MonoBehaviour
       if (world.name.StartsWith("World") && int.TryParse(world.name.Substring(5), out int worldNum))
       {
         Debug.Log("Processing world " + worldNum);
-        if (worldNum > SaveManager.save.worldUnlocked)
+        if (worldNum > MaxWorld())
         {
           var mat = world.GetComponent<Renderer>().material;
           var color = mat.GetColor("_Color");
@@ -432,5 +515,156 @@ public class MainMenuController : MonoBehaviour
         }
       }
     }
+  }
+
+  public IEnumerator UnlockNextWorldNow()
+  {
+    yield break;
+    while (menuState != MainMenuState.WorldSelect)
+      yield return new WaitForEndOfFrame();
+
+    menuState = MainMenuState.Between;
+
+    yield return new WaitForSeconds(1.0f);
+
+    NextWorld();
+
+    menuState = MainMenuState.WorldSelect;
+  }
+
+  public IEnumerator UnlockNextLevelNow()
+  {
+    Debug.Log("UnlockNextLevelNow: " + menuState);
+    while (menuState != MainMenuState.LevelSelect)
+      yield return new WaitForEndOfFrame();
+    Debug.Log("UnlockNextLevelNow: " + menuState);
+
+    menuState = MainMenuState.Between;
+    //yield return new WaitForSeconds(1.0f);
+
+    if (LevelCompleteSound != null)
+    {
+      source.volume = Settings.Current.MasterVolume * Settings.Current.SoundVolume;
+      source.clip = LevelCompleteSound;
+      source.Play();
+    }
+
+    if (LevelCompletePrefab != null)
+    {
+      GameObject.Instantiate(LevelCompletePrefab, new Vector3(481.8504f, 248.8504f, -116.0667f), Quaternion.identity);
+    }
+
+    yield return new WaitForSeconds(1.0f);
+    NextWorld(true);
+
+    menuState = MainMenuState.LevelSelect;
+  }
+
+  private void LoadLevelPreview()
+  {
+    StartCoroutine(CreateScenePreviewAsync());
+  }
+
+  private IEnumerator CreateScenePreviewAsync()
+  {
+    var parent = GameObject.Find("Levels/CurLevel");
+    var level = CurLevel();
+    LoadSceneParameters a = new LoadSceneParameters
+    {
+      loadSceneMode = LoadSceneMode.Additive,
+      localPhysicsMode = LocalPhysicsMode.None
+    };
+
+    Debug.Log("Loading preview");
+    var activeScene = SceneManager.GetActiveScene();
+    var sceneLoad = SceneManager.LoadSceneAsync(level.name, a);
+    //sceneLoad.allowSceneActivation = false;
+    while (!sceneLoad.isDone)
+      yield return null;
+    Debug.Log("Preview loaded");
+    SceneManager.SetActiveScene(activeScene);
+    ProcessScenePreview(SceneManager.GetSceneByName(level.name), parent);
+  }
+
+  private void ProcessScenePreview(Scene scene, GameObject parent)
+  {
+    Debug.Log("Deactivating scene " + scene.name);
+    return;
+
+    // Deactivate objects we don't want, and put the rest in a master game object
+    GameObject scenePreview = new GameObject($"Preview {scene.name}");
+
+    foreach (GameObject obj in scene.GetRootGameObjects())
+    {
+      obj.transform.parent = scenePreview.transform;
+
+      if (obj.GetComponent<Camera>() ||
+        obj.GetComponent<Light>() ||
+        obj.GetComponent<PlayerMovements>() ||
+        obj.name.StartsWith("Planet"))
+      {
+        obj.SetActive(false);
+      }
+
+      var outline = obj.GetComponent<Outline>();
+      if (outline != null)
+      {
+        var renderer = obj.GetComponent<Renderer>();
+        foreach (var mat in renderer.materials)
+        {
+          if (mat.name.StartsWith("Outline"))
+          {
+            mat.renderQueue = 0;
+          }
+        }
+        outline.enabled = false;
+      }
+    }
+
+    // Get bounds and target scale
+    var bounds = GetObjectBounds(scenePreview);
+    float maxBounds = Math.Max(Math.Max(bounds.size.x, bounds.size.y), bounds.size.z);
+    float targetScale = 40.0f / maxBounds;
+    //scenePreview.AddComponent<ScaleFixer>().TargetScale = Vector3.one / maxBounds * 40.0f;
+
+    // Center
+    var center = new GameObject("Centerer");
+    //center.transform.position = -bounds.center / targetScale;
+    center.transform.parent = parent.transform;
+    center.transform.localPosition = Vector3.zero;
+    center.AddComponent<ScaleFixer>().TargetScale = Vector3.one;
+
+    //scenePreview.transform.position -= bounds.center;
+    for (int i = 0; i < scenePreview.transform.childCount; ++i)
+    {
+      scenePreview.transform.GetChild(i).transform.position -= bounds.center;
+    }
+
+    // Position
+    scenePreview.transform.position = center.transform.position;
+    scenePreview.transform.parent = center.transform;
+
+    // Scale
+    scenePreview.transform.localScale = targetScale * Vector3.one;
+
+    // Add spinner
+    var rotator = scenePreview.AddComponent<Rotator>();
+    rotator.axis = Vector3.up;
+    rotator.angle = 1.0f;
+
+    // Might as well unload the scene after this
+    SceneManager.UnloadSceneAsync(scene);
+  }
+
+  private Bounds GetObjectBounds(GameObject obj)
+  {
+    var mainRenderer = obj.GetComponent<Renderer>();
+    var combinedBounds = mainRenderer != null ? mainRenderer.bounds : new Bounds();
+    var renderers = obj.GetComponentsInChildren<Renderer>();
+    foreach (var renderer in renderers)
+    {
+      combinedBounds.Encapsulate(renderer.bounds);
+    }
+    return combinedBounds;
   }
 }

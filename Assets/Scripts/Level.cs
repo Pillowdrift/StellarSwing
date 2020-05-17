@@ -18,6 +18,8 @@ public class Level : IComparable<Level>
 	public int number;
 	public Ranks ranks;
 	public bool highscores = true;
+
+	public Sprite PreviewImage;
 	
 	public int CompareTo(Level _level) 
 	{

@@ -98,7 +98,6 @@ public class EndFlagScript : MonoBehaviour
 		if (collider.gameObject.tag == "Player" && !LevelState.Dead && !LevelState.HasFinished)
 		{
 			GUIController.HideText("Tutorial");
-      GameObject.Find("MainGUI").GetComponent<Animator>().Play("EndLevel");
 			
 			// Set flag so this doesn't run more than once
 			LevelState.HasFinished = true;
@@ -189,12 +188,12 @@ public class EndFlagScript : MonoBehaviour
 		{
 			savedRecording = true;
 			GameRecorder.StopRecording();
-			Recording rec = GameRecorder.Save(true, false);
+			//Recording rec = GameRecorder.Save(true, false);
 		
 			// Upload score to online thing
 			if(!GameRecorder.playingBack)
 			{
-				HighScores.PostScore(LevelSelectGUI.currentLevel, rec);
+				//HighScores.PostScore(LevelSelectGUI.currentLevel, rec);
 
 			}
 			// Disable buttons so user doesn't disrupt score uploading
@@ -212,6 +211,9 @@ public class EndFlagScript : MonoBehaviour
 		
 		// Let the camera pan back a bit
 		yield return new WaitForSeconds(tapped ? 0 : WAIT_TIME);
+
+		// Show the gui
+    GameObject.Find("MainGUI").GetComponent<Animator>().Play("EndLevel");
 		
 		// Show first star
 		Debug.Log("Showing speed star!");
