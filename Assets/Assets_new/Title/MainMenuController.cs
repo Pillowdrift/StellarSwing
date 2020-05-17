@@ -24,6 +24,9 @@ public class MainMenuController : MonoBehaviour
 
   public GameObject LevelCompletePrefab;
   public AudioClip LevelCompleteSound;
+  public GameObject WorldCompletePrefab;
+  public AudioClip WorldCompleteSound;
+  public Sprite DefaultLevelPreview;
 
   // Used if the screen to show is the level select, shows the next level with an unlock animation
   public static bool UnlockNextWorld = false;
@@ -41,24 +44,36 @@ public class MainMenuController : MonoBehaviour
   private static bool worldCurrentlySelected = false;
   private static int levelSelected = 1;
 
+  private static bool firstTime = true;
+
+  private int? lastWorldSelected = null;
+
   protected void Awake()
   {
+    if (worldCurrentlySelected || UnlockNextWorld || UnlockNextLevel)
+      NextStateToLoad = MainMenuState.LevelSelect;
+
     animation = GetComponent<Animation>();
     source = GetComponent<AudioSource>();
     worldAnimator = GameObject.Find("Worlds").GetComponent<Animator>();
     modalBlocker = GameObject.Find("ModalBlocker").GetComponent<Image>();
     levelAnimation = GameObject.Find("FullLevelSelect/Levels").GetComponent<Animation>();
 
+    if (firstTime)
+    {
+      firstTime = false;
+    }
+  }
+
+  private void InitLevelSelect()
+  {
     // World select stuff
-    worldSelected = MaxWorld();
-    Debug.Log("Showing world " + worldSelected);
+    //worldSelected = MaxWorld();
+    //Debug.Log("Showing world " + worldSelected);
 
     UpdateWorldSelectButtons();
     FlushWorldSelectAnimation(true);
     FadeWorlds();
-
-    if (worldCurrentlySelected)
-      NextStateToLoad = UnlockNextWorld ? MainMenuState.WorldSelect : MainMenuState.LevelSelect;
 
     if (UnlockNextWorld)
     {
@@ -71,6 +86,8 @@ public class MainMenuController : MonoBehaviour
 
     UnlockNextLevel = false;
     UnlockNextWorld = false;
+
+    LoadPreview(false, worldSelected, levelSelected);
   }
 
   protected void Start()
@@ -79,10 +96,12 @@ public class MainMenuController : MonoBehaviour
     {
       case MainMenuState.LevelSelect:
         ShowPageInstant("WorldToLevelSelect", NextStateToLoad);
-        LoadPreview(false, worldSelected, levelSelected);
+        lastWorldSelected = worldSelected;
+        InitLevelSelect();
         break;
       case MainMenuState.WorldSelect:
         ShowPageInstant("MenuToWorldSelect", NextStateToLoad);
+        InitLevelSelect();
         break;
       case MainMenuState.Menu:
         ShowPageInstant("TitleToMenu", NextStateToLoad);
@@ -116,6 +135,12 @@ public class MainMenuController : MonoBehaviour
 
   public void ShowLevelSelect()
   {
+    // When we first show the world select we can select the next level for the player to play
+    worldSelected = MaxWorld();
+    levelSelected = MaxLevel();
+    lastWorldSelected = worldSelected;
+
+    InitLevelSelect();
     FadeWorlds();
     menuState = MainMenuState.Between;
     StartCoroutine(PlayAnimation(animation, "MenuToWorldSelect", false, () =>
@@ -124,9 +149,9 @@ public class MainMenuController : MonoBehaviour
     }));
   }
 
-  public void HideLevelSelect()
+  public void HideLevelSelect(bool force = false)
   {
-    if (menuState == MainMenuState.Between)
+    if (menuState == MainMenuState.Between && force == false)
       return;
 
     if (worldCurrentlySelected)
@@ -329,7 +354,7 @@ public class MainMenuController : MonoBehaviour
     if (init)
     {
       Debug.Log($"Instant loading!! {worldCurrentlySelected}");
-      worldAnimator.Play(worldCurrentlySelected ? $"World{worldSelected}Selected" : $"World{worldSelected}");
+      worldAnimator.Play(worldCurrentlySelected ? $"World{worldSelected}Selected" : $"World{worldSelected}");//, -1, 0.0f);
 
       if (menuState == MainMenuState.LevelSelect)
       {
@@ -408,12 +433,12 @@ public class MainMenuController : MonoBehaviour
   private void LoadPreview(bool next, int world, int number)
   {
     var level = GetLevel(world, number);
-    Text label = GameObject.Find(next ? "NextLevel/LevelPreview/Text" : "CurLevel/LevelPreview/Text").GetComponent<Text>();
-    label.text = $"World {world} - Level {number}";
-    if (level != null && level.PreviewImage != null)
+    if (level != null)
     {
+      Text label = GameObject.Find(next ? "NextLevel/LevelPreview/Text" : "CurLevel/LevelPreview/Text").GetComponent<Text>();
+      label.text = $"World {world} - Level {number}";
       Image image = GameObject.Find(next ? "NextLevel/LevelPreview/PreviewImage" : "CurLevel/LevelPreview/PreviewImage").GetComponent<Image>();
-      image.sprite = level.PreviewImage;
+      image.sprite = level.PreviewImage ?? DefaultLevelPreview;
     }
   }
 
@@ -431,16 +456,31 @@ public class MainMenuController : MonoBehaviour
     }
     else
     {
-      worldCurrentlySelected = true;
-      levelSelected = MaxLevel();
-      LoadPreview(false, worldSelected, levelSelected);
-      FlushWorldSelectAnimation();
-      UpdateWorldSelectButtons();
-
       menuState = MainMenuState.Between;
-      StartCoroutine(PlayAnimation(animation, "WorldToLevelSelect", false, () =>
+      StartCoroutine(WaitForStateAsync(worldAnimator, $"World{worldSelected}", () =>
       {
-        menuState = MainMenuState.LevelSelect;
+        if (lastWorldSelected != null && lastWorldSelected != worldSelected)
+        {
+          levelSelected = 1;
+        }
+
+        if (levelSelected > MaxLevel())
+          levelSelected = MaxLevel();
+
+        LoadPreview(false, worldSelected, levelSelected);
+        LoadPreview(true, worldSelected, levelSelected);
+
+        worldCurrentlySelected = true;
+        FlushWorldSelectAnimation();
+        UpdateWorldSelectButtons();
+
+        menuState = MainMenuState.Between;
+        StartCoroutine(PlayAnimation(animation, "WorldToLevelSelect", false, () =>
+        {
+          menuState = MainMenuState.LevelSelect;
+        }));
+
+        lastWorldSelected = worldSelected;
       }));
     }
   }
@@ -454,7 +494,7 @@ public class MainMenuController : MonoBehaviour
 
   private int MaxLevel()
   {
-    int res = GameObject.Find($"World{worldSelected}").GetComponent<Levels>().levels.Last().number;
+    int res = GameObject.Find($"World{worldSelected}").GetComponent<Levels>().levels.Last(lvl => lvl.highscores).number;
     if (SaveManager.save.worldUnlocked <= worldSelected && SaveManager.save.levelUnlocked < res)
       res = SaveManager.save.levelUnlocked;
     Debug.Log("max level: " + res);
@@ -519,15 +559,30 @@ public class MainMenuController : MonoBehaviour
 
   public IEnumerator UnlockNextWorldNow()
   {
-    yield break;
-    while (menuState != MainMenuState.WorldSelect)
+    while (menuState != MainMenuState.LevelSelect)
       yield return new WaitForEndOfFrame();
 
     menuState = MainMenuState.Between;
 
+    HideLevelSelect(true);
+
     yield return new WaitForSeconds(1.0f);
 
-    NextWorld();
+    if (WorldCompleteSound != null)
+    {
+      source.volume = Settings.Current.MasterVolume * Settings.Current.SoundVolume;
+      source.clip = WorldCompleteSound;
+      source.Play();
+    }
+
+    if (WorldCompletePrefab != null)
+    {
+      GameObject.Instantiate(WorldCompletePrefab, new Vector3(482.2004f, 248.8504f, -116.0667f), Quaternion.identity);
+    }
+
+    yield return new WaitForSeconds(1.0f);
+
+    NextWorld(true);
 
     menuState = MainMenuState.WorldSelect;
   }
@@ -551,7 +606,7 @@ public class MainMenuController : MonoBehaviour
 
     if (LevelCompletePrefab != null)
     {
-      GameObject.Instantiate(LevelCompletePrefab, new Vector3(481.8504f, 248.8504f, -116.0667f), Quaternion.identity);
+      GameObject.Instantiate(LevelCompletePrefab, new Vector3(482.2504f, 248.8504f, -116.0667f), Quaternion.identity);
     }
 
     yield return new WaitForSeconds(1.0f);
@@ -666,5 +721,12 @@ public class MainMenuController : MonoBehaviour
       combinedBounds.Encapsulate(renderer.bounds);
     }
     return combinedBounds;
+  }
+
+  private static IEnumerator WaitForStateAsync(Animator animator, string stateName, Action action)
+  {
+    while (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+      yield return null;
+    action();
   }
 }
