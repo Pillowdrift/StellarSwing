@@ -48,6 +48,7 @@ public class LevelEndScoreAccumulator : MonoBehaviour
   {
     for (int i = 0; i < PlayerCount; ++i)
     {
+      _sources[i].volume = Settings.Current.MasterVolume * Settings.Current.SoundVolume;
       _sources[i].Play();
       yield return new WaitForSeconds(0.1f);
     }

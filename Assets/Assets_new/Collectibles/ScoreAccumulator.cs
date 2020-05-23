@@ -45,6 +45,7 @@ public class ScoreAccumulator : MonoBehaviour
   public void Play()
   {
     var player = _sources[_current];
+    player.volume = Settings.Current.MasterVolume * Settings.Current.SoundVolume;
     player.Play();
     _current = (_current + 1) % PlayerCount;
     ResetCurrentAfter(ResetTime);
