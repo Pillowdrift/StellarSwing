@@ -36,7 +36,7 @@ public class NewGame : MonoBehaviour
   {
     SaveManager.Create();
     MainMenu.ShowLevelSelect();
-    FindObjectOfType<SimpleLevelSelector>().Start();
+    //FindObjectOfType<SimpleLevelSelector>().Start();
     //SceneManager.LoadScene("Title");
   }
 

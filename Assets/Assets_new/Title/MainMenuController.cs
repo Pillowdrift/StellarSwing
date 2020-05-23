@@ -521,9 +521,10 @@ public class MainMenuController : MonoBehaviour
 
   public int MaxWorld()
   {
+    const int LastWorld = 5;
     if (SaveManager.save == null)
       return 1;
-    var res = SaveManager.save.worldUnlocked;
+    var res = Math.Min(LastWorld, SaveManager.save.worldUnlocked);
     Debug.Log("Max world: " + res);
     return res;
   }
@@ -610,7 +611,16 @@ public class MainMenuController : MonoBehaviour
     }
 
     yield return new WaitForSeconds(1.0f);
-    NextWorld(true);
+
+    // Special stuff for the ending
+    if (worldSelected == 5 && levelSelected == 5)
+    {
+      SceneManager.LoadScene("Credits");
+    }
+    else
+    {
+      NextWorld(true);
+    }
 
     menuState = MainMenuState.LevelSelect;
   }

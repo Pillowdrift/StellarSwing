@@ -23,8 +23,8 @@ public class SaveManager : MonoBehaviour
 	{
 		save = new Save();
 		save.filename = saveFilename;
-		save.worldUnlocked = 1;
-		save.levelUnlocked = 1;
+		save.worldUnlocked = 5;
+		save.levelUnlocked = 5;
 		save.Write();
 	}
 	
