@@ -22,7 +22,7 @@ public class CollectiblePickles : MonoBehaviour
       var particleSystem = GameObject.Instantiate(ParticleSystem);
       particleSystem.transform.position = transform.position;
       particleSystem.GetComponent<ParticleSystem>().maxParticles = Count;
-      Settings.IncrementPicolinium(Count);
+      SaveManager.save?.IncrementPicolinium(Count);
       _scoreAccumulator.Play();
       gameObject.SetActive(false);
     }

@@ -4,7 +4,7 @@ using System.Collections;
 public class SaveManager : MonoBehaviour
 {
 	public const string dir = "";
-	public const string ext = ".wifsav";
+	public const string ext = ".stellarsave";
 	public const string saveFilename = "player1" + ext;
 	
 	public static Save save;
@@ -23,28 +23,26 @@ public class SaveManager : MonoBehaviour
 	{
 		save = new Save();
 		save.filename = saveFilename;
-		save.worldUnlocked = 1;
-		save.levelUnlocked = 1;
 		save.Write();
 	}
 	
-	public static int LevelToLevelID(Level level)
-	{
+	//public static int LevelToLevelID(Level level)
+	//{
 		// Find which level this is.
-		int levelID = 0;
-		for (levelID = 0; levelID < Levels.AllLevels.Count; ++levelID) 
-		{
-			if (Levels.AllLevels[levelID].CompareTo(level) == 0)
-				break;
-		}
-		
-		return levelID;
-	}
+		//int levelID = 0;
+		//for (levelID = 0; levelID < Levels.AllLevels.Count; ++levelID) 
+		//{
+			//if (Levels.AllLevels[levelID].CompareTo(level) == 0)
+				//break;
+		//}
+		//
+		//return levelID;
+	//}
 	
 	public static void UpdateScore(Level level)	
 	{
 		// Find which level this is.
-		int levelID = LevelToLevelID(level);
+		//int levelID = LevelToLevelID(level);
 		
 		// Get the score.
 		Save.LevelHighScore score = new Save.LevelHighScore();
@@ -55,7 +53,7 @@ public class SaveManager : MonoBehaviour
 		StarsThisLevel = GetStars(score, level);
 		
 		// Get the old score from file so we can check which ones we surpassed and award stars accordingly
-		Save.LevelHighScore oldScore = save.GetHighScore(levelID);
+		Save.LevelHighScore oldScore = save.GetHighScore(level.world, level.number);
 		
 		bool ignoreOldScore = false;
 		// if old score was null
@@ -87,7 +85,7 @@ public class SaveManager : MonoBehaviour
 		
 		// Update the score.
 		if (save != null)
-			save.UpdateHighScore(score, levelID);
+			save.UpdateHighScore(score, level.world, level.number);
 	}
 	
 	public static int GetStars(Save.LevelHighScore score, Level level)
@@ -126,19 +124,14 @@ public class SaveManager : MonoBehaviour
 	public static bool GotSpeedStar(Level level)
 	{
 		// Get index of level
-		int levelID = LevelToLevelID(level);
-		
-		Save.LevelHighScore highscore = save.GetHighScore(levelID);
+		Save.LevelHighScore highscore = save.GetHighScore(level.world, level.number);
 		
 		return GotWinStar(level) && HasSurpassedSpeed(highscore, level);
 	}
 	
 	public static bool GotTimeStar(Level level)
 	{
-		// Get index of level
-		int levelID = LevelToLevelID(level);
-		
-		Save.LevelHighScore highscore = save.GetHighScore(levelID);
+		Save.LevelHighScore highscore = save.GetHighScore(level.world, level.number);
 		
 		return GotWinStar(level) && HasSurpassedTime(highscore, level);
 	}

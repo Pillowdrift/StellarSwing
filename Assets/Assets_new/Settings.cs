@@ -15,11 +15,6 @@ public class Settings : MonoBehaviour
       Windowed
     }
 
-    public struct PlayerStatsT
-    {
-      public int Picolinium;
-    }
-
     // General settings
     public bool TutorialEnabled;
     public float TurningSensitivity;
@@ -36,9 +31,6 @@ public class Settings : MonoBehaviour
     public float MasterVolume;
     public float MusicVolume;
     public float SoundVolume;
-
-    // Player stats
-    public PlayerStatsT PlayerStats;
 
     public static GameSettings Default {
       get {
@@ -58,21 +50,9 @@ public class Settings : MonoBehaviour
           MasterVolume = 1.0f,
           MusicVolume = 1.0f,
           SoundVolume = 1.0f,
-          // Player stats
-          PlayerStats = new PlayerStatsT
-          {
-            Picolinium = 0
-          }
         };
       }
     }
-  }
-
-  public static void IncrementPicolinium(int count)
-  {
-    var v = Current;
-    v.PlayerStats.Picolinium += count;
-    Current = v;
   }
 
   public static bool Current_InitiallyLoaded = false;
@@ -141,7 +121,6 @@ public class Settings : MonoBehaviour
 			w.WriteLine("MasterVolume=" + values.MasterVolume);
 			w.WriteLine("MusicVolume=" + values.MusicVolume);
 			w.WriteLine("SoundVolume=" + values.SoundVolume);
-      w.WriteLine("PlayerStats.Picolinium=" + values.PlayerStats.Picolinium);
 		}
   }
 
@@ -233,10 +212,6 @@ public class Settings : MonoBehaviour
               Debug.LogWarning("Failed to parse soundVolume " + line);
             else
               values.SoundVolume = soundVolume;
-            break;
-          case "PlayerStats.Picolinium":
-            if (int.TryParse(value, out int picolinium))
-              values.PlayerStats.Picolinium = picolinium;
             break;
           default:
             Debug.LogWarning("Unrecognised settings key for line " + line);

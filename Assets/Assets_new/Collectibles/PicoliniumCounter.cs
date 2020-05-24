@@ -5,6 +5,9 @@ public class PicoliniumCounter : MonoBehaviour
 {
   public float CountRate = 0.1f;
 
+  // if set it'll count to this target
+  public int Target = -1;
+
   private float _count = 0;
 
   private Text _text;
@@ -12,12 +15,12 @@ public class PicoliniumCounter : MonoBehaviour
   void Start()
   {
     _text = GetComponent<Text>();
-    _count = (float)Settings.Current.PlayerStats.Picolinium;
+    _count = (float)SaveManager.save?.picolinium;
   }
 
   void Update()
   {
-    float actualCount = (float)Settings.Current.PlayerStats.Picolinium;
+    float actualCount = Target >= 0 ? Target : (float)(SaveManager.save?.picolinium ?? 0);
     if (_count < actualCount)
     {
       var newCount = _count + CountRate * Time.deltaTime;

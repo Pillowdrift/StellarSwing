@@ -86,7 +86,7 @@ public class JukeBox : MonoBehaviour {
 	{
 		AudioSource source = GetComponent<AudioSource>();
 		
-		if (source != null && SaveManager.save != null)		
+		if (source != null)		
 		{
 			clip = music;
 			source.loop = true;

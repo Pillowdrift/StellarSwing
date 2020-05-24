@@ -36,6 +36,7 @@ public class NewGame : MonoBehaviour
   {
     SaveManager.Create();
     MainMenu.ShowLevelSelect();
+    GameObject.Find("ContinueButton").GetComponent<Button>().interactable = true;
     //FindObjectOfType<SimpleLevelSelector>().Start();
     //SceneManager.LoadScene("Title");
   }

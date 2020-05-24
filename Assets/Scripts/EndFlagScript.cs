@@ -146,18 +146,6 @@ public class EndFlagScript : MonoBehaviour
   {
     Debug.Log("Level finished!");
 
-    // Update save
-    // Don't save if we are replaying a recording.
-    if (!GameRecorder.playingBack)
-    {
-      if (LevelSelectGUI.currentLevel != null)
-      {
-        SaveManager.Beaten(LevelSelectGUI.currentLevel);
-        SaveManager.UpdateScore(LevelSelectGUI.currentLevel);
-        SaveManager.Write();
-      }
-    }
-
     // Wait time between stars unless tapped to skip
     const bool playting = true;
     const bool playfail = false;
@@ -213,6 +201,30 @@ public class EndFlagScript : MonoBehaviour
     scoreStar = SaveManager.HasSurpassedSpeed(score, LevelSelectGUI.currentLevel);
     timeStar = SaveManager.HasSurpassedTime(score, LevelSelectGUI.currentLevel);
 
+    // Check rewards
+    int passedReward = 500;
+    int noPowerupsReward = 500;
+    int scoreReward = scoreStar ? 500 : 0;
+    int timeReward = timeStar ? 500 : 0;
+
+    // Get picolinium counter and set target to current value so we can manually increment it
+    var picoliniumCounter = GameObject.Find("Game End/Content/Picolinium/Value/Content/Text")?.GetComponent<PicoliniumCounter>();
+    picoliniumCounter.Target = SaveManager.save?.picolinium ?? 0;
+
+    SaveManager.save?.IncrementPicolinium(passedReward + noPowerupsReward + scoreReward + timeReward);
+
+    // Update save
+    // Don't save if we are replaying a recording.
+    if (!GameRecorder.playingBack)
+    {
+      if (LevelSelectGUI.currentLevel != null)
+      {
+        SaveManager.Beaten(LevelSelectGUI.currentLevel);
+        SaveManager.UpdateScore(LevelSelectGUI.currentLevel);
+        SaveManager.Write();
+      }
+    }
+
     // Let the camera pan back a bit
     yield return WaitButAllowSkip(START_WAIT_TIME);
 
@@ -225,49 +237,64 @@ public class EndFlagScript : MonoBehaviour
 
     string formattedTime = ReadableTime((int)(score.Time * 1000.0f));
 
-    SoundManager.Play("ting");
-    Settings.IncrementPicolinium(500);
+    // Get reward text template
+    var bonusTemplate = GameObject.Find("RewardText");
 
+    SoundManager.Play("ting");
+    picoliniumCounter.Target += passedReward;
+
+    // Show level time
     var levelTime = GameObject.Find("LevelTime/Text").GetComponent<TextRevealer>();
     levelTime.Text = $"{formattedTime}";
     levelTime.Run = true;
     levelTime.Counter = 0.0f;
 
-    yield return new WaitForSeconds(WAIT_TIME);
-
-    var bonusTemplate = GameObject.Find("RewardText");
-
-    SoundManager.Play("ting");
-    Settings.IncrementPicolinium(500);
-
     var newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
-    newBonusText.Text = "No powerups";
-    newBonusText.Go = true;
-
-    SoundManager.Play("ting");
-    Settings.IncrementPicolinium(500);
-
-    yield return new WaitForSeconds(WAIT_TIME);
-
-    SoundManager.Play("ting");
-    Settings.IncrementPicolinium(500);
-
-    newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
-    newBonusText.Text = "Super fast time!";
+    newBonusText.Text = "Level complete!";
     newBonusText.Go = true;
 
     yield return new WaitForSeconds(WAIT_TIME);
 
-    SoundManager.Play("ting");
-    Settings.IncrementPicolinium(500);
+    // Show powerups bonus
+    if (noPowerupsReward > 0)
+    {
+      newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
+      newBonusText.Text = "No powerups";
+      newBonusText.Go = true;
 
-    newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
-    newBonusText.Text = "Super fast speed!";
-    newBonusText.Go = true;
+      SoundManager.Play("ting");
+      picoliniumCounter.Target += noPowerupsReward;
 
-    yield return new WaitForSeconds(WAIT_TIME);
+      yield return new WaitForSeconds(WAIT_TIME);
+    }
 
+    // Show time bonus
+    if (timeReward > 0)
+    {
+      SoundManager.Play("ting");
+      picoliniumCounter.Target += timeReward;
 
+      newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
+      newBonusText.Text = "Super fast time!";
+      newBonusText.Go = true;
+
+      yield return new WaitForSeconds(WAIT_TIME);
+    }
+
+    // Show speed bonus
+    if (scoreReward > 0)
+    {
+      SoundManager.Play("ting");
+      picoliniumCounter.Target += scoreReward;
+
+      newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
+      newBonusText.Text = "Super fast speed!";
+      newBonusText.Go = true;
+
+      yield return new WaitForSeconds(WAIT_TIME);
+    }
+
+    // End
     player.SendMessage("StopCounting");
 
     player.SendMessage("EndMining");
