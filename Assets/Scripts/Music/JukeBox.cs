@@ -101,6 +101,8 @@ public class JukeBox : MonoBehaviour {
 	{
 		if (clip != null && clip == music)
 			return;
+		if (music == null)
+			return;
 
 		Debug.Log("Playing " + music.name);
 		
