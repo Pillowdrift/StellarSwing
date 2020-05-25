@@ -43,7 +43,7 @@ public class Save
 
   public Save()
   {
-    worldUnlocked = 1;
+    worldUnlocked = 5;
     levelUnlocked = 1;
   }
 

@@ -126,12 +126,16 @@ public class LoadLevel : MonoBehaviour
 				{
 					levelToLoad = "World " + currentWorld.ToString() + " To World " + LevelSelectGUI.currentLevel.world.ToString();
 				}
+				else if (LevelSelectGUI.currentLevel.number == 1)
+				{
+					levelToLoad = "Title_new";
+          MainMenuController.UnlockNextWorld = true;
+				}
 				// Let's show the level selection instead
 				else
 				{
 					levelToLoad = "Title_new";
-					if (JustUnlocked)
-						MainMenuController.UnlockNextLevel = true;
+          MainMenuController.UnlockNextLevel = true;
 				}
 			}
 		}
