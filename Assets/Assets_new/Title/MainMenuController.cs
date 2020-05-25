@@ -317,6 +317,7 @@ public class MainMenuController : MonoBehaviour
 
   public void Exit()
   {
+    SaveManager.save?.Write();
     var fade = GameObject.Find("FadeImage")?.GetComponent<Image>();
     fade.color = Color.black;
     fade.CrossFadeAlpha(1.0f, 1.0f, true);

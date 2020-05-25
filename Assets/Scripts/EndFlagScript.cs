@@ -211,7 +211,11 @@ public class EndFlagScript : MonoBehaviour
     var picoliniumCounter = GameObject.Find("Game End/Content/Picolinium/Value/Content/Text")?.GetComponent<PicoliniumCounter>();
     picoliniumCounter.Target = SaveManager.save?.picolinium ?? 0;
 
-    SaveManager.save?.IncrementPicolinium(passedReward + noPowerupsReward + scoreReward + timeReward);
+    if (SaveManager.save != null)
+    {
+      SaveManager.save.levelCompletions++;
+      SaveManager.save.IncrementPicolinium(passedReward + noPowerupsReward + scoreReward + timeReward);
+    }
 
     // Update save
     // Don't save if we are replaying a recording.

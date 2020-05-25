@@ -31,6 +31,16 @@ public class Save
   public int droneCount = 0;
   public int picolinium = 0;
 
+  // stats
+  public float playTime = 0.0f;
+  public int picoliniumFoundTotal = 0;
+  public float highestSpeed = 0.0f;
+  public int levelCompletions = 0;
+
+  public HashSet<string> unlocks = new HashSet<string>();
+  public string currentUpgrade = "";
+  public string currentHat = "";
+
   public Save()
   {
     worldUnlocked = 1;
@@ -164,6 +174,26 @@ public class Save
     { }
   }
 
+  private static void ReadUpgrades(string line, ref Save save)
+  {
+    try
+    {
+      string[] split = line.Split('=');
+      if (split.Length == 2)
+      {
+        if (split[0] == "unlocks")
+        {
+          string[] unlockNames = split[1].Split(',');
+          foreach (string unlockName in unlockNames)
+          {
+            save.unlocks.Add(unlockName);
+          }
+        }
+      }
+    }
+    catch
+    { }
+  }
 
   public string WriteAsXml(string filename)
   {
@@ -176,7 +206,7 @@ public class Save
     var writer = new StreamWriter(file);
 
     // Write the rest of the data.
-    WriteValues(writer, new { worldUnlocked, levelUnlocked, playerName, droneCount, picolinium });
+    WriteValues(writer, new { worldUnlocked, levelUnlocked, playerName, droneCount, picolinium, playTime, picoliniumFoundTotal, highestSpeed, levelCompletions });
 
     // Write the high scores
     foreach (KeyValuePair<(int, int), LevelHighScore> highscore in levelHighscores)
@@ -189,6 +219,16 @@ public class Save
       WriteValue(writer, $"highscores.{world}.{level}.time", highscore.Value.Time);
       WriteValue(writer, $"highscores.{world}.{level}.stars", highscore.Value.Stars);
     }
+
+    // Write unlocks
+    string unlockString = "";
+    foreach (string unlock in unlocks)
+    {
+      unlockString += (unlockString.Length == 0 ? "" : ",") + unlock;
+    }
+    WriteValue(writer, "unlocks", unlockString);
+    WriteValue(writer, "currentUpgrade", currentUpgrade);
+    WriteValue(writer, "currentHat", currentHat);
 
     // Cool we're done.
     writer.Close();
@@ -213,7 +253,14 @@ public class Save
         ReadValue(line, nameof(playerName), ref save.playerName);
         ReadValue(line, nameof(droneCount), ref save.droneCount);
         ReadValue(line, nameof(picolinium), ref save.picolinium);
+        ReadValue(line, nameof(playTime), ref save.playTime);
+        ReadValue(line, nameof(highestSpeed), ref save.highestSpeed);
+        ReadValue(line, nameof(levelCompletions), ref save.levelCompletions);
+        ReadValue(line, nameof(picoliniumFoundTotal), ref save.picoliniumFoundTotal);
+        ReadValue(line, nameof(currentHat), ref save.currentHat);
+        ReadValue(line, nameof(currentUpgrade), ref save.currentUpgrade);
         ReadHighscore(line, ref save);
+        ReadUpgrades(line, ref save);
       }
     }
     catch
@@ -237,5 +284,6 @@ public class Save
   public void IncrementPicolinium(int count)
   {
     picolinium += count;
+    picoliniumFoundTotal += count;
   }
 }

@@ -90,8 +90,13 @@ public class PlayerMovements : MonoBehaviour
 			Vector3 vel = GetComponent<Rigidbody>().velocity;
 			//vel *= speedloss;
 			vel.y = GetComponent<Rigidbody>().velocity.y;
-			GetComponent<Rigidbody>().velocity = vel;	
+			GetComponent<Rigidbody>().velocity = vel;
 
+			float speed = vel.magnitude;
+			if (SaveManager.save != null && speed > SaveManager.save.highestSpeed)
+			{
+				SaveManager.save.highestSpeed = speed;
+			}
 		}
 	}
 	

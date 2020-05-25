@@ -21,11 +21,15 @@ public class PicoliniumCounter : MonoBehaviour
   void Update()
   {
     float actualCount = Target >= 0 ? Target : (float)(SaveManager.save?.picolinium ?? 0);
-    if (_count < actualCount)
+    if (Mathf.Abs(_count - actualCount) < 0.1f)
     {
-      var newCount = _count + CountRate * Time.deltaTime;
-      newCount = Mathf.Min(newCount, actualCount);
-      int added = (int)newCount - (int)_count;
+      _count = actualCount;
+    }
+    else
+    {
+      float sign = Mathf.Sign(actualCount - _count);
+      var newCount = _count + sign * CountRate * Time.deltaTime;
+      newCount = sign >= 0.0f ? Mathf.Min(newCount, actualCount) : Mathf.Max(newCount, actualCount);
       _count = newCount;
     }
 
