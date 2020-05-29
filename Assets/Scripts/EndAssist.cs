@@ -19,6 +19,7 @@ public class EndAssist : MonoBehaviour
 	// Point the player towards the target
 	void Update()
 	{
+		return;
 		if(GetComponent<Rigidbody>().isKinematic)
 			return;
 		
