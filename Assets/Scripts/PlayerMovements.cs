@@ -84,11 +84,13 @@ public class PlayerMovements : MonoBehaviour
 		if(!LevelState.Dead && !LevelState.HasFinished && !GetComponent<Rigidbody>().isKinematic)
 		{
 			float speedloss = Mathf.Clamp01(((90.0f - Mathf.Abs(angleChange)) / 90.0f) + (SPEEDLOSS_THRERSHHERLD * Time.deltaTime));
+
+			speedloss = 1.0f - (0.5f * (1.0f - speedloss));
 			
 			angleChange = 0.0f;
 			
 			Vector3 vel = GetComponent<Rigidbody>().velocity;
-			//vel *= speedloss;
+			vel *= speedloss;
 			vel.y = GetComponent<Rigidbody>().velocity.y;
 			GetComponent<Rigidbody>().velocity = vel;
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpeedBooster : MonoBehaviour
 {
   public float Power = 1.0f;
+  public float MaxSpeed = 100.0f;
 
   private GameObject boostingObject;
 
@@ -13,7 +14,10 @@ public class SpeedBooster : MonoBehaviour
     if (boostingObject != null)
     {
       var direction = boostingObject.transform.forward;
-      boostingObject.GetComponent<Rigidbody>().AddForce(direction * Power);
+      var rigidbody = boostingObject.GetComponent<Rigidbody>();
+      rigidbody.AddForce(direction * Power);
+      if (rigidbody.velocity.sqrMagnitude > MaxSpeed * MaxSpeed)
+        rigidbody.velocity = rigidbody.velocity.normalized * MaxSpeed;
     }
   }
 
