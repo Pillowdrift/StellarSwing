@@ -40,9 +40,9 @@ public class MainMenuController : MonoBehaviour
   private Image modalBlocker;
   private AudioSource source;
 
-  private static int worldSelected = 1;
+  public static int worldSelected = 1;
   private static bool worldCurrentlySelected = false;
-  private static int levelSelected = 1;
+  public static int levelSelected = 1;
 
   private static bool firstTime = true;
 

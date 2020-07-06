@@ -13,9 +13,28 @@ public class TextRevealer : MonoBehaviour
   // The counter is how many characters of text from the original string to show
   public float Counter = 0;
 
+  public bool TextFromStory = false;
+
   private void Start()
   {
     _text = GetComponent<Text>();
+
+    if (TextFromStory)
+    {
+      int world = MainMenuController.worldSelected;
+      int level = MainMenuController.levelSelected;
+      Debug.Log("Getting story for world " + world + " level " + level);
+
+      if (Story.Parts.TryGetValue((world, level), out string story))
+      {
+        Debug.Log("Got story: " + story);
+        Text = story;
+      }
+      else
+      {
+        Debug.LogError("Couldn't get story!!");
+      }
+    }
   }
 
   void Update()
