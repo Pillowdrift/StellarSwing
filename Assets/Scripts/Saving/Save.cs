@@ -39,7 +39,7 @@ public class Save
 
   public HashSet<string> unlocks = new HashSet<string>();
   public string currentUpgrade = "";
-  public string currentHat = "";
+  public HashSet<string> currentHats = new HashSet<string>();
 
   public Save()
   {
@@ -174,19 +174,19 @@ public class Save
     { }
   }
 
-  private static void ReadUpgrades(string line, ref Save save)
+  private static void ReadUpgrades(string line, string type, HashSet<string> unlocks)
   {
     try
     {
       string[] split = line.Split('=');
       if (split.Length == 2)
       {
-        if (split[0] == "unlocks")
+        if (split[0] == type)
         {
           string[] unlockNames = split[1].Split(',');
           foreach (string unlockName in unlockNames)
           {
-            save.unlocks.Add(unlockName);
+            unlocks.Add(unlockName);
           }
         }
       }
@@ -226,9 +226,17 @@ public class Save
     {
       unlockString += (unlockString.Length == 0 ? "" : ",") + unlock;
     }
+
     WriteValue(writer, "unlocks", unlockString);
     WriteValue(writer, "currentUpgrade", currentUpgrade);
-    WriteValue(writer, "currentHat", currentHat);
+
+    string hatString = "";
+    foreach (string hat in currentHats)
+    {
+      hatString += (hatString.Length == 0 ? "" : ",") + hat;
+    }
+
+    WriteValue(writer, "currentHats", hatString);
 
     // Cool we're done.
     writer.Close();
@@ -257,10 +265,10 @@ public class Save
         ReadValue(line, nameof(highestSpeed), ref save.highestSpeed);
         ReadValue(line, nameof(levelCompletions), ref save.levelCompletions);
         ReadValue(line, nameof(picoliniumFoundTotal), ref save.picoliniumFoundTotal);
-        ReadValue(line, nameof(currentHat), ref save.currentHat);
         ReadValue(line, nameof(currentUpgrade), ref save.currentUpgrade);
         ReadHighscore(line, ref save);
-        ReadUpgrades(line, ref save);
+        ReadUpgrades(line, "currentHats", save.currentHats);
+        ReadUpgrades(line, "unlocks", save.unlocks);
       }
     }
     catch

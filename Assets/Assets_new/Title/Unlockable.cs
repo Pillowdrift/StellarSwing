@@ -52,7 +52,7 @@ public class Unlockable : MonoBehaviour
     if (UnlockType == Type.Upgrade)
       SaveManager.save.currentUpgrade = gameObject.name;
     else if (UnlockType == Type.Hat)
-      SaveManager.save.currentHat = gameObject.name;
+      SaveManager.save.currentHats.Add(gameObject.name);
 
     SaveManager.save.Write();
 
@@ -67,8 +67,8 @@ public class Unlockable : MonoBehaviour
 
     if (UnlockType == Type.Upgrade && SaveManager.save.currentUpgrade == gameObject.name)
       SaveManager.save.currentUpgrade = "";
-    else if (UnlockType == Type.Hat && SaveManager.save.currentHat == gameObject.name)
-      SaveManager.save.currentHat = "";
+    else if (UnlockType == Type.Hat && SaveManager.save.currentHats.Contains(gameObject.name))
+      SaveManager.save.currentHats.Remove(gameObject.name);
 
     SaveManager.save.Write();
 
@@ -86,14 +86,10 @@ public class Unlockable : MonoBehaviour
     bool buyButtonEnabled = false;
 
     // Get current unlock
-    string currentUnlockOfType = "";
-    if (UnlockType == Type.Upgrade)
-      currentUnlockOfType = SaveManager.save.currentUpgrade;
-    else if (UnlockType == Type.Hat)
-      currentUnlockOfType = SaveManager.save.currentHat;
+    string currentUpgrade = SaveManager.save.currentUpgrade;
 
     // Enable buttons depending on whether we have it unlocked etc
-    if (currentUnlockOfType == gameObject.name)
+    if (currentUpgrade == gameObject.name || SaveManager.save.currentHats.Contains(gameObject.name))
       unequipButtonEnabled = true;
     else if (SaveManager.save.unlocks.Contains(gameObject.name))
       equipButtonEnabled = true;
