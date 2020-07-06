@@ -18,6 +18,7 @@ public class MainMenuController : MonoBehaviour
     LevelSelect,
     Stats,
     Unlocks,
+    Logs,
   }
 
   public static MainMenuState NextStateToLoad = MainMenuState.Between;
@@ -309,6 +310,35 @@ public class MainMenuController : MonoBehaviour
     }
   }
 
+  public void ShowLogs()
+  {
+    if (modalBlocker.raycastTarget)
+      return;
+
+    if (menuState == MainMenuState.WorldSelect)
+    {
+      menuState = MainMenuState.Between;
+      StartCoroutine(PlayAnimation(animation, "LevelSelectToLogs", false, () =>
+      {
+        menuState = MainMenuState.Logs;
+      }));
+    }
+  }
+
+  public void CloseLogs()
+  {
+    if (modalBlocker.raycastTarget)
+      return;
+
+    if (menuState == MainMenuState.Logs)
+    {
+      menuState = MainMenuState.Between;
+      StartCoroutine(PlayAnimation(animation, "LevelSelectToLogs", true, () =>
+      {
+        menuState = MainMenuState.WorldSelect;
+      }));
+    }
+  }
 
   public void ShowCredits()
   {
