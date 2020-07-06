@@ -47,6 +47,8 @@ public class StoryFiller : MonoBehaviour
         var story = GameObject.Instantiate(storyTemplate, transform);
         var text = story.GetComponent<Text>();
         text.text = "World " + currentWorld + "\n";
+        text.fontStyle = FontStyle.Bold;
+        text.fontSize = 40;
       }
 
       // Add actual story
@@ -63,9 +65,7 @@ public class StoryFiller : MonoBehaviour
       var text = story.GetComponent<Text>();
       text.text = "(to be continued)";
     }
-  }
 
-  void Update()
-  {
+    storyTemplate.SetActive(false);
   }
 }
