@@ -19,6 +19,12 @@ public class GrapplingHook : MonoBehaviour
 		public int fingerId;
 		public float startTime;
 	};
+
+	public bool IsGrappled {
+		get {
+			return grapples.Count != 0;
+		}
+	}
 	
 	public GameObject currentTutorial = null;
 	
