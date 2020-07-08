@@ -47,7 +47,7 @@ public class Settings : MonoBehaviour
           AnisoLevel = 1,
           VSync = true,
           // Sound
-          MasterVolume = 1.0f,
+          MasterVolume = 0.5f,
           MusicVolume = 1.0f,
           SoundVolume = 1.0f,
         };

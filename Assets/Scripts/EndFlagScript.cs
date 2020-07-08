@@ -133,7 +133,6 @@ public class EndFlagScript : MonoBehaviour
 
   private IEnumerator WaitButAllowSkip(float seconds)
   {
-    tapped = false;
     float endTime = Time.time + seconds;
     while (Time.time < endTime && !tapped)
     {
@@ -230,6 +229,7 @@ public class EndFlagScript : MonoBehaviour
     }
 
     // Let the camera pan back a bit
+    tapped = false;
     yield return WaitButAllowSkip(START_WAIT_TIME);
 
     // Show the gui
@@ -237,6 +237,7 @@ public class EndFlagScript : MonoBehaviour
     GameObject.Find("Game End").BroadcastMessage("Reset");
     GameObject.Find("MainGUI").GetComponent<Animator>().Play("EndLevel");
 
+    tapped = false;
     yield return new WaitForSeconds(0.5f);
 
     string formattedTime = ReadableTime((int)(score.Time * 1000.0f));
@@ -253,49 +254,65 @@ public class EndFlagScript : MonoBehaviour
     levelTime.Run = true;
     levelTime.Counter = 0.0f;
 
-    var newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
-    newBonusText.Text = "Level complete!";
-    newBonusText.Go = true;
+    TextFadeout newBonusText;
+    if (!tapped)
+    {
+      newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
+      newBonusText.Text = "Level complete!";
+      newBonusText.Go = true;
+    }
 
-    yield return new WaitForSeconds(WAIT_TIME);
+    yield return WaitButAllowSkip(WAIT_TIME);
 
     // Show powerups bonus
     if (noPowerupsReward > 0)
     {
-      newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
-      newBonusText.Text = "No powerups";
-      newBonusText.Go = true;
-
-      SoundManager.Play("ting");
       picoliniumCounter.Target += noPowerupsReward;
 
-      yield return new WaitForSeconds(WAIT_TIME);
+      if (!tapped)
+      {
+        newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
+        newBonusText.Text = "No powerups";
+        newBonusText.Go = true;
+
+        SoundManager.Play("ting");
+      }
+
+      yield return WaitButAllowSkip(WAIT_TIME);
     }
 
     // Show time bonus
     if (timeReward > 0)
     {
-      SoundManager.Play("ting");
       picoliniumCounter.Target += timeReward;
 
-      newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
-      newBonusText.Text = "Super fast time!";
-      newBonusText.Go = true;
+      if (!tapped)
+      {
+        SoundManager.Play("ting");
 
-      yield return new WaitForSeconds(WAIT_TIME);
+        newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
+        newBonusText.Text = "Super fast time!";
+        newBonusText.Go = true;
+      }
+
+      yield return WaitButAllowSkip(WAIT_TIME);
     }
 
     // Show speed bonus
     if (scoreReward > 0)
     {
-      SoundManager.Play("ting");
       picoliniumCounter.Target += scoreReward;
 
-      newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
-      newBonusText.Text = "Super fast speed!";
-      newBonusText.Go = true;
+      if (!tapped)
+      {
+        SoundManager.Play("ting");
 
-      yield return new WaitForSeconds(WAIT_TIME);
+        newBonusText = GameObject.Instantiate(bonusTemplate, bonusTemplate.transform.parent).GetComponent<TextFadeout>();
+        newBonusText.Text = "Super fast speed!";
+        newBonusText.Go = true;
+      }
+
+      yield return WaitButAllowSkip(WAIT_TIME);
     }
 
     // End

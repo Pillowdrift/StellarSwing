@@ -26,12 +26,15 @@ public class PlayerUnlocks : MonoBehaviour
 
   private bool available = true;
 
+  private float hatHeight = 0.0f;
+
   private void Start()
   {
     _rigidbody = GetComponent<Rigidbody>();
     if (SaveManager.save != null)
     {
-      EnableHat(SaveManager.save.currentHat);
+      foreach (var hat in SaveManager.save.currentHats)
+        EnableHat(hat);
       EnablePowerup(SaveManager.save.currentUpgrade);
     }
   }
@@ -93,7 +96,20 @@ public class PlayerUnlocks : MonoBehaviour
     for (int i = 0; i < hats.childCount; ++i)
     {
       var hat = hats.GetChild(i).gameObject;
-      hat.SetActive(hatToEnable == hat.name);
+      if (hatToEnable == hat.name)
+      {
+        hat.SetActive(true);
+
+        // Stack em up except the mustache
+        if (hat.name != "Mustache")
+        {
+          float height = hat.GetComponent<MeshFilter>().mesh.bounds.size.y * hat.transform.lossyScale.y;
+          var pos = hat.transform.position;
+          pos.y += hatHeight;
+          hat.transform.position = pos;
+          hatHeight += height * 0.5f * 0.7f;
+        }
+      }
     }
   }
 

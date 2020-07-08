@@ -14,6 +14,11 @@ public class CollectiblePickles : MonoBehaviour
     _scoreAccumulator = FindObjectOfType<ScoreAccumulator>();
   }
 
+  private void Update()
+  {
+    transform.Rotate(new Vector3(0.0f, 1.0f, 0.0f));
+  }
+
   private void OnTriggerEnter(Collider other)
   {
     if (other.gameObject.name == "Player")
@@ -21,9 +26,9 @@ public class CollectiblePickles : MonoBehaviour
       Debug.Log("Player touched crystal");
       var particleSystem = GameObject.Instantiate(ParticleSystem);
       particleSystem.transform.position = transform.position;
-      particleSystem.GetComponent<ParticleSystem>().maxParticles = Count;
+      particleSystem.GetComponent<ParticleSystem>().maxParticles = Count / 10;
       SaveManager.save?.IncrementPicolinium(Count);
-      _scoreAccumulator.Play();
+      _scoreAccumulator?.Play();
       gameObject.SetActive(false);
     }
   }

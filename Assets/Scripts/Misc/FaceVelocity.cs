@@ -14,9 +14,12 @@ public class FaceVelocity : MonoBehaviour {
 	void Update () {
 		// Calculate velocity
 		Vector3 vel = transform.position - oldPos;
-		oldPos = transform.position;
-		
-		// Face our velocity
-		transform.LookAt(transform.position + vel);
+		if (Mathf.Approximately(0.0f, vel.sqrMagnitude))
+		{
+			oldPos = transform.position;
+
+			// Face our velocity
+			transform.LookAt(transform.position + vel);
+		}
 	}
 }
