@@ -30,6 +30,11 @@ public class SteamManager : MonoBehaviour {
 
 	public bool steamEnabled = true;
 
+	void Start() {
+		DontDestroyOnLoad(gameObject);
+	}
+		 
+
 	protected static SteamManager s_instance;
 	protected static SteamManager Instance {
 		get {
