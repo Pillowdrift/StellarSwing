@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
 public class TitleBlurScript : MonoBehaviour
 {
   public Color AdditiveColor = Color.black;

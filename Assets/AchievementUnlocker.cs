@@ -4,17 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Steamworks;
 
-public class AchievementUnlocker : MonoBehaviour {
+public class AchievementUnlocker : MonoBehaviour
+{
   public string AchievementIDStr;
   public bool UnlockOnLoad = false;
   private bool unlocked;
 
-  void Awake() {
+  void Awake()
+  {
     CheckActive();
   }
 
-  bool CheckActive() {
-    if (!SteamManager.Initialized || AchievementIDStr == null) {
+  bool CheckActive()
+  {
+    if (!SteamManager.Initialized || AchievementIDStr == null)
+    {
       gameObject.SetActive(false);
       if (AchievementIDStr == null) Debug.LogError("AchievementIDStr not set in AchievementUnlocker!");
       return false;
@@ -23,26 +27,33 @@ public class AchievementUnlocker : MonoBehaviour {
   }
 
 
-  void UnlockAchievement() {
+  public void UnlockAchievement()
+  {
     if (!CheckActive()) return;
     SteamUserStats.GetAchievement(AchievementIDStr, out unlocked);
-    if (!unlocked) {
+    if (!unlocked)
+    {
       SteamUserStats.SetAchievement(AchievementIDStr);
       SteamUserStats.StoreStats();
-    } else {
+    }
+    else
+    {
       Debug.Log("Already unlocked " + AchievementIDStr);
     }
   }
 
   // Start is called before the first frame update
-  void Start() {
-    if (UnlockOnLoad) {
+  void Start()
+  {
+    if (UnlockOnLoad)
+    {
       UnlockAchievement();
     }
   }
 
   // Update is called once per frame
-  void Update() {
+  void Update()
+  {
 
   }
 }
