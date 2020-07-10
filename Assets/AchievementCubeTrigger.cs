@@ -12,24 +12,13 @@ public class AchievementCubeTrigger : MonoBehaviour
     Unlocker = GameObject.Find("AchievementUnlocker").GetComponent<AchievementUnlocker>();
     if (Unlocker != null)
     {
-      Debug.Log("FOUND UNLOCKER1");
-    }
-    else
-    {
-      Debug.LogError("DID NOT FIND UNLOCKER1");
+      Debug.Log("Loaded achievement unlocker");
     }
   }
   // Start is called before the first frame update
   void Start()
   {
-    if (Unlocker != null)
-    {
-      Debug.Log("FOUND UNLOCKER2");
-    }
-    else
-    {
-      Debug.LogError("DID NOT FIND UNLOCKER2");
-    }
+
   }
 
   // Update is called once per frame
@@ -42,7 +31,6 @@ public class AchievementCubeTrigger : MonoBehaviour
   {
     if (other != null && other.tag == "Player")
     {
-      Debug.LogError("Trying to unlock achievement");
       Unlocker.UnlockAchievement();
     }
   }

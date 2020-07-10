@@ -30,6 +30,7 @@ public class Save
   public string playerName = "Name";
   public int droneCount = 0;
   public int picolinium = 0;
+  public int crashCount = 0;
 
   // stats
   public float playTime = 0.0f;
@@ -206,7 +207,7 @@ public class Save
     var writer = new StreamWriter(file);
 
     // Write the rest of the data.
-    WriteValues(writer, new { worldUnlocked, levelUnlocked, playerName, droneCount, picolinium, playTime, picoliniumFoundTotal, highestSpeed, levelCompletions });
+    WriteValues(writer, new { worldUnlocked, levelUnlocked, playerName, droneCount, picolinium, playTime, picoliniumFoundTotal, highestSpeed, levelCompletions, crashCount });
 
     // Write the high scores
     foreach (KeyValuePair<(int, int), LevelHighScore> highscore in levelHighscores)
@@ -266,6 +267,7 @@ public class Save
         ReadValue(line, nameof(levelCompletions), ref save.levelCompletions);
         ReadValue(line, nameof(picoliniumFoundTotal), ref save.picoliniumFoundTotal);
         ReadValue(line, nameof(currentUpgrade), ref save.currentUpgrade);
+        ReadValue(line, nameof(crashCount), ref save.crashCount);
         ReadHighscore(line, ref save);
         ReadUpgrades(line, "currentHats", save.currentHats);
         ReadUpgrades(line, "unlocks", save.unlocks);

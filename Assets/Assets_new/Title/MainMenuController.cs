@@ -49,6 +49,8 @@ public class MainMenuController : MonoBehaviour
 
   private int? lastWorldSelected = null;
 
+  private AchievementUnlocker unlockUnlocker;
+
   protected void Awake()
   {
     if (worldCurrentlySelected || UnlockNextWorld || UnlockNextLevel)
@@ -282,6 +284,15 @@ public class MainMenuController : MonoBehaviour
 
   public void ShowUnlocks()
   {
+    if (unlockUnlocker == null)
+    {
+      unlockUnlocker = Resources.Load<GameObject>("AchievementUnlocker").GetComponent<AchievementUnlocker>();
+      unlockUnlocker.AchievementIDStr = "allunlocks";
+      if (SaveManager.save.unlocks.Count == 13)
+      {
+        unlockUnlocker.UnlockAchievement();
+      }
+    }
     if (modalBlocker.raycastTarget)
       return;
 

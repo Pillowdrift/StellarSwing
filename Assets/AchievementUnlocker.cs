@@ -26,6 +26,18 @@ public class AchievementUnlocker : MonoBehaviour
     return true;
   }
 
+  public void ClearAchievement()
+  {
+    if (!CheckActive()) return;
+
+    SteamUserStats.GetAchievement(AchievementIDStr, out unlocked);
+    if (unlocked)
+    {
+      Debug.Log("Clearing Achievement");
+      SteamUserStats.ClearAchievement(AchievementIDStr);
+      SteamUserStats.StoreStats();
+    }
+  }
 
   public void UnlockAchievement()
   {

@@ -42,6 +42,8 @@ public class EndDeathScript : MonoBehaviour
   // If they stop grappling or moving up, kill em.
   private GameObject playerCurrentlyInArea;
 
+  private AchievementUnlocker crashUnlocker;
+
   void Start()
   {
     MainGUI = GameObject.Find("MainGUI").GetComponent<Animator>();
@@ -101,9 +103,13 @@ public class EndDeathScript : MonoBehaviour
     if (collider.tag == "Player")
     {
       if (Immediate)
+      {
         KillPlayer(collider.gameObject);
+      }
       else
+      {
         playerCurrentlyInArea = collider.gameObject;
+      }
     }
   }
 
@@ -125,6 +131,7 @@ public class EndDeathScript : MonoBehaviour
         SoundManager.Play("crash");
 
         player.SendMessage("Reload");
+        IncrementCrashCount(true);
       }
 
       return;
@@ -140,6 +147,7 @@ public class EndDeathScript : MonoBehaviour
       // Update drone count
       if (SaveManager.save != null)
       {
+        if (explode) IncrementCrashCount(false);
         SaveManager.save.droneCount++;
         SaveManager.Write();
 
@@ -172,6 +180,7 @@ public class EndDeathScript : MonoBehaviour
         // Disable renderers if exploding
         player.GetComponent<Renderer>().enabled = false;
         player.transform.Find("Shield").GetComponent<Renderer>().enabled = false;
+
       }
 
       // Disable default camera controller until level restarts
@@ -187,6 +196,30 @@ public class EndDeathScript : MonoBehaviour
 
       // Pause and then restart the level
       StartCoroutine(PauseBeforeReset());
+    }
+  }
+
+  void IncrementCrashCount(bool write)
+  {
+    if (SaveManager.save != null)
+    {
+      SaveManager.save.crashCount += 1;
+      if (write)
+      {
+        SaveManager.Write();
+      }
+      if (SaveManager.save.crashCount >= 3)
+      {
+        if (crashUnlocker == null)
+        {
+          crashUnlocker = Resources.Load<GameObject>("AchievementUnlocker").GetComponent<AchievementUnlocker>();
+          if (crashUnlocker != null)
+          {
+            crashUnlocker.AchievementIDStr = "dronecrash";
+            crashUnlocker.UnlockAchievement();
+          }
+        }
+      }
     }
   }
 

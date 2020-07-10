@@ -19,6 +19,8 @@ public class Unlockable : MonoBehaviour
 
   private int price = 0;
 
+  private AchievementUnlocker unlockUnlocker;
+
   public void Start()
   {
     equipButton = transform.Find("EquipButton")?.GetComponent<Button>();
@@ -42,6 +44,16 @@ public class Unlockable : MonoBehaviour
 
     foreach (Unlockable unlockable in FindObjectsOfType<Unlockable>())
       unlockable.UpdateState();
+
+    if (unlockUnlocker == null)
+    {
+      unlockUnlocker = Resources.Load<GameObject>("AchievementUnlocker").GetComponent<AchievementUnlocker>();
+      unlockUnlocker.AchievementIDStr = "allunlocks";
+      if (SaveManager.save.unlocks.Count == 13)
+      {
+        unlockUnlocker.UnlockAchievement();
+      }
+    }
   }
 
   public void EquipClicked()
