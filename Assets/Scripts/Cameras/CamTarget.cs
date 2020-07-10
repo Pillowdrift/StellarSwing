@@ -39,9 +39,6 @@ public class CamTarget : MonoBehaviour
 	// When you go into the zone.
 	void OnTriggerEnter(Collider other)
 	{
-		if (sGrappleAttachedTo != null)
-			return;
-
 		if(other.gameObject.name == "Player")
 		{
 			Enable();
