@@ -69,6 +69,10 @@ public class GrapplingHook : MonoBehaviour
 	private List<GameObject> grappleable;
 
 	private GameObject targetedObject;
+
+	private AchievementUnlocker hangUnlocker;
+	private float hangTime = 0;
+	private bool triedHangUnlock = false;
 	
 //	float ropeWidth;
 	
@@ -136,6 +140,21 @@ public class GrapplingHook : MonoBehaviour
 	public void Update()
 	{
 		GameObject targetedObjectPrev = targetedObject;
+
+		if (IsGrappled)
+		{
+			hangTime += Time.deltaTime;
+			if (hangTime > 30 && !triedHangUnlock)
+			{
+				hangUnlocker = AchievementUnlocker.MakeUnlocker("hanginout");
+				hangUnlocker.UnlockAchievement();
+				triedHangUnlock = true;
+			}
+		}
+		else
+		{
+			hangTime = 0;
+		}
 
 		// Do gamepad input
 		// Detarget
