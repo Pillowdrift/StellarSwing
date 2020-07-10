@@ -286,8 +286,7 @@ public class MainMenuController : MonoBehaviour
   {
     if (unlockUnlocker == null)
     {
-      unlockUnlocker = Resources.Load<GameObject>("AchievementUnlocker").GetComponent<AchievementUnlocker>();
-      unlockUnlocker.AchievementIDStr = "allunlocks";
+      unlockUnlocker = AchievementUnlocker.MakeUnlocker("allunlocks");
       if (SaveManager.save.unlocks.Count == 13)
       {
         unlockUnlocker.UnlockAchievement();

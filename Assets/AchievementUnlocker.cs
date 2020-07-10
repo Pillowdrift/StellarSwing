@@ -10,6 +10,18 @@ public class AchievementUnlocker : MonoBehaviour
   public bool UnlockOnLoad = false;
   private bool unlocked;
 
+  public static AchievementUnlocker MakeUnlocker(string AchievementIDStr)
+  {
+    var gameobj = Resources.Load<GameObject>("AchievementUnlocker");
+    if (gameobj == null)
+    {
+      Debug.LogError("Error -- could not fabricate AchievementUnlocker");
+    }
+    AchievementUnlocker result = gameobj.GetComponent<AchievementUnlocker>();
+    result.AchievementIDStr = AchievementIDStr;
+    return result;
+  }
+
   void Awake()
   {
     CheckActive();
@@ -26,18 +38,6 @@ public class AchievementUnlocker : MonoBehaviour
     return true;
   }
 
-  public void ClearAchievement()
-  {
-    if (!CheckActive()) return;
-
-    SteamUserStats.GetAchievement(AchievementIDStr, out unlocked);
-    if (unlocked)
-    {
-      Debug.Log("Clearing Achievement");
-      SteamUserStats.ClearAchievement(AchievementIDStr);
-      SteamUserStats.StoreStats();
-    }
-  }
 
   public void UnlockAchievement()
   {
