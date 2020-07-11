@@ -19,6 +19,9 @@ public class PauseButton : MonoBehaviour
 
 	public void Pause()
 	{
+		if (Time.timeScale == 0.0f)
+			return;
+
 		if (MainGUI.GetCurrentAnimatorStateInfo(0).IsName("Playing"))
 		{
 			MainGUI.Play("Pause");
