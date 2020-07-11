@@ -20,6 +20,9 @@ public class Unlockable : MonoBehaviour
   private int price = 0;
 
   private AchievementUnlocker unlockUnlocker;
+  private AchievementUnlocker hatStackUnlocker;
+
+  private static bool triedHatStack = false;
 
   public void Start()
   {
@@ -47,8 +50,7 @@ public class Unlockable : MonoBehaviour
 
     if (unlockUnlocker == null)
     {
-      unlockUnlocker = Resources.Load<GameObject>("AchievementUnlocker").GetComponent<AchievementUnlocker>();
-      unlockUnlocker.AchievementIDStr = "allunlocks";
+      unlockUnlocker = AchievementUnlocker.MakeUnlocker("allunlocks");
       if (SaveManager.save.unlocks.Count == 13)
       {
         unlockUnlocker.UnlockAchievement();
@@ -67,6 +69,19 @@ public class Unlockable : MonoBehaviour
       SaveManager.save.currentHats.Add(gameObject.name);
 
     SaveManager.save.Write();
+
+    if (SaveManager.save.currentHats.Count > 1)
+    {
+      if (hatStackUnlocker == null)
+      {
+        hatStackUnlocker = AchievementUnlocker.MakeUnlocker("deckedout");
+      }
+      if (!triedHatStack)
+      {
+        hatStackUnlocker.UnlockAchievement();
+        triedHatStack = true;
+      }
+    }
 
     foreach (Unlockable unlockable in FindObjectsOfType<Unlockable>())
       unlockable.UpdateState();
