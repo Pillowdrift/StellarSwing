@@ -37,6 +37,6 @@ public class Riser : MonoBehaviour {
 		transform.Translate(new Vector3(0, 1, 0) * UpSpeed * Time.deltaTime);
 		
 		// Fade out the alpha.
-		GetComponent<Renderer>().material.SetColor("_TintColor", color * (1 - (timer / LifeTime)));
+		GetComponent<Renderer>().material.SetColor("_TintColor", 0.75f * color * (1 - (timer / LifeTime)));
 	}
 }
