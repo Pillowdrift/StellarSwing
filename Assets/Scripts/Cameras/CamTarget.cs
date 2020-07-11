@@ -59,8 +59,10 @@ public class CamTarget : MonoBehaviour
 	{	
 		if(sDisableOnceGrappled)
 			Disable(1);
-		if(sAfterGrappleTarget != null)
+		if (sAfterGrappleTarget != null)
 			sTarget = sAfterGrappleTarget;
+		else
+			Disable(1);
 		
 		sGrappleAttachedTo = grappleTarget;
 	}

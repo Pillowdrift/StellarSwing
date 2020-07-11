@@ -240,7 +240,7 @@ public class GrapplingHook : MonoBehaviour
 					if (rope.enabled == true)
 						Detach();					
 					
-					Attach(hit, (transform.position - hit.point).magnitude);
+					Attach(hit, (transform.position - hit.point).magnitude, true);
 					SoundManager.Play("attach");
 				}
 			}
@@ -417,7 +417,7 @@ public class GrapplingHook : MonoBehaviour
 					if(grappleDist > minRopeDistanceForNewRope)
 					{
 						//float grapdiff = (grapple.transform.position - hitInfo.point).magnitude;
-						Attach(hitInfo, springJoint.maxDistance - grappleDist);
+						Attach(hitInfo, springJoint.maxDistance - grappleDist, false);
 					}
 				}
 				
@@ -476,7 +476,7 @@ public class GrapplingHook : MonoBehaviour
 				if (rope.enabled == true)
 					Detach();					
 				
-				Attach(hit, (transform.position - hit.point).magnitude);
+				Attach(hit, (transform.position - hit.point).magnitude, true);
 
 				hit.collider.gameObject.SendMessage("Grappled", SendMessageOptions.DontRequireReceiver);
 
@@ -549,7 +549,7 @@ public class GrapplingHook : MonoBehaviour
 		springJoint.connectedBody = null;
 	}
 	
-	public void Attach(RaycastHit hit, float distance)
+	public void Attach(RaycastHit hit, float distance, bool initialGrapple)
 	{
 		if (hit.collider != null && hit.collider.tag == "GrappleTarget")
 		{
@@ -569,15 +569,19 @@ public class GrapplingHook : MonoBehaviour
 		if (hit.collider != null && hit.collider.tag == "GrappleTarget")
 		{
 			Transform t = hit.collider.gameObject.GetComponent<GrappleGuide>().grappleTo;
-			CamTarget.Grappled(t);
+			if (initialGrapple)
+        CamTarget.Grappled(t);
 			grappleData.gameObject.transform.position = t.position;
 		}
 		else
 		{
-			if (hit.collider != null)
-				CamTarget.Grappled(hit.collider.transform);
-			else
-				CamTarget.Grappled(transform);
+			if (initialGrapple)
+			{
+				if (hit.collider != null)
+					CamTarget.Grappled(hit.collider.transform);
+				else
+					CamTarget.Grappled(transform);
+			}
 			grappleData.gameObject.transform.position = hit.point;
 		}
 		

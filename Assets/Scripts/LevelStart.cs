@@ -32,7 +32,8 @@ public class LevelStart : MonoBehaviour
 	private IEnumerator ShowStartText()
 	{
 		yield return new WaitForEndOfFrame();
-    tutorialCamera.ShowTutorialText("Click anywhere to begin", false, "Level Start");
+		if (!LevelStart.started)
+      tutorialCamera.ShowTutorialText("Click anywhere to begin", false, "Level Start");
 	}
 	
 	public void Start()

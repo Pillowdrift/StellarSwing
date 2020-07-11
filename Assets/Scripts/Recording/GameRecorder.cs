@@ -160,7 +160,7 @@ public class GameRecorder : MonoBehaviour
 					RaycastHit hit = new RaycastHit();
 					hit.point = current.GetGrapplePos(time);
 					
-					grappleScript.Attach(hit, -1);
+					grappleScript.Attach(hit, -1, true);
 				}
 				else if (!current.IsGrappling(time) && current.IsGrappling(lastTime))
 				{
