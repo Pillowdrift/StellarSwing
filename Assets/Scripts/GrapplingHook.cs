@@ -73,16 +73,19 @@ public class GrapplingHook : MonoBehaviour
 	private AchievementUnlocker hangUnlocker;
 	private float hangTime = 0;
 	private bool triedHangUnlock = false;
-	
-//	float ropeWidth;
-	
-//	const float TRANSPARENCY_THRESHOLD = 0.99f;	
-//	
-//	const float ENABLED_THICKNESS = 0.2f;
-//	const float DISABLED_THICKNESS = 1.0f;
-//	
-//	const float TRANSITION_RATE = 25.0f;
-	
+
+	private AchievementUnlocker regrappleUnlocker;
+	private static int lastGrappled = 0;
+
+	//	float ropeWidth;
+
+	//	const float TRANSPARENCY_THRESHOLD = 0.99f;	
+	//	
+	//	const float ENABLED_THICKNESS = 0.2f;
+	//	const float DISABLED_THICKNESS = 1.0f;
+	//	
+	//	const float TRANSITION_RATE = 25.0f;
+
 	// Use this for initialization
 	void Awake()
 	{
@@ -475,6 +478,23 @@ public class GrapplingHook : MonoBehaviour
 		}
 	}
 
+	private void CheckRegrapple(GameObject collided)
+	{
+		if (collided == null)
+			return;
+
+		if (regrappleUnlocker == null)
+			regrappleUnlocker = AchievementUnlocker.MakeUnlocker("doublegrapple");
+
+		int grappled = collided.GetInstanceID();
+		if (lastGrappled == grappled)
+		{
+			regrappleUnlocker.UnlockAchievement();
+		}
+
+		lastGrappled = grappled;
+	}
+
 	public void TryGrapple(Vector3 position)
 	{
 		// If this is the gamepad, don't process here (it's done in update)
@@ -490,7 +510,8 @@ public class GrapplingHook : MonoBehaviour
 		ray = theCamera.ScreenPointToRay(position);
 		if (Physics.Raycast(ray, out hit) && (enableRegrapple || rope.enabled == false))
 		{
-			if(hit.collider.gameObject != gameObject && hit.collider.gameObject.tag != "Ungrappleable")
+			CheckRegrapple(hit.collider.gameObject);
+			if (hit.collider.gameObject != gameObject && hit.collider.gameObject.tag != "Ungrappleable")
 			{
 				if (rope.enabled == true)
 					Detach();					

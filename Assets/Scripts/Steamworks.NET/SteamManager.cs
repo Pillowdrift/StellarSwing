@@ -24,9 +24,6 @@ using System.Diagnostics;
 public class SteamManager : MonoBehaviour {
 #if !DISABLESTEAMWORKS
 	protected static bool s_EverInitialized = false;
-	static SteamManager() {
-		UnityEngine.Debug.Log("!!!!!!!!!!!!!!!!!!!!!!TEST STRING!!!!!!!!!!!!!!!!!!!!!");
-		}
 
 	public bool steamEnabled = true;
 
