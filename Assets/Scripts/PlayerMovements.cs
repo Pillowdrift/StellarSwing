@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayerMovements : MonoBehaviour
 {
+
+	private static bool triedUnlock = false;
+	//private static float topspeed = 0;
 	public float Speed { get { return GetComponent<Rigidbody>().velocity.magnitude; } }
 	
 	const float FORCE_APPLIED = 500F;
@@ -43,6 +46,11 @@ public class PlayerMovements : MonoBehaviour
 	
 	void Update()
 	{
+		if (!triedUnlock && Speed > 300 && GetComponent<GrapplingHook>().IsGrappled)
+		{
+			AchievementUnlocker.MakeUnlocker("topspeed").UnlockAchievement();
+			triedUnlock = true;
+		}
 		if (LevelStart.started && !LevelState.Dead)
 		{
 			float moment;
@@ -110,7 +118,7 @@ public class PlayerMovements : MonoBehaviour
 		//return (score > 0) ? score : 0;
 		return -score;
 	}
-	
+
 	/*void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.tag == "Planet")
@@ -132,5 +140,15 @@ public class PlayerMovements : MonoBehaviour
 			if(impactPower > 30)
 				SoundManager.Play("smash", impactPower);
 		}
+	}*/
+
+	//
+	/*void OnGUI()
+	{
+		topspeed = Speed > topspeed ? Speed : topspeed;
+		GUIStyle guiStyle = new GUIStyle(GUI.skin.label);
+		guiStyle.fontSize = 20;
+		guiStyle.normal.textColor = Color.white;
+		GUI.Label(new Rect(400, 0, 100, 100), Speed + " " + topspeed, guiStyle);
 	}*/
 }
