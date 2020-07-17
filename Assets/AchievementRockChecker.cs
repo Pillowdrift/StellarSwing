@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AchievementRock2_3 : MonoBehaviour
+public class AchievementRockChecker : MonoBehaviour
 {
   private static bool touchedRock;
 

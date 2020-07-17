@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AchievementEndScript1_6 : MonoBehaviour
 {
-  private AchievementUnlocker unlocker;
+  private static bool triedUnlock = false;
 
   // Start is called before the first frame update
   void Start()
@@ -23,10 +23,10 @@ public class AchievementEndScript1_6 : MonoBehaviour
     if (collision.gameObject.name != "Player")
       return;
 
-    if (unlocker == null && AchievementCube1_6.GetCount() == 0)
+    if (!triedUnlock && AchievementCube1_6.GetCount() == 0)
     {
-      unlocker = AchievementUnlocker.MakeUnlocker("world1_6");
-      unlocker.UnlockAchievement();
+      AchievementUnlocker.MakeUnlocker("world1_6").UnlockAchievement();
+      triedUnlock = true;
     }
   }
 
