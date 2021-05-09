@@ -493,7 +493,12 @@ public class MainMenuController : MonoBehaviour
     {
       var lvl = CurLevel();
       LevelSelectGUI.currentLevel = lvl;
-      SceneManager.LoadScene(lvl.name);
+
+      var save = SaveManager.save;
+      if (lvl.name == "World 1 Level 1" && save != null && save.worldUnlocked == 1 && save.levelUnlocked == 1)
+        SceneManager.LoadScene("Prelude");
+      else
+        SceneManager.LoadScene(lvl.name);
     }
     else
     {

@@ -10,7 +10,7 @@ public class CreditsGUI : MonoBehaviour
 	private const string credits = 	  "Credits\n\n"
 									+ "© 2020 Pillowdrift Games\n"
 									+ "\n"
-									+ "Remaster by cat (Caitlin Wilks)\n"
+									+ "Remaster by Caitlin Wilks & Luci Grey\n"
 									+ "\n"
 									+ "Original pillowdrift crew:\n"
 									+ "Caitlin Wilks\n"

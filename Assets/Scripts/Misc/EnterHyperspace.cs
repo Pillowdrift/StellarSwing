@@ -19,6 +19,8 @@ public class EnterHyperspace : MonoBehaviour
 	private float afterShrinkTimer;
 	
 	private int nextWorld;
+
+	public bool prelude = false;
 	
 	// Use this for initialization
 	void Start() 
@@ -69,18 +71,25 @@ public class EnterHyperspace : MonoBehaviour
 			// Wait a frame
 			yield return 0;
 		}
-		
+
+		if (prelude)
+		{
+			Application.LoadLevel("World 1 Level 1");
+		}
+		else
+		{
 #if GO_BACK_TO_TITLE
-		LevelSelectGUI.worldToShow = "World" + (nextWorld - 1);
-		LevelSelectGUI.levelToShow = 0;
-		LevelSelectGUI.worldTransition = true;
-		MainMenuController.UnlockNextWorld = true;
-		Application.LoadLevel("Title_new");
+			LevelSelectGUI.worldToShow = "World" + (nextWorld - 1);
+			LevelSelectGUI.levelToShow = 0;
+			LevelSelectGUI.worldTransition = true;
+			MainMenuController.UnlockNextWorld = true;
+			Application.LoadLevel("Title_new");
 #else
-		LevelSelectGUI.worldToShow = "World" + (nextWorld);
-		LevelSelectGUI.levelToShow = 0;
-		LevelSelectGUI.worldTransition = false;
-		Loading.Load(WorldToLoad);
+      LevelSelectGUI.worldToShow = "World" + (nextWorld);
+      LevelSelectGUI.levelToShow = 0;
+      LevelSelectGUI.worldTransition = false;
+      Loading.Load(WorldToLoad);
 #endif
+		}
 	}
 }
