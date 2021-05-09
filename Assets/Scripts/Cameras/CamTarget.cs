@@ -29,7 +29,7 @@ public class CamTarget : MonoBehaviour
 		if(disableOnceGrappledTo == null)
 			disableOnceGrappledTo = target;
 			
-		Disable(1);
+		Disable(returnRate);
 	}
 	
 	void Update()

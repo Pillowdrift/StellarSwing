@@ -320,7 +320,8 @@ public class EndFlagScript : MonoBehaviour
 
     player.SendMessage("EndMining");
 
-    GameObject.Find("Game End/Content/Story/Text").GetComponent<TextRevealer>().Run = true;
+    //GameObject.Find("Game End/Content/Story/Text").GetComponent<TextRevealer>().Run = true;
+    GameObject.Find("MainGUI").GetComponent<Animator>().Play("ExpandEndLevel");
 
     if (!uploading)
       GUIController.EndLevel(true);

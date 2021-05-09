@@ -17,7 +17,7 @@ public class LevelStart : MonoBehaviour
 	private ScrollingCamera scrollingCamera;
 	private GrapplingHook grapplingHook;
 	private PlayerMovements playerMovements;
-	
+
 	private Vector3 initialCameraPosition;
 	private Quaternion initialCameraRotation;
 	
@@ -48,9 +48,9 @@ public class LevelStart : MonoBehaviour
 		else
 		{
 			enabled = true;
-			
-			initialCameraPosition = transform.position;
-			initialCameraRotation = transform.rotation;
+
+      initialCameraPosition = transform.position;
+      initialCameraRotation = transform.rotation;
 			
 			AmbientNoise.Play();
 			

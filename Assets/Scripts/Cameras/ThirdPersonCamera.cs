@@ -48,7 +48,8 @@ public class ThirdPersonCamera : MonoBehaviour
 
   void Start()
   {
-    transform.rotation = CalculateDesiredRotation();
+    // hack instead of GetDesiredRotation in case it takes into account a camera trigger
+    transform.rotation = Quaternion.LookRotation(target.transform.forward);
     Vector3 targetPos = target.transform.position + offset - transform.forward * distanceFromCamera;// + (transform.forward * -1 * realDistance);
     transform.position = targetPos;
   }
