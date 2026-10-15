@@ -1,6 +1,7 @@
 fileFormatVersion: 2
 guid: 91601cc260679e247a49699170d3667a
 MonoImporter:
+  externalObjects: {}
   serializedVersion: 2
   defaultReferences:
   - currentTutorial: {instanceID: 0}
@@ -9,3 +10,6 @@ MonoImporter:
   - ropeMaterial: {fileID: 2100000, guid: 6f88657647b656246b35457069ca52ec, type: 2}
   executionOrder: 2
   icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
