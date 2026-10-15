@@ -87,7 +87,7 @@ new(); place(W, 'rock.png', 170, 10, -46, W); beam(W, 60, 214, 120, 96, W); beam
 
 new(); m(C+'barrier.png', '-trim', '+repage', '-morphology', 'Dilate', 'Disk:1.5', '-fill', '#ff6ab0', '-colorize', '45', '(', '+clone', '-background', '#ff3a90', '-shadow', '90x5+0+0', ')', '+swap', '-background', 'none', '-layers', 'merge', '+repage', T+'barrier_t.png'); m(W, '(', T+'barrier_t.png', '-resize', '210x210', ')', '-gravity', 'center', '-composite', W); nosign(W, W); finish('world1_6', W)
 
-new(); streaks(W, W, col='#ffb45a', lines=((80, 14, 104, 6), (104, 10, 92, 7), (128, 16, 108, 6), (152, 12, 96, 5), (176, 24, 88, 4))); shadowed(W, 'drone_side.png', 180, 30, 0, W, rot=-10, flop=True); finish('topspeed', W)
+new(); streaks(W, W, col='#ffb45a', lines=((104, 10, 92, 7), (128, 16, 108, 6), (152, 12, 96, 5), (176, 24, 88, 4))); shadowed(W, 'drone_side.png', 180, 30, 0, W, rot=-10, flop=True); finish('topspeed', W)
 
 new(); shadowed(W, 'rock.png', 200, 0, 0, W); nosign(W, W); finish('world2_3', W)
 new(); shadowed(W, 'dasher.png', 196, 0, 0, W); nosign(W, W); finish('world3_2', W)
