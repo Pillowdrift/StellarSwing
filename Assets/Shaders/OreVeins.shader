@@ -9,8 +9,10 @@ Shader "Stellar/OreVeins"
 		_CrystalColor ("Crystal Colour", Color) = (1, 0.3, 0.25, 1)
 		_Color ("Brightness (animated by Glower)", Color) = (1, 1, 1, 1)
 		_Glow ("Glow", Range(0, 2)) = 0.35
-		_Metallic ("Metallic", Range(0, 1)) = 0.5
-		_Glossiness ("Smoothness", Range(0, 1)) = 0.85
+		_Wrap ("Wrap (half-Lambert)", Range(0, 1)) = 0.7
+		_Shininess ("Shininess", Range(0, 1)) = 0.8
+		_SpecStrength ("Highlight Strength", Range(0, 2)) = 1.2
+		_SpecTint ("Highlight Colour", Color) = (1, 1, 1, 1)
 		_Contrast ("Mask Contrast", Range(1, 4)) = 1.8
 	}
 	SubShader
@@ -21,20 +23,19 @@ Shader "Stellar/OreVeins"
 		Offset -1, -1
 
 		CGPROGRAM
-		#pragma surface surf Standard alpha:fade
+		#pragma surface surf Wrap alpha:fade
 		#pragma target 3.0
+		#include "WrapLighting.cginc"
 
 		sampler2D _MainTex;
 		fixed4 _CrystalColor;
 		fixed4 _Color;
 		half _Glow;
-		half _Metallic;
-		half _Glossiness;
 		half _Contrast;
 
 		struct Input { float2 uv_MainTex; };
 
-		void surf (Input IN, inout SurfaceOutputStandard o)
+		void surf (Input IN, inout SurfaceOutputWrap o)
 		{
 			fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
 			// Keep the texture's crystal detail, recoloured towards the ore colour
@@ -43,8 +44,7 @@ Shader "Stellar/OreVeins"
 			half3 crystal = _CrystalColor.rgb * _Color.rgb * (0.35 + 1.3 * detail);
 			o.Albedo = crystal;
 			o.Emission = crystal * _Glow;
-			o.Metallic = _Metallic;
-			o.Smoothness = _Glossiness;
+			o.Gloss = 1;
 			o.Alpha = saturate((tex.a - 0.5) * _Contrast + 0.5) * _Color.a;
 		}
 		ENDCG

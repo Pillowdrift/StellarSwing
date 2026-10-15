@@ -55,13 +55,16 @@ Material:
     - _Glow: 0.55
     - _InvFade: 0.01
     - _Metallic: 0.9
-    - _Shininess: 0.078125
+    - _Shininess: 0.8
+    - _SpecStrength: 1.2
     - _SquashAmount: 1
+    - _Wrap: 0.7
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CrystalColor: {r: 0.3, g: 1, b: 0.45, a: 1}
     - _Scale: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _SpecTint: {r: 0.58, g: 1, b: 0.67, a: 1}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -33,8 +33,12 @@ Material:
     - _Glossiness: 0.72
     - _Glow: 0.55
     - _Metallic: 0.9
+    - _Shininess: 0.8
+    - _SpecStrength: 1.2
+    - _Wrap: 0.7
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CrystalColor: {r: 1, g: 0.22, b: 0.18, a: 1}
+    - _SpecTint: {r: 1, g: 0.532, b: 0.508, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
