@@ -45,10 +45,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BumpScale: 0.5
+    - _BumpScale: 0.2
     - _Cutoff: 0.5
-    - _DetailAlbedoStrength: 0.25
-    - _DetailNormalScale: 0.5
+    - _DetailAlbedoStrength: 0.12
+    - _DetailNormalScale: 0.2
     - _DetailTiling: 4
     - _Outline: 0.08
     - _RimPower: 3
