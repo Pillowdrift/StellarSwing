@@ -16,6 +16,7 @@ Library Assets (library).
 | `library_hero_3840x1240.jpg` | Library Hero (no logo; Steam puts the logo on top) |
 | `library_logo_1280.png` | Library Logo (transparent; "centered bottom" or "left bottom" both work) |
 
-`src/` holds the title scene captured with the UI hidden, one render per asset shape,
-plus the title logo (`Assets/Assets_new/Title/ss_title.png`). To change the layout, edit
+`src/` holds the title scene with the UI hidden, rendered straight from the title camera
+(not the game view, which stretches to the requested size): one render at each wide
+asset's exact shape and a 6144x3456 master the tall ones are cropped from, plus the title logo (`Assets/Assets_new/Title/ss_title.png`). To change the layout, edit
 `compose.py` and run `python3 tools/steam/store/art/compose.py` (needs ImageMagick 7).
