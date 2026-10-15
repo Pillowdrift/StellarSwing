@@ -48,6 +48,12 @@ public class LerpPos : MonoBehaviour
 	
 	public void LerpToStartPos()
 	{
+		// Head for the spot behind the (already reset) player rather than the pose saved at
+		// load, which is the tutorial camera's first shot when the level opens with a tutorial
+		ThirdPersonCamera cameraController = GetComponent<ThirdPersonCamera>();
+		if (cameraController != null)
+			cameraController.GetRestPose(out position, out rotation);
+
 		timeDiff = 0.0f;
 		lerping = true;
 	}

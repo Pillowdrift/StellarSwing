@@ -48,10 +48,16 @@ public class ThirdPersonCamera : MonoBehaviour
 
   void Start()
   {
+    GetRestPose(out Vector3 pos, out Quaternion rot);
+    transform.SetPositionAndRotation(pos, rot);
+  }
+
+  // Where the camera sits behind the player when nothing is steering it
+  public void GetRestPose(out Vector3 position, out Quaternion rotation)
+  {
     // hack instead of GetDesiredRotation in case it takes into account a camera trigger
-    transform.rotation = Quaternion.LookRotation(target.transform.forward);
-    Vector3 targetPos = target.transform.position + offset - transform.forward * distanceFromCamera;// + (transform.forward * -1 * realDistance);
-    transform.position = targetPos;
+    rotation = Quaternion.LookRotation(target.transform.forward);
+    position = target.transform.position + offset - rotation * Vector3.forward * distanceFromCamera;
   }
 
   void Update()
