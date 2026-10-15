@@ -22,7 +22,9 @@ public class Loading : MonoBehaviour
 	
 	void Start()
 	{
-		Camera.main.GetComponent<GUILayer>().enabled = false;
+		GUILayer guiLayer = Camera.main.GetComponent<GUILayer>();
+		if (guiLayer != null)
+			guiLayer.enabled = false;
 		circleLerp = 0;
 		
 		srtatingFov = Camera.main.fieldOfView;

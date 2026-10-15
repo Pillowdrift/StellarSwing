@@ -641,7 +641,7 @@ public class GrapplingHook : MonoBehaviour
 		}
 		else
 		{
-			grappleData.gameObject.transform.LookAt(grapples[grapples.Count - 1].gameObject.transform, -GetComponent<Rigidbody>().velocity);
+			grappleData.gameObject.transform.LookAt(grapples[grapples.Count - 1].gameObject.transform, -GetComponent<Rigidbody>().linearVelocity);
 			
 			grappleData.offset = hit.normal * GrappleExtrusion;
 		}

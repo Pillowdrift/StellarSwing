@@ -13,7 +13,7 @@ public class GrappleGuideParent : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{			
-		transform.LookAt(transform.position + transform.parent.GetComponent<Rigidbody>().velocity);
+		transform.LookAt(transform.position + transform.parent.GetComponent<Rigidbody>().linearVelocity);
 	
 	}
 }

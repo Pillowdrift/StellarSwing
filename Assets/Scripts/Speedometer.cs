@@ -47,7 +47,7 @@ public class Speedometer : MonoBehaviour
 		if (playerBody != null)
 		{
 			// Adjust velocity for needle
-			Vector3 adjustedVelocity = new Vector3(playerBody.velocity.x, playerBody.velocity.y, playerBody.velocity.z);
+			Vector3 adjustedVelocity = new Vector3(playerBody.linearVelocity.x, playerBody.linearVelocity.y, playerBody.linearVelocity.z);
 			
 			// Scale speed
 			float speed = adjustedVelocity.magnitude * speedScale;

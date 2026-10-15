@@ -178,7 +178,7 @@ public class GUIController : MonoBehaviour
 		if (obj != null)
 		{
 			GUIText text = obj.GetComponent<GUIText>();
-			return text.enabled;
+			return text != null && text.enabled;
 		}
 		return false;
 	}

@@ -112,7 +112,7 @@ public class EndFlagScript : MonoBehaviour
 
       //freeze the player
       LevelState.Dead = true;
-      collider.GetComponent<Rigidbody>().velocity = Vector3.zero;
+      collider.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
       collider.GetComponent<Rigidbody>().isKinematic = true;
 
       //make the player face the thing it hit
@@ -342,7 +342,7 @@ public class EndFlagScript : MonoBehaviour
   private static List<string> _units = new List<string>
   {
       "ns",
-      "µs",
+      "ï¿½s",
       "ms",
       "s",
       "min",

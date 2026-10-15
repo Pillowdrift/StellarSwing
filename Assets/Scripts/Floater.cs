@@ -23,7 +23,7 @@ public class Floater : MonoBehaviour
 		
 		if (forceFactor > 0f)
 		{
-			Vector3 uplift = -Physics.gravity * buoyancy * (forceFactor - GetComponent<Rigidbody>().velocity.y * bounceDamp) * 0.9f;
+			Vector3 uplift = -Physics.gravity * buoyancy * (forceFactor - GetComponent<Rigidbody>().linearVelocity.y * bounceDamp) * 0.9f;
 			
 			if (float.IsNaN(uplift.sqrMagnitude))
 				throw new UnityException("Invalid buoyancy");

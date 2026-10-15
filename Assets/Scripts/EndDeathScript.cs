@@ -85,7 +85,7 @@ public class EndDeathScript : MonoBehaviour
       // If we aren't grappled and we aren't moving up, kill them
       if (!grapplingHook.IsGrappled)
       {
-        float dot = Vector3.Dot(Vector3.up, rigidbody.velocity.normalized);
+        float dot = Vector3.Dot(Vector3.up, rigidbody.linearVelocity.normalized);
         if (dot < -0.25f)
         {
           KillPlayer(playerCurrentlyInArea);

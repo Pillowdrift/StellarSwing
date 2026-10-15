@@ -43,7 +43,7 @@ public class TutorialButton : MonoBehaviour
 
 	void Update()
 	{
-		if (!enabled || !GetComponent<GUITexture>().enabled)
+		if (!enabled || GetComponent<GUITexture>() == null || !GetComponent<GUITexture>().enabled)
 			return;
 		
 		if (Time.time - creationTime < 0.5f)

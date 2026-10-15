@@ -35,7 +35,7 @@ public class Flipper : MonoBehaviour
 		
 		if (body != null)
 		{
-			body.velocity = new Vector3(body.velocity.x, power, body.velocity.z);
+			body.linearVelocity = new Vector3(body.linearVelocity.x, power, body.linearVelocity.z);
 		}
 	}
 }

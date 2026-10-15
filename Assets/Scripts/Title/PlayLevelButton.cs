@@ -29,7 +29,9 @@ public class PlayLevelButton : MonoBehaviour
 			if (timer < 0)
 			{
 				gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-				Camera.main.GetComponent<GUILayer>().enabled = false;
+				GUILayer guiLayer = Camera.main.GetComponent<GUILayer>();
+				if (guiLayer != null)
+					guiLayer.enabled = false;
 				LevelSelectGUI.worldToShow = LevelSelectGUI.currentWorld;
 				LevelSelectGUI.levelToShow = LevelSelectGUI.currentLevel.number;
 				LevelSelectGUI.LoadSelectedLevel();

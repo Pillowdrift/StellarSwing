@@ -148,9 +148,9 @@ public class GameRecorder : MonoBehaviour
 			{
 				transform.position = current.GetPosition(time);
 				if (!GetComponent<Rigidbody>().isKinematic)
-					GetComponent<Rigidbody>().velocity = current.GetVelocity(time);
+					GetComponent<Rigidbody>().linearVelocity = current.GetVelocity(time);
 				
-				transform.LookAt(transform.position + GetComponent<Rigidbody>().velocity);
+				transform.LookAt(transform.position + GetComponent<Rigidbody>().linearVelocity);
 				
 				if (current.IsGrappling(time) && current.GetGrapplePos(lastTime) != current.GetGrapplePos(time))
 				{
@@ -301,6 +301,6 @@ public class GameRecorder : MonoBehaviour
 			linePoints.Enqueue(transform.position + offset);
 		}
 		
-		current.Add(transform.position + offset, GetComponent<Rigidbody>().velocity, grappleScript.IsGrappling(), grappleScript.GetPos());
+		current.Add(transform.position + offset, GetComponent<Rigidbody>().linearVelocity, grappleScript.IsGrappling(), grappleScript.GetPos());
 	}
 }

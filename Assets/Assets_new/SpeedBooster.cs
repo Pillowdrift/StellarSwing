@@ -16,8 +16,8 @@ public class SpeedBooster : MonoBehaviour
       var direction = boostingObject.transform.forward;
       var rigidbody = boostingObject.GetComponent<Rigidbody>();
       rigidbody.AddForce(direction * Power);
-      if (rigidbody.velocity.sqrMagnitude > MaxSpeed * MaxSpeed)
-        rigidbody.velocity = rigidbody.velocity.normalized * MaxSpeed;
+      if (rigidbody.linearVelocity.sqrMagnitude > MaxSpeed * MaxSpeed)
+        rigidbody.linearVelocity = rigidbody.linearVelocity.normalized * MaxSpeed;
     }
   }
 

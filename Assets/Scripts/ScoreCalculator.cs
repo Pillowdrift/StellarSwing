@@ -63,7 +63,7 @@ public class ScoreCalculator : MonoBehaviour
 		{
 			time += Time.deltaTime;
 			
-			float kineticEnergy = 0.5f * GetComponent<Rigidbody>().mass * GetComponent<Rigidbody>().velocity.sqrMagnitude;
+			float kineticEnergy = 0.5f * GetComponent<Rigidbody>().mass * GetComponent<Rigidbody>().linearVelocity.sqrMagnitude;
 			float gpe = GetComponent<Rigidbody>().mass * (-Physics.gravity.y) * (endHeight + transform.position.y);		
 			//float gravitationalPotentialEnergy = rigidbody.mass * (-Physics.gravity.y) * transform.position.y;		
 			energy = kineticEnergy + gpe;
@@ -75,7 +75,7 @@ public class ScoreCalculator : MonoBehaviour
 				EnergyLossParticleController.Score(energyDelta);
 				if(energyDelta > 1)
 				{
-					transform.LookAt(transform.position + GetComponent<Rigidbody>().velocity);
+					transform.LookAt(transform.position + GetComponent<Rigidbody>().linearVelocity);
 				}
 			}
 			

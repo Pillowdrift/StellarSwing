@@ -23,7 +23,7 @@ public class TextFader : MonoBehaviour
 		if (Time.time < startTime + delay)
 			return;
 
-		if (fadeout || fadein)
+		if ((fadeout || fadein) && GetComponent<GUIText>() != null)
 		{
 			Color c = GetComponent<GUIText>().material.color;
 			c.a = Mathf.Lerp(c.a, (fadeout ? 0 : 1), Time.deltaTime * fadeRate);

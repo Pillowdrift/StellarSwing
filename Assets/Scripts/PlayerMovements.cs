@@ -6,7 +6,7 @@ public class PlayerMovements : MonoBehaviour
 
 	private static bool triedUnlock = false;
 	//private static float topspeed = 0;
-	public float Speed { get { return GetComponent<Rigidbody>().velocity.magnitude; } }
+	public float Speed { get { return GetComponent<Rigidbody>().linearVelocity.magnitude; } }
 	
 	const float FORCE_APPLIED = 500F;
 	const float SPEEDLOSS_THRERSHHERLD = 1.8f;
@@ -27,14 +27,14 @@ public class PlayerMovements : MonoBehaviour
 	
 	public void Go()
 	{
-		GetComponent<Rigidbody>().velocity = transform.rotation * startingVelocity;
+		GetComponent<Rigidbody>().linearVelocity = transform.rotation * startingVelocity;
 		lastSpeed = startingVelocity.magnitude;
 	}
 	
 	public void Reload()
 	{
 		GetComponent<Rigidbody>().isKinematic = false;
-		GetComponent<Rigidbody>().velocity = Vector3.zero;
+		GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
 		GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
 		Physics.gravity = new Vector3 (0, -40, 0);
 	}
@@ -75,10 +75,10 @@ public class PlayerMovements : MonoBehaviour
 					
 					Quaternion a = Quaternion.Euler(0, angle, 0);
 						
-					Vector3 outvec = a * GetComponent<Rigidbody>().velocity;
+					Vector3 outvec = a * GetComponent<Rigidbody>().linearVelocity;
 					
-					outvec.y = GetComponent<Rigidbody>().velocity.y;
-					GetComponent<Rigidbody>().velocity = outvec;
+					outvec.y = GetComponent<Rigidbody>().linearVelocity.y;
+					GetComponent<Rigidbody>().linearVelocity = outvec;
 					
 					transform.rotation *= a;
 					
@@ -97,10 +97,10 @@ public class PlayerMovements : MonoBehaviour
 			
 			angleChange = 0.0f;
 			
-			Vector3 vel = GetComponent<Rigidbody>().velocity;
+			Vector3 vel = GetComponent<Rigidbody>().linearVelocity;
 			vel *= speedloss;
-			vel.y = GetComponent<Rigidbody>().velocity.y;
-			GetComponent<Rigidbody>().velocity = vel;
+			vel.y = GetComponent<Rigidbody>().linearVelocity.y;
+			GetComponent<Rigidbody>().linearVelocity = vel;
 
 			float speed = vel.magnitude;
 			if (SaveManager.save != null && speed > SaveManager.save.highestSpeed)
@@ -112,8 +112,8 @@ public class PlayerMovements : MonoBehaviour
 	
 	public float SpeedLost()
 	{
-		float score = lastSpeed - GetComponent<Rigidbody>().velocity.magnitude;
-		lastSpeed = GetComponent<Rigidbody>().velocity.magnitude;
+		float score = lastSpeed - GetComponent<Rigidbody>().linearVelocity.magnitude;
+		lastSpeed = GetComponent<Rigidbody>().linearVelocity.magnitude;
 	
 		//return (score > 0) ? score : 0;
 		return -score;

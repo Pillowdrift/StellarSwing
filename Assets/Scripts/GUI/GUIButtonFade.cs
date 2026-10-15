@@ -14,6 +14,9 @@ public class GUIButtonFade : MonoBehaviour
 	
 	void Start()
 	{
+		if (GetComponent<GUITexture>() == null)
+			return;
+
 		// Enable guiTexture (but keep it faded out if button disabled)
 		GetComponent<GUITexture>().enabled = true;
 		
@@ -85,6 +88,9 @@ public class GUIButtonFade : MonoBehaviour
 	
 	void SetAlpha(float a)
 	{
+		if (GetComponent<GUITexture>() == null)
+			return;
+
 		Color col = GetComponent<GUITexture>().color;
 		col.a = a;
 		GetComponent<GUITexture>().color = col;
@@ -92,6 +98,9 @@ public class GUIButtonFade : MonoBehaviour
 	
 	float GetAlpha()
 	{
+		if (GetComponent<GUITexture>() == null)
+			return 0.0f;
+
 		return GetComponent<GUITexture>().color.a;
 	}
 }

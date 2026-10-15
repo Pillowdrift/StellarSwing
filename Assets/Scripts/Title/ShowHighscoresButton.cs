@@ -16,7 +16,9 @@ public class ShowHighscoresButton : MonoBehaviour
 			GetComponent<Collider>().enabled = false;
 		}
 		
-		GameObject.Find("HighscoresArea").GetComponent<GUITexture>().enabled = HighScoresGUI.enable;			
+		GUITexture area = GameObject.Find("HighscoresArea").GetComponent<GUITexture>();
+		if (area != null)
+			area.enabled = HighScoresGUI.enable;			
 	}
 	
 	void OnMouseDown()

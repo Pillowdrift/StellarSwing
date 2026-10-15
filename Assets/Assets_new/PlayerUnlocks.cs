@@ -57,23 +57,23 @@ public class PlayerUnlocks : MonoBehaviour
       if (Input.GetMouseButton((int)MouseButton.RightMouse))
       {
         _rigidbody.AddForce(Vector3.up * JetForce);
-        if (_rigidbody.velocity.y > 0.0f)
+        if (_rigidbody.linearVelocity.y > 0.0f)
         {
-          var vel = _rigidbody.velocity;
+          var vel = _rigidbody.linearVelocity;
           vel.y = 0.0f;
-          _rigidbody.velocity = vel;
+          _rigidbody.linearVelocity = vel;
         }
       }
     }
     else if (currentPowerup == Powerup.Boost)
     {
-      var direction = _rigidbody.velocity.normalized;
+      var direction = _rigidbody.linearVelocity.normalized;
       if (Input.GetMouseButton((int)MouseButton.RightMouse))
       {
         _rigidbody.AddForce(direction * BoostForce);
-        var speed = _rigidbody.velocity.magnitude;
+        var speed = _rigidbody.linearVelocity.magnitude;
         if (speed > BoostMaxSpeed)
-          _rigidbody.velocity = direction * BoostMaxSpeed;
+          _rigidbody.linearVelocity = direction * BoostMaxSpeed;
       }
     }
     else if (currentPowerup == Powerup.BulletTime)

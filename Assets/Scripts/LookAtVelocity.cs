@@ -8,14 +8,14 @@ public class LookAtVelocity : MonoBehaviour
 	
 	void Update()
 	{
-		if(GetComponent<Rigidbody>().velocity.sqrMagnitude < 0.01f)
+		if(GetComponent<Rigidbody>().linearVelocity.sqrMagnitude < 0.01f)
 			return;
 		
-		Quaternion fromUpAngle = Quaternion.LookRotation(GetComponent<Rigidbody>().velocity, transform.up);			
-		Quaternion toUpAngle = Quaternion.LookRotation(GetComponent<Rigidbody>().velocity);
+		Quaternion fromUpAngle = Quaternion.LookRotation(GetComponent<Rigidbody>().linearVelocity, transform.up);			
+		Quaternion toUpAngle = Quaternion.LookRotation(GetComponent<Rigidbody>().linearVelocity);
 		
 		Quaternion targetAngle = Quaternion.Slerp(fromUpAngle, toUpAngle, UP_CORRECT_RATE * Time.deltaTime);
 		
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetAngle, CORRECT_RATE * Time.deltaTime * GetComponent<Rigidbody>().velocity.sqrMagnitude);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetAngle, CORRECT_RATE * Time.deltaTime * GetComponent<Rigidbody>().linearVelocity.sqrMagnitude);
 	}
 }

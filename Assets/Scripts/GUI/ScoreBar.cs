@@ -26,6 +26,9 @@ public class ScoreBar : MonoBehaviour
 		front = GameObject.Find("ScorebarFront").GetComponent<GUITexture>();
 		mid = GameObject.Find("ScorebarMid").GetComponent<GUITexture>();
 		decofront = GameObject.Find("ScorebarDecoFront").GetComponent<GUITexture>();
+
+		if (front == null || mid == null || decofront == null)
+			return;
 		
 #if HORIZONTAL
 		maxSize = front.pixelInset.width;
@@ -51,6 +54,9 @@ public class ScoreBar : MonoBehaviour
 	
 	public void Update()
 	{
+		if (front == null || mid == null || decofront == null)
+			return;
+
 		Rect dimensions;
 		
 		if (back != null && front != null && LevelStart.started)

@@ -32,7 +32,7 @@ public class EndAssist : MonoBehaviour
 		targetDir.Normalize();	
 		
 		//Calculate the direction are going on a 2D plane
-		Vector3 playerDir = GetComponent<Rigidbody>().velocity;
+		Vector3 playerDir = GetComponent<Rigidbody>().linearVelocity;
 		playerDir.y = 0;
 		float player2DSpd = playerDir.magnitude; // save our 2D speed
 		playerDir.Normalize();
@@ -45,8 +45,8 @@ public class EndAssist : MonoBehaviour
 		playerDir *= player2DSpd;
 		
 		// add back the Y velosity
-		playerDir.y = GetComponent<Rigidbody>().velocity.y;
+		playerDir.y = GetComponent<Rigidbody>().linearVelocity.y;
 		
-		GetComponent<Rigidbody>().velocity = playerDir;
+		GetComponent<Rigidbody>().linearVelocity = playerDir;
 	}
 }

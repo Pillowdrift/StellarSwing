@@ -16,6 +16,9 @@ public class ScreenFade : MonoBehaviour
 	
 	void Start()
 	{
+		if (GetComponent<GUITexture>() == null)
+			return;
+
 		Color col = GetComponent<GUITexture>().color;
 		col.a = 0;
 		GetComponent<GUITexture>().color = col;
@@ -23,7 +26,13 @@ public class ScreenFade : MonoBehaviour
 	
 	void Update()
 	{
-		if (fading)
+		if (fading && GetComponent<GUITexture>() == null)
+		{
+			// Nothing to draw (legacy GUITexture stripped); finish instantly so callers waiting on the fade proceed
+			fading = false;
+			doneFading = true;
+		}
+		else if (fading)
 		{
 			// Interpolate towards colour
 			Color col = GetComponent<GUITexture>().color;

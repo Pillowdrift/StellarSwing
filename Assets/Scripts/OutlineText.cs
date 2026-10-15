@@ -69,6 +69,9 @@ public class OutlineText
         children.Clear();
 
         // Update prefab
+        if (GetComponent<GUIText>() == null || prefab.GetComponent<GUIText>() == null)
+            return;
+
         prefab.GetComponent<GUIText>().text = GetComponent<GUIText>().text;
         prefab.GetComponent<GUIText>().enabled = GetComponent<GUIText>().enabled;
 
