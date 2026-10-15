@@ -51,6 +51,10 @@ public class MainMenuController : MonoBehaviour
 
   private AchievementUnlocker unlockUnlocker;
 
+  // The big title logo is hidden while the Story Log is open; that panel is taller than the others
+  private Image titleLogo;
+  private bool titleLogoShown = true;
+
   protected void Awake()
   {
     if (worldCurrentlySelected || UnlockNextWorld || UnlockNextLevel)
@@ -61,6 +65,9 @@ public class MainMenuController : MonoBehaviour
     worldAnimator = GameObject.Find("Worlds").GetComponent<Animator>();
     modalBlocker = GameObject.Find("ModalBlocker").GetComponent<Image>();
     levelAnimation = GameObject.Find("FullLevelSelect/Levels").GetComponent<Animation>();
+    var logoObject = GameObject.Find("Title_Menus/Title/Logo");
+    if (logoObject != null)
+      titleLogo = logoObject.GetComponent<Image>();
 
     if (firstTime)
     {
@@ -182,6 +189,13 @@ public class MainMenuController : MonoBehaviour
 
   protected void Update()
   {
+    bool wantLogo = menuState != MainMenuState.Logs;
+    if (titleLogo != null && wantLogo != titleLogoShown)
+    {
+      titleLogoShown = wantLogo;
+      titleLogo.CrossFadeAlpha(wantLogo ? 1.0f : 0.0f, 0.25f, true);
+    }
+
     if (modalBlocker.raycastTarget)
       return;
 
