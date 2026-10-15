@@ -81,11 +81,11 @@ public class LoadLevel : MonoBehaviour
 		switch (level.ToLower())
 		{
 		case "next":
-			if (Input.GetButton("NextLevel"))
+			if (InputManager.Button("NextLevel"))
 				ButtonPressed();
 			break;
 		case "previous":
-			if (Input.GetButton("PreviousLevel"))
+			if (InputManager.Button("PreviousLevel"))
 				ButtonPressed();
 			break;
 		}

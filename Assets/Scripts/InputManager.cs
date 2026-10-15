@@ -3,6 +3,17 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour
 {
+	// Stellar Swing is a mouse game. The old keyboard steering (arrows / A-D) and the
+	// unfinished gamepad support confused players who found them by accident, so every
+	// non-mouse gameplay input goes through these and is off unless this is flipped.
+	// Escape (pause / back) is a plain key read elsewhere and stays enabled.
+	public static readonly bool NonMouseControls = false;
+
+	public static bool Button(string name) { return NonMouseControls && Input.GetButton(name); }
+	public static bool ButtonDown(string name) { return NonMouseControls && Input.GetButtonDown(name); }
+	public static bool ButtonUp(string name) { return NonMouseControls && Input.GetButtonUp(name); }
+	public static float Axis(string name) { return NonMouseControls ? Input.GetAxis(name) : 0.0f; }
+
 	private const float GAMEPAD_DEFAULT_SENSITIVITY = 10.0f;
 
 	// Whether to render a line between the start and current position of the drag
@@ -64,9 +75,9 @@ public class InputManager : MonoBehaviour
 	void Update()
 	{
 		// Update input state
-		held = Input.GetMouseButton(0) ||  Input.GetButton("Grapple");
-		pressed = Input.GetMouseButtonDown(0) || Input.GetButtonDown("Grapple");
-		released = Input.GetMouseButtonUp(0) || Input.GetButtonUp("Grapple");
+		held = Input.GetMouseButton(0) ||  Button("Grapple");
+		pressed = Input.GetMouseButtonDown(0) || ButtonDown("Grapple");
+		released = Input.GetMouseButtonUp(0) || ButtonUp("Grapple");
 		
 		if (pressed)
 			held = true;
@@ -78,7 +89,7 @@ public class InputManager : MonoBehaviour
 		else
 			dragging = false;
 
-		if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.0f)
+		if (Mathf.Abs(Axis("Horizontal")) > 0.0f)
 		{
 			dragging = true;
 		}
@@ -91,7 +102,7 @@ public class InputManager : MonoBehaviour
 		frameDifference = currentPosition - previousPosition;
 
 		// Add gamepad input
-		frameDifference.x += Input.GetAxis("Horizontal") * GAMEPAD_DEFAULT_SENSITIVITY;
+		frameDifference.x += Axis("Horizontal") * GAMEPAD_DEFAULT_SENSITIVITY;
 		
 		// Calculate line angle
 		float angle = Vector3.Angle(currentPosition, previousPosition);

@@ -54,15 +54,15 @@ public class TutorialButton : MonoBehaviour
 			switch (action)
 			{
 			case TutorialAction.NEXT:
-				if (Input.GetButton("NextLevel"))
+				if (InputManager.Button("NextLevel"))
 					ButtonPressed();
 				break;
 			case TutorialAction.PREV:
-				if (Input.GetButton("PreviousLevel"))
+				if (InputManager.Button("PreviousLevel"))
 					ButtonPressed();
 				break;
 			case TutorialAction.SKIP:
-				if (Input.GetButton("SkipTutorial"))
+				if (InputManager.Button("SkipTutorial"))
 					ButtonPressed();
 				break;
 			}

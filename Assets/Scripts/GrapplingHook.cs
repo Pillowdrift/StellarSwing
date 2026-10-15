@@ -161,16 +161,16 @@ public class GrapplingHook : MonoBehaviour
 
 		// Do gamepad input
 		// Detarget
-		if (!Input.GetButton("Target"))
+		if (!InputManager.Button("Target"))
 		{
 			targetedObject = null;
 		}
 
 		// Target
-		if (Input.GetButton("Target"))
+		if (InputManager.Button("Target"))
 		{
-			Vector3 position = new Vector3(Input.GetAxis("Horizontal2"),
-			                               Input.GetAxis("Vertical2"),
+			Vector3 position = new Vector3(InputManager.Axis("Horizontal2"),
+			                               InputManager.Axis("Vertical2"),
 			                               0);
 			
 			// Confirm axis to viewport space (-1..1 to 0..1)
@@ -243,12 +243,12 @@ public class GrapplingHook : MonoBehaviour
 
 		// Detatch
 		if (LevelStart.started &&
-		    Input.GetButtonUp("Grapple"))
+		    InputManager.ButtonUp("Grapple"))
 			Detach();
 
 		// Attach
 		if (LevelStart.started &&
-		    Input.GetButtonDown("Grapple") &&
+		    InputManager.ButtonDown("Grapple") &&
 		    targetedObject != null)
 		{
 			Vector3 viewPoint = theCamera.WorldToViewportPoint(targetedObject.transform.position);
@@ -498,7 +498,7 @@ public class GrapplingHook : MonoBehaviour
 	public void TryGrapple(Vector3 position)
 	{
 		// If this is the gamepad, don't process here (it's done in update)
-		if (Input.GetButtonDown("Grapple"))
+		if (InputManager.ButtonDown("Grapple"))
 			return;
 
 		if (currentTutorial != null)

@@ -100,7 +100,7 @@ public class LevelStart : MonoBehaviour
 				grapplingHook.Update();
 
 			// Handle back button
-			if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("SkipTutorial"))
+			if (Input.GetKeyDown(KeyCode.Escape) || InputManager.ButtonDown("SkipTutorial"))
 			{
 				GameObject pauseButton = GameObject.Find("Pause");
 				if (pauseButton != null)
