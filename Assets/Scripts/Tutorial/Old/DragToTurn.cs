@@ -4,6 +4,7 @@ using System.Collections;
 public class DragToTurn : MonoBehaviour
 {
 	private bool tutorialEnabled = false;
+	// Legacy animated finger; its GUITexture no longer exists in Unity 6, so this is normally null
 	public GUITexture finger;
 	
 	const float SWIPE_DISTANCE = 0.25f;
@@ -22,7 +23,8 @@ public class DragToTurn : MonoBehaviour
 		tutorialCamera.ShowTutorialText("Drag to alter your trajectory", false);
 		//GUIController.ShowText("TutorialText");
 		
-		finger.enabled = true;
+		if (finger != null)
+			finger.enabled = true;
 		
 		//Time.timeScale = 0.0f;
 		tutorialEnabled = true;
@@ -45,7 +47,8 @@ public class DragToTurn : MonoBehaviour
 	
 	void HideDrag()
 	{
-		finger.enabled = false;
+		if (finger != null)
+			finger.enabled = false;
 	}
 	
 	void OnTriggerEnter(Collider collider)
@@ -69,12 +72,17 @@ public class DragToTurn : MonoBehaviour
 	{
 		if (tutorialEnabled)
 		{
-			if (InputManager.pressed)
+			// Dismiss on a click or as soon as the player drags; they are often already
+			// holding the mouse when they reach the trigger, so a fresh press may never come
+			if (InputManager.pressed || InputManager.dragging)
 			{
 				DisableTutorial();
 			}
 		}
 		
+		if (finger == null)
+			return;
+
 		if(finger.enabled || LevelState.HasFinished)
 		{				
 			finger.transform.position = new Vector3(Mathf.SmoothStep(0.5f - SWIPE_DISTANCE, 0.5f + SWIPE_DISTANCE, Mathf.SmoothStep(0,1,time)), finger.transform.position.y, 0);			
