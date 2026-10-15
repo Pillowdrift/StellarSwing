@@ -104,7 +104,9 @@ public class GrapplingHook : MonoBehaviour
 		
 		ropeObject = GameObject.Find("Rope");
 		rope = ropeObject.GetComponent<LineRenderer>();
-		rope.SetWidth(0.40f, 0.40f);
+		// Laser beam: wide line whose texture fades to transparent at the edges (see LaserBeam)
+		rope.startWidth = 1.8f;
+		rope.endWidth = 1.8f;
 		rope.enabled = false;
 		
 		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
