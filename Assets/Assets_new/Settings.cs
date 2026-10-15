@@ -27,6 +27,9 @@ public class Settings : MonoBehaviour
     public int AnisoLevel;
     public bool VSync;
     public int DistantAsteroids; // 0 off, 1 low, 2 high
+    public bool Hdr;
+    public int Bloom; // 0 off, 1 low, 2 high
+    public bool AmbientOcclusion;
 
     // Sound settings
     public float MasterVolume;
@@ -48,6 +51,9 @@ public class Settings : MonoBehaviour
           AnisoLevel = 1,
           VSync = true,
           DistantAsteroids = 2,
+          Hdr = true,
+          Bloom = 1,
+          AmbientOcclusion = true,
           // Sound
           MasterVolume = 0.5f,
           MusicVolume = 1.0f,
@@ -73,6 +79,9 @@ public class Settings : MonoBehaviour
   public Dropdown filteringDropdown;
   public Dropdown vsyncDropdown;
   public Dropdown distantAsteroidsDropdown;
+  public Dropdown hdrDropdown;
+  public Dropdown bloomDropdown;
+  public Dropdown ambientOcclusionDropdown;
   public Slider masterVolumeSlider;
   public Slider musicVolumeSlider;
   public Slider soundVolumeSlider;
@@ -109,6 +118,7 @@ public class Settings : MonoBehaviour
 
     // Background detail
     global::DistantAsteroids.SetLevel(values.DistantAsteroids);
+    GraphicsEffects.Configure(values.Hdr, values.Bloom, values.AmbientOcclusion);
   }
 
   public void Save(GameSettings values)
@@ -125,6 +135,9 @@ public class Settings : MonoBehaviour
 			w.WriteLine("AnisoLevel=" + values.AnisoLevel);
 			w.WriteLine("VSync=" + values.VSync);
 			w.WriteLine("DistantAsteroids=" + values.DistantAsteroids);
+			w.WriteLine("Hdr=" + values.Hdr);
+			w.WriteLine("Bloom=" + values.Bloom);
+			w.WriteLine("AmbientOcclusion=" + values.AmbientOcclusion);
 			w.WriteLine("MasterVolume=" + values.MasterVolume);
 			w.WriteLine("MusicVolume=" + values.MusicVolume);
 			w.WriteLine("SoundVolume=" + values.SoundVolume);
@@ -195,6 +208,18 @@ public class Settings : MonoBehaviour
               Debug.LogWarning("Failed to parse anisoLevel " + line);
             else
               values.AnisoLevel = anisoLevel;
+            break;
+          case "Hdr":
+            if (bool.TryParse(value, out bool hdr))
+              values.Hdr = hdr;
+            break;
+          case "Bloom":
+            if (int.TryParse(value, out int bloom))
+              values.Bloom = Mathf.Clamp(bloom, 0, 2);
+            break;
+          case "AmbientOcclusion":
+            if (bool.TryParse(value, out bool ambientOcclusion))
+              values.AmbientOcclusion = ambientOcclusion;
             break;
           case "DistantAsteroids":
             if (int.TryParse(value, out int distantAsteroids))
@@ -267,6 +292,12 @@ public class Settings : MonoBehaviour
     PopulateVSync(values, vsyncDropdown);
     if (distantAsteroidsDropdown != null)
       distantAsteroidsDropdown.value = values.DistantAsteroids;
+    if (hdrDropdown != null)
+      hdrDropdown.value = values.Hdr ? 1 : 0;
+    if (bloomDropdown != null)
+      bloomDropdown.value = values.Bloom;
+    if (ambientOcclusionDropdown != null)
+      ambientOcclusionDropdown.value = values.AmbientOcclusion ? 1 : 0;
 
     // Sounds
     masterVolumeSlider.value = values.MasterVolume;
@@ -470,6 +501,24 @@ public class Settings : MonoBehaviour
     New.AnisoLevel = option;
     UpdateConfirmButtonState();
     Debug.Log("Set aniso to " + New.AnisoLevel);
+  }
+
+  public void SetHdr(int option)
+  {
+    New.Hdr = option == 1;
+    UpdateConfirmButtonState();
+  }
+
+  public void SetBloom(int option)
+  {
+    New.Bloom = option;
+    UpdateConfirmButtonState();
+  }
+
+  public void SetAmbientOcclusion(int option)
+  {
+    New.AmbientOcclusion = option == 1;
+    UpdateConfirmButtonState();
   }
 
   public void SetDistantAsteroids(int option)
