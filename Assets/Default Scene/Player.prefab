@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 2300000}
   - component: {fileID: 3359285224643690909}
   - component: {fileID: 11400000}
-  - component: {fileID: 14500000}
   - component: {fileID: 11400004}
   - component: {fileID: 11400006}
   - component: {fileID: 11400008}
@@ -201,29 +200,6 @@ MonoBehaviour:
   grapple: {fileID: 0}
   rope: {fileID: 0}
   ropeMaterial: {fileID: 0}
---- !u!145 &14500000
-SpringJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_ConnectedBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  serializedVersion: 2
-  m_Spring: 3.4028233e+38
-  m_Damper: 3.4028233e+38
-  m_MinDistance: 0
-  m_MaxDistance: 3.402823e+36
-  m_Tolerance: 0.025
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 0

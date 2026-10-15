@@ -73,3 +73,7 @@ crashlytics-build.properties
 /build
 # Trello export (converted to docs/trello-board.md)
 /trello.json
+
+# Editor screenshots taken by Claude via the Unity CLI
+/Assets/Screenshots/
+/Assets/Screenshots.meta
