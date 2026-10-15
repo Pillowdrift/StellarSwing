@@ -56,9 +56,10 @@ public class MainMenuController : MonoBehaviour
   private BackgroundWorlds backgroundWorlds;
   private LevelPreviewRig levelPreviewRig;
 
-  // The 'World N' / 'Level N' side panels duplicate the card caption on the level screen, so hide them there
+  // The old 'World N' / 'Level N' side panels are replaced by captions centred under the planet and level
   private Graphic[] sidePanelGraphics;
   private bool sidePanelsShown = true;
+  private Text worldNameLabel;
   private bool titleLogoShown = true;
 
   protected void Awake()
@@ -81,6 +82,9 @@ public class MainMenuController : MonoBehaviour
         sidePanels.AddRange(panel.GetComponentsInChildren<Graphic>(true));
     }
     sidePanelGraphics = sidePanels.ToArray();
+    var worldNameObject = GameObject.Find("FullLevelSelect/WorldName");
+    if (worldNameObject != null)
+      worldNameLabel = worldNameObject.GetComponent<Text>();
     var logoObject = GameObject.Find("Title_Menus/Title/Logo");
     if (logoObject != null)
       titleLogo = logoObject.GetComponent<Image>();
@@ -214,15 +218,20 @@ public class MainMenuController : MonoBehaviour
     if (backgroundWorlds != null && backgroundWorlds.CurrentWorld != worldSelected && menuState != MainMenuState.Title && menuState != MainMenuState.Menu)
       backgroundWorlds.ShowWorld(worldSelected, false);
 
-    bool wantSidePanels = !worldCurrentlySelected;
-    if (sidePanelGraphics != null && wantSidePanels != sidePanelsShown)
+    if (sidePanelGraphics != null && sidePanelsShown)
     {
-      sidePanelsShown = wantSidePanels;
+      sidePanelsShown = false;
       foreach (var graphic in sidePanelGraphics)
       {
         if (graphic != null)
-          graphic.enabled = wantSidePanels;
+          graphic.enabled = false;
       }
+    }
+
+    if (worldNameLabel != null)
+    {
+      worldNameLabel.text = $"World {worldSelected}";
+      worldNameLabel.enabled = !worldCurrentlySelected;
     }
 
     bool wantLogo = menuState != MainMenuState.Logs;
@@ -657,6 +666,17 @@ public class MainMenuController : MonoBehaviour
     }
   }
 
+  // Completion effects used to spawn at fixed coordinates; follow the planet / level preview instead,
+  // keeping the original height and depth in front of the menu
+  private Vector3 EffectPosition(string anchorPath)
+  {
+    var position = new Vector3(482.2f, 248.8504f, -116.0667f);
+    var anchor = GameObject.Find(anchorPath);
+    if (anchor != null)
+      position.x = anchor.transform.position.x;
+    return position;
+  }
+
   public IEnumerator UnlockNextWorldNow()
   {
     while (menuState != MainMenuState.LevelSelect)
@@ -677,7 +697,7 @@ public class MainMenuController : MonoBehaviour
 
     if (WorldCompletePrefab != null)
     {
-      GameObject.Instantiate(WorldCompletePrefab, new Vector3(482.2004f, 248.8504f, -116.0667f), Quaternion.identity);
+      GameObject.Instantiate(WorldCompletePrefab, EffectPosition("FullLevelSelect/Worlds"), Quaternion.identity);
     }
 
     yield return new WaitForSeconds(1.0f);
@@ -706,7 +726,7 @@ public class MainMenuController : MonoBehaviour
 
     if (LevelCompletePrefab != null)
     {
-      GameObject.Instantiate(LevelCompletePrefab, new Vector3(482.2504f, 248.8504f, -116.0667f), Quaternion.identity);
+      GameObject.Instantiate(LevelCompletePrefab, EffectPosition("CurLevel/LevelPreview/PreviewModel"), Quaternion.identity);
     }
 
     yield return new WaitForSeconds(1.0f);
