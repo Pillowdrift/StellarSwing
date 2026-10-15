@@ -67,6 +67,18 @@ public static class BuildScript
                          .Concat(Directory.GetDirectories(dir, "*_BackUpThisFolder_ButDontShipItWithYourGame")))
       Directory.Delete(junk, true);
 
-    return summary.result == BuildResult.Succeeded;
+    // Unity can report Succeeded with errors (eg. a platform module the open editor hasn't
+    // loaded). Ignore the editor-automation server's own timeouts, logged while a build blocks it.
+    var errors = report.steps.SelectMany(step => step.messages)
+      .Where(m => (m.type == LogType.Error || m.type == LogType.Exception) &&
+                  !m.content.Contains("/api/exec") && !m.content.Contains("Main thread operation timed out"))
+      .ToList();
+    foreach (var error in errors)
+      Debug.LogError($"[BuildScript] {folder}: {error.content}");
+    bool ok = summary.result == BuildResult.Succeeded && errors.Count == 0 &&
+              (File.Exists(options.locationPathName) || Directory.Exists(options.locationPathName));
+    if (!ok)
+      Debug.LogError($"[BuildScript] {folder} build failed, see the errors above");
+    return ok;
   }
 }
