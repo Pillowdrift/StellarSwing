@@ -239,4 +239,20 @@ for n in ('uie_resources_bg.png', 'uie_shop_item_btn.png', 'uie_shop_item_bg.png
     if os.path.exists(os.path.join(SRC, n)):
         steelify(n)
 
+
+# ---------------------------------------------------------------- orangify: hue-rotate the remaining blue sprites onto the rust/amber palette
+def orangify(name, hue='3', sat='105', bright='100'):
+    """Blue (~205 deg) -> orange (~25 deg) by rotating hue; these sprites are monochrome blue so nothing else shifts."""
+    src = os.path.join(SRC, name)
+    if not os.path.exists(src):
+        return
+    out = os.path.join(TMP, 'or_' + name)
+    im(src, '-modulate', f'{bright},{sat},{hue}', out)
+    save(out, name)
+
+for n in ('uie_chkbox_tick.png', 'uie_rd_tick.png', 'uie_swtch_tick.png', 'uie_swtch_background.png', 'uie_progressbar_filled.png',
+          'uie_game_healthbar_filled.png', 'icon_lock.png', 'icon_pgind.png', 'uie_inventory_header.png', 'uie_game_btn.png',
+          'uie_game_player_frame.png', 'uie_inventory_userpic_frame.png', 'uie_inventory_talents_bg.png'):
+    orangify(n)
+
 print('written to', OUT)

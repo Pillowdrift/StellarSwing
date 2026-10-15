@@ -1,18 +1,14 @@
 using UnityEngine;
-using System.Collections;
 
+// Keeps a quad's front face turned toward the main camera every frame,
+// regardless of how its parent moves or rotates.
 public class Billboard : MonoBehaviour
 {
-	private Quaternion initialRotation;
-	
-	void Start()
+	void LateUpdate()
 	{
-		initialRotation = transform.rotation;
-	}
-	
-	void Update()
-	{
-		transform.LookAt(transform.position - Camera.main.transform.forward, Camera.main.transform.up);
-		transform.rotation *= initialRotation;
+		Camera cam = Camera.main;
+		if (cam == null)
+			return;
+		transform.rotation = Quaternion.LookRotation(transform.position - cam.transform.position, cam.transform.up);
 	}
 }
