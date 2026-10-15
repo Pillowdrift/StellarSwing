@@ -51,7 +51,7 @@ public class LevelPreviewRig : MonoBehaviour
 		camObject.transform.LookAt(root.transform.position + Vector3.up * 0.3f);
 		slot.camera = camObject.AddComponent<Camera>();
 		slot.camera.clearFlags = CameraClearFlags.SolidColor;
-		slot.camera.backgroundColor = new Color(0.07f, 0.05f, 0.12f, 1.0f);
+		slot.camera.backgroundColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 		slot.camera.fieldOfView = 32.0f;
 		slot.camera.nearClipPlane = 0.5f;
 		slot.camera.farClipPlane = 80.0f;
