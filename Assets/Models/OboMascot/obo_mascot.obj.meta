@@ -3,7 +3,22 @@ guid: 58d4e9f3abab643ec9f98d20a7d52030
 ModelImporter:
   serializedVersion: 24300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OboBody
+    second: {fileID: 2100000, guid: c674dc703c63145c483b50b6a74ee92b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OboDark
+    second: {fileID: 2100000, guid: 351674aad5b9b4333a7e8adde9405e81, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OboInk
+    second: {fileID: 2100000, guid: dc94c5393911a4e1594a0e3d9ed785fd, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
