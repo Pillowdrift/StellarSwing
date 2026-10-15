@@ -14410,6 +14410,7 @@ GameObject:
   - component: {fileID: 250424448}
   - component: {fileID: 250424450}
   - component: {fileID: 250424449}
+  - component: {fileID: 250424451}
   m_Layer: 0
   m_Name: FullLevelSelect
   m_TagString: Untagged
@@ -14486,6 +14487,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 250424447}
   m_CullTransparentMesh: 0
+--- !u!114 &250424451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250424447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce1ccc7a2231141b690b045a704519de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelSelectHeight
+  targetFraction: 0.62
+  maxHeight: 820
 --- !u!1 &252260969
 GameObject:
   m_ObjectHideFlags: 0
@@ -21786,6 +21801,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.051999997
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.051999997
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
         type: 3}
@@ -112631,7 +112661,7 @@ Transform:
   m_GameObject: {fileID: 2009801652}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -231, y: 53, z: -519}
+  m_LocalPosition: {x: 0.0016954211, y: 53.000896, z: -518.9995}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -126971,6 +127001,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.051999997
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.051999997
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 1766063094945270797, guid: 49e4149a222013741b5a9008dae5b6f8,
         type: 3}

@@ -22,7 +22,7 @@ public class LevelPreviewRig : MonoBehaviour
 	public Slot currentSlot;
 	public Slot nextSlot;
 	public float spinDegreesPerSecond = 18.0f;
-	public Vector2Int textureSize = new Vector2Int(512, 320);
+	public Vector2Int textureSize = new Vector2Int(768, 480);
 
 	void Awake()
 	{

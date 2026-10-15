@@ -55,6 +55,10 @@ public class MainMenuController : MonoBehaviour
   private Image titleLogo;
   private BackgroundWorlds backgroundWorlds;
   private LevelPreviewRig levelPreviewRig;
+
+  // The 'World N' / 'Level N' side panels duplicate the card caption on the level screen, so hide them there
+  private Graphic[] sidePanelGraphics;
+  private bool sidePanelsShown = true;
   private bool titleLogoShown = true;
 
   protected void Awake()
@@ -69,6 +73,14 @@ public class MainMenuController : MonoBehaviour
     levelAnimation = GameObject.Find("FullLevelSelect/Levels").GetComponent<Animation>();
     backgroundWorlds = FindObjectOfType<BackgroundWorlds>();
     levelPreviewRig = FindObjectOfType<LevelPreviewRig>();
+    var sidePanels = new System.Collections.Generic.List<Graphic>();
+    foreach (var panelName in new[] { "CurrentWorld", "CurrentLevel" })
+    {
+      var panel = GameObject.Find("FullLevelSelect/ScrollRect/Viewport/Content/" + panelName);
+      if (panel != null)
+        sidePanels.AddRange(panel.GetComponentsInChildren<Graphic>(true));
+    }
+    sidePanelGraphics = sidePanels.ToArray();
     var logoObject = GameObject.Find("Title_Menus/Title/Logo");
     if (logoObject != null)
       titleLogo = logoObject.GetComponent<Image>();
@@ -201,6 +213,17 @@ public class MainMenuController : MonoBehaviour
   {
     if (backgroundWorlds != null && backgroundWorlds.CurrentWorld != worldSelected && menuState != MainMenuState.Title && menuState != MainMenuState.Menu)
       backgroundWorlds.ShowWorld(worldSelected, false);
+
+    bool wantSidePanels = !worldCurrentlySelected;
+    if (sidePanelGraphics != null && wantSidePanels != sidePanelsShown)
+    {
+      sidePanelsShown = wantSidePanels;
+      foreach (var graphic in sidePanelGraphics)
+      {
+        if (graphic != null)
+          graphic.enabled = wantSidePanels;
+      }
+    }
 
     bool wantLogo = menuState != MainMenuState.Logs;
     if (titleLogo != null && wantLogo != titleLogoShown)
