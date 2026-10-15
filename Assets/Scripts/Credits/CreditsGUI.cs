@@ -40,51 +40,25 @@ public class CreditsGUI : MonoBehaviour
   // rate of scrolling
   private const float rate = 0.1f;
 
-	private bool canSkip = false;
-	
-	// Use this for initialization
-	void Start()
+	// Back to the title, showing the next world unlocking if this was the first time through
+	// (CreditsRoll calls this once the credits are done)
+	public void Exit()
 	{
-		WaitAndAllowSkip();
-		//initialPosition = textObj.transform.position;
-		//textObj.GetComponent<GUIText>().text = credits;
-	}
-
-	void WaitAndAllowSkip() => StartCoroutine(WaitAndAllowSkip_());
-
-	IEnumerator WaitAndAllowSkip_()
-	{
-		yield return new WaitForSeconds(5.0f);
-		canSkip = true;
-	}
-	
-	// Update is called once per frame
-	void Update()
-	{
-		//textObj.transform.Translate(0, rate * Time.deltaTime, 0);
-		
-		//if (textObj.transform.position.y > 5.0f)
-			//textObj.transform.position = initialPosition;
-		
-		// tap to get to menu
-		if (canSkip && Input.GetMouseButton(0))
+		if (SaveManager.save != null &&
+			SaveManager.save.worldUnlocked == 5)
 		{
-			if (SaveManager.save != null &&
-				SaveManager.save.worldUnlocked == 5)
-			{
-				// World5 so it'll show THE NEXT world (6)
-				SaveManager.save.worldUnlocked = 6;
-				SaveManager.save.levelUnlocked = 1;
+			// World5 so it'll show THE NEXT world (6)
+			SaveManager.save.worldUnlocked = 6;
+			SaveManager.save.levelUnlocked = 1;
 
-				LevelSelectGUI.worldToShow = "World5";
-				LevelSelectGUI.levelToShow = 0;
-				LevelSelectGUI.worldTransition = true;
-				Application.LoadLevel("Title_new");
-			}
-			else
-			{
-				Loading.Load("Title_new");
-			}
+			LevelSelectGUI.worldToShow = "World5";
+			LevelSelectGUI.levelToShow = 0;
+			LevelSelectGUI.worldTransition = true;
+			Application.LoadLevel("Title_new");
+		}
+		else
+		{
+			Loading.Load("Title_new");
 		}
 	}
 }
