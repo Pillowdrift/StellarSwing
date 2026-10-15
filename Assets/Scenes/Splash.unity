@@ -611,6 +611,7 @@ MonoBehaviour:
   bobSpeed: 0.8
   tiltDegrees: 5
   tiltSpeed: 0.5
+  faceCamera: 1
 --- !u!135 &989016006
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1203,7 +1204,7 @@ Transform:
   m_GameObject: {fileID: 2121007112}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7039883, y: 0.066336855, z: -0.06633722, w: -0.7039882}
-  m_LocalPosition: {x: -28.0857, y: 4.9322367, z: 11.184236}
+  m_LocalPosition: {x: -28.0857, y: 3.2417507, z: 11.184236}
   m_LocalScale: {x: 1, y: 1, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
