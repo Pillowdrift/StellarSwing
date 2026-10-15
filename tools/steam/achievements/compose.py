@@ -27,9 +27,9 @@ def frame(img, out):
 def place(bg, cut, size, x, y, out, rot=0, extra=()):
     m(bg, '(', C+cut, '-trim', '+repage', '-background', 'none', '-rotate', str(rot), '-resize', f'{size}x{size}', *extra, ')', '-gravity', 'center', '-geometry', f'{x:+d}{y:+d}', '-composite', out)
 
-def shadowed(bg, cut, size, x, y, out, rot=0):
+def shadowed(bg, cut, size, x, y, out, rot=0, flop=False):
     # soft glow behind the subject so dark models read on the dark background
-    m(bg, '(', C+cut, '-trim', '+repage', '-background', 'none', '-rotate', str(rot), '-resize', f'{size}x{size}',
+    m(bg, '(', C+cut, '-trim', '+repage', *(['-flop'] if flop else []), '-background', 'none', '-rotate', str(rot), '-resize', f'{size}x{size}',
       '(', '+clone', '-background', '#8a7cc8', '-shadow', '60x8+0+0', ')', '+swap', '-background', 'none', '-layers', 'merge', '+repage', ')',
       '-gravity', 'center', '-geometry', f'{x:+d}{y:+d}', '-composite', out)
 
@@ -68,7 +68,7 @@ for n in range(1, 6):
 new(); shadowed(W, 'ship_a.png', 210, 0, 6, W)
 m(W, '-font', FONT, '-pointsize', '78', '-fill', AMBER, '-stroke', '#1a1720', '-strokewidth', '3', '-gravity', 'northeast', '-annotate', '+30+18', '?', W); finish('droneshirkduty', W)
 
-new(); streaks(W, W); shadowed(W, 'drone_side.png', 190, 22, 0, W); badge(W, '20', W, size=28); finish('speedy', W)
+new(); streaks(W, W); shadowed(W, 'drone_side.png', 190, 22, 0, W, flop=True); badge(W, '20', W, size=28); finish('speedy', W)
 
 new(); shadowed(W, 'Crown.png', 190, 0, -4, W); badge(W, '60', W, size=28); finish('speedrunner', W)
 
@@ -87,7 +87,7 @@ new(); place(W, 'rock.png', 170, 10, -46, W); beam(W, 60, 214, 120, 96, W); beam
 
 new(); m(C+'barrier.png', '-trim', '+repage', '-morphology', 'Dilate', 'Disk:1.5', '-fill', '#ff6ab0', '-colorize', '45', '(', '+clone', '-background', '#ff3a90', '-shadow', '90x5+0+0', ')', '+swap', '-background', 'none', '-layers', 'merge', '+repage', T+'barrier_t.png'); m(W, '(', T+'barrier_t.png', '-resize', '210x210', ')', '-gravity', 'center', '-composite', W); nosign(W, W); finish('world1_6', W)
 
-new(); streaks(W, W, col='#ffb45a', lines=((70, 14, 150, 6), (100, 10, 130, 7), (130, 16, 150, 6), (160, 12, 120, 5), (188, 24, 110, 4))); shadowed(W, 'drone_side.png', 186, 14, -4, W, rot=-14); finish('topspeed', W)
+new(); streaks(W, W, col='#ffb45a', lines=((80, 14, 104, 6), (104, 10, 92, 7), (128, 16, 108, 6), (152, 12, 96, 5), (176, 24, 88, 4))); shadowed(W, 'drone_side.png', 180, 30, 0, W, rot=-10, flop=True); finish('topspeed', W)
 
 new(); shadowed(W, 'rock.png', 200, 0, 0, W); nosign(W, W); finish('world2_3', W)
 new(); shadowed(W, 'dasher.png', 196, 0, 0, W); nosign(W, W); finish('world3_2', W)
