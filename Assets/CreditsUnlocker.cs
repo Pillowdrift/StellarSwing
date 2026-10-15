@@ -27,7 +27,7 @@ public class CreditsUnlocker : MonoBehaviour
     {
       speedyUnlocker.UnlockAchievement();
     }
-    else if (minutes <= 10)
+    if (minutes <= 10)
     {
       superSpeedyUnlocker.UnlockAchievement();
     }
