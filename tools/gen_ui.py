@@ -8,15 +8,15 @@ Requires ImageMagick 7 (`magick`).
 """
 import os, subprocess, sys, tempfile
 
-SRC = os.path.join(os.path.dirname(__file__), '..', 'Assets', 'SpaceGUI', 'img')
+SRC = os.path.join(os.path.dirname(__file__), 'ui_src')   # pristine SpaceGUI originals; never read the Assets copies, they are this script's output
 OUT = sys.argv[1]
 os.makedirs(OUT, exist_ok=True)
 TMP = tempfile.mkdtemp()
 
 # palette (from the Stellar Swing logo: grey stone + rust streaks)
-GUN_LIGHT = '#70757d'
-GUN_MID   = '#454a52'
-GUN_DARK  = '#202328'
+GUN_LIGHT = '#7a7c80'
+GUN_MID   = '#4b4d52'
+GUN_DARK  = '#232428'
 GUN_DEEP  = '#141619'
 RUST      = '#b5542a'
 RUST_DARK = '#6e2f16'
@@ -37,27 +37,37 @@ def layer_from_mask(w, h, color, alpha_mask, name):
     im('-size', f'{w}x{h}', f'xc:{color}', alpha_mask, '-alpha', 'off', '-compose', 'CopyOpacity', '-composite', '-colorspace', 'sRGB', '-type', 'TrueColorAlpha', out)
     return out
 
+STONE = os.path.join(os.path.dirname(__file__), '..', 'Assets', 'Textures', 'UI', 'stone_tile.png')
+RUST_TILE = os.path.join(os.path.dirname(__file__), '..', 'Assets', 'Textures', 'UI', 'rust_tile.png')
+
 def brushed(w, h, top=GUN_LIGHT, bottom=GUN_DARK, seed=7, strength='38%'):
-    """Vertical gradient with a horizontal brushed-metal grain."""
+    """Stone fill sampled from the Stellar Swing logo, shaded top-to-bottom by the gradient."""
     base = os.path.join(TMP, f'base_{w}x{h}_{seed}.png')
-    im('-size', f'{w}x{h}', f'gradient:{top}-{bottom}', base)
-    grain = os.path.join(TMP, f'grain_{w}x{h}_{seed}.png')
-    lo = int(strength[:-1]); hi = 100 - lo
-    im('-size', f'{w}x{h}', 'xc:gray50', '-seed', seed, '+noise', 'Gaussian', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor',
-       '-motion-blur', '0x18+0', '-auto-level', '-level', f'{lo}%,{hi}%', '-blur', '0x0.8', '-colorspace', 'gray', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor', grain)
+    im('-size', f'{w}x{h}', f'gradient:{top}-{bottom}', '-type', 'TrueColor', base)
+    stone = os.path.join(TMP, f'stone_{w}x{h}_{seed}.png')
+    ox, oy = (seed * 37) % 256, (seed * 91) % 256
+    small = os.path.join(TMP, 'stone_small.png')
+    im(STONE, '-resize', '50%', '-blur', '0x0.6', small)   # finer grain so it reads as stone, not runes
+    im('-size', f'{w}x{h}', f'tile:{small}', '-roll', f'+{ox}+{oy}', '-type', 'TrueColor', stone)
+    # normalise the stone around mid grey (+-12%) so the gradient sets the overall tone
+    im(stone, '-colorspace', 'gray', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor', '-auto-level', '-level', '-60%,160%', stone)
     out = os.path.join(TMP, f'brushed_{w}x{h}_{seed}.png')
-    im(base, grain, '-compose', 'Overlay', '-composite', out)
+    im(base, stone, '-compose', 'Overlay', '-composite', out)
     return out
 
 def rust_streaks(w, h, seed=3, amount=0.55):
-    """Transparent layer of rust-coloured streaks, denser toward the bottom."""
+    """Transparent layer of the logo's rust texture, masked into streaks denser toward the bottom."""
     mask = os.path.join(TMP, f'rustmask_{w}x{h}_{seed}.png')
     im('-size', f'{w}x{h}', '-seed', seed, 'plasma:fractal', '-colorspace', 'gray', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor',
        '-blur', '0x1', '-motion-blur', '0x6+90', '-level', '55%,85%', mask)
     grad = os.path.join(TMP, f'rustgrad_{w}x{h}.png')
-    im('-size', f'{w}x{h}', 'gradient:black-white', grad)
+    im('-size', f'{w}x{h}', 'gradient:black-white', '-type', 'TrueColor', grad)
     im(mask, grad, '-compose', 'Multiply', '-composite', '-evaluate', 'Multiply', amount, mask)
-    return layer_from_mask(w, h, RUST, mask, f'rust_{w}x{h}_{seed}')
+    rust_img = os.path.join(TMP, f'rusttile_{w}x{h}_{seed}.png')
+    im('-size', f'{w}x{h}', f'tile:{RUST_TILE}', '-roll', f'+{(seed*53)%256}+{(seed*17)%256}', '-type', 'TrueColor', rust_img)
+    out = os.path.join(TMP, f'rust_{w}x{h}_{seed}.png')
+    im(rust_img, mask, '-alpha', 'off', '-compose', 'CopyOpacity', '-composite', '-type', 'TrueColorAlpha', out)
+    return out
 
 _plate_n = [0]
 def shaded_plate(w, h, mask, top=GUN_LIGHT, bottom=GUN_DARK, bevel=3, rust=0.5, edge=GUN_DEEP, seed=7):
@@ -114,7 +124,7 @@ im(os.path.join(TMP, 'hdr_stage.png'), mask, '-alpha', 'off', '-compose', 'CopyO
 save(os.path.join(TMP, 'hdr_out.png'), 'window_header.png')
 
 # ---------------------------------------------------------------- uie_btn / uie_btn2 410x90 (whole-sprite buttons)
-for name, top, bottom, rust in (('uie_btn.png', '#4d525a', '#1b1e22', 0.35), ('uie_btn2.png', '#656a72', '#2a2e34', 0.35)):
+for name, top, bottom, rust in (('uie_btn.png', '#5a5c61', '#1e1f23', 0.4), ('uie_btn2.png', '#6c6e73', '#2b2c31', 0.4)):
     w, h = 410, 90
     mask = poly_mask(w, h, [(8, 2), (402, 2), (408, 10), (408, 80), (402, 88), (8, 88), (2, 80), (2, 10)], 'btn')
     plate = shaded_plate(w, h, mask, top, bottom, bevel=2, rust=rust)
