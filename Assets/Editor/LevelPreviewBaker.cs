@@ -182,6 +182,7 @@ public static class LevelPreviewBaker
 		copy.CopyPropertiesFromMaterial(mat);
 		copy.SetFloat("_Outline", 0);
 		EditorUtility.SetDirty(copy);
+		AssetDatabase.SaveAssetIfDirty(copy);
 		return copy;
 	}
 
