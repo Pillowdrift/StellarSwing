@@ -130,7 +130,7 @@ public static class LevelPreviewBaker
 			var part = new Mesh { indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
 			part.CombineMeshes(pair.Value.ToArray(), true, true);
 			perMaterial.Add(new CombineInstance { mesh = part, subMeshIndex = 0, transform = Matrix4x4.identity });
-			materials.Add(pair.Key);
+			materials.Add(PreviewMaterial(pair.Key));
 		}
 
 		var combined = new Mesh { name = name + " Preview", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
@@ -160,6 +160,29 @@ public static class LevelPreviewBaker
 
 		Debug.Log("LevelPreviewBaker: " + name + " -> " + combined.vertexCount + " verts, " + materials.Count + " materials, source size " + bounds.size);
 		return true;
+	}
+
+	// Outline shaders push the outline out in object units, which are world units once the
+	// level is merged into one mesh, so give the preview a copy with the outline turned off
+	static Material PreviewMaterial(Material mat)
+	{
+		if (!mat.HasProperty("_Outline") || mat.GetFloat("_Outline") == 0)
+			return mat;
+
+		string folder = OutputFolder + "/Materials";
+		if (!AssetDatabase.IsValidFolder(folder))
+			AssetDatabase.CreateFolder(OutputFolder, "Materials");
+		string path = folder + "/" + mat.name + " NoOutline.mat";
+		var copy = AssetDatabase.LoadAssetAtPath<Material>(path);
+		if (copy == null)
+		{
+			copy = new Material(mat);
+			AssetDatabase.CreateAsset(copy, path);
+		}
+		copy.CopyPropertiesFromMaterial(mat);
+		copy.SetFloat("_Outline", 0);
+		EditorUtility.SetDirty(copy);
+		return copy;
 	}
 
 	static bool IsSolid(MeshRenderer renderer)
