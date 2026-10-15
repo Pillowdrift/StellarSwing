@@ -8,6 +8,9 @@ it that are out of date. The short description has a 300 character limit.
 
 ## Other things to update
 
+- **Capsules and library art**: new set in `art/out/` (see `art/README.md`). The old
+  ones were made at older, smaller sizes, and the vertical capsule and library header
+  were missing.
 - **Screenshots and trailer**: the current ones are from 2020. Fresh 1920x1080 shots are
   in `screenshots/` at the root of the repo (the non-thumb ones).
 - **System requirements**: Mac says macOS 10 and Linux says Ubuntu 14.04, which Unity 6
