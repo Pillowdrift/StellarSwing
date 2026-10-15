@@ -346,7 +346,12 @@ public class MainMenuController : MonoBehaviour
     if (unlockUnlocker == null)
     {
       unlockUnlocker = AchievementUnlocker.MakeUnlocker("allunlocks");
-      if (SaveManager.save.unlocks.Count == 13)
+      // Everything in the shop bought (the earn-only crown doesn't count)
+      bool all = true;
+      foreach (var unlockable in FindObjectsByType<Unlockable>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        if (unlockable.Purchasable && !SaveManager.save.unlocks.Contains(unlockable.gameObject.name))
+          all = false;
+      if (all)
       {
         unlockUnlocker.UnlockAchievement();
       }
