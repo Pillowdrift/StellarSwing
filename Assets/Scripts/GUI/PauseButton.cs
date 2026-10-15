@@ -49,9 +49,10 @@ public class PauseButton : MonoBehaviour
 
 		if (GUIController.LevelStarted && !LevelState.Dead && !LevelState.HasFinished && !GameRecorder.playingBack)
 		{
+			// (Bullet time can have the time scale below 1, so set it outright rather than flip it)
 			if (Time.timeScale > 0.0f && !paused && currentState.IsName("Unpaused"))
 			{
-				Time.timeScale = 1.0f - Time.timeScale;
+				Time.timeScale = 0.0f;
 				GUIController.GUILevelPause();
 				paused = true;
 				sharedUI.enabled = true;
@@ -61,7 +62,7 @@ public class PauseButton : MonoBehaviour
 			}
 			else if (paused && currentState.IsName("Pause"))
 			{
-				Time.timeScale = 1.0f - Time.timeScale;
+				Time.timeScale = 1.0f;
 				GUIController.GUILevelPlay();
 				paused = false;
 				sharedUI.enabled = false;
