@@ -22,6 +22,9 @@ public class Unlockable : MonoBehaviour
 
   private int price = 0;
 
+  private Graphic[] buyGraphics;
+  private Color[] buyColours;
+
   private AchievementUnlocker unlockUnlocker;
   private AchievementUnlocker hatStackUnlocker;
 
@@ -47,6 +50,9 @@ public class Unlockable : MonoBehaviour
     SaveManager.save.picolinium -= price;
     SaveManager.save.unlocks.Add(gameObject.name);
     SaveManager.save.Write();
+
+    // Put it straight on (a second hat stacks on top of the first, which is half the fun)
+    EquipClicked();
 
     foreach (Unlockable unlockable in FindObjectsOfType<Unlockable>())
       unlockable.UpdateState();
@@ -133,10 +139,17 @@ public class Unlockable : MonoBehaviour
     unequipButton.gameObject.SetActive(unequipButtonEnabled);
     buyButton.gameObject.SetActive(buyButtonEnabled);
 
-    // Disable buy button if we don't have enough picolinium
-    if (SaveManager.save.picolinium < price)
+    // Grey out the buy button if we can't afford it
+    bool affordable = SaveManager.save.picolinium >= price;
+    buyButton.interactable = affordable;
+    if (buyGraphics == null)
     {
-      buyButton.interactable = false;
+      buyGraphics = buyButton.GetComponentsInChildren<Graphic>(true);
+      buyColours = new Color[buyGraphics.Length];
+      for (int i = 0; i < buyGraphics.Length; i++)
+        buyColours[i] = buyGraphics[i].color;
     }
+    for (int i = 0; i < buyGraphics.Length; i++)
+      buyGraphics[i].color = affordable ? buyColours[i] : buyColours[i] * new Color(0.4f, 0.4f, 0.4f, 0.7f);
   }
 }
