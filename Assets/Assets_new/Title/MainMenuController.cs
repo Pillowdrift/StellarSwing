@@ -54,6 +54,7 @@ public class MainMenuController : MonoBehaviour
   // The big title logo is hidden while the Story Log is open; that panel is taller than the others
   private Image titleLogo;
   private BackgroundWorlds backgroundWorlds;
+  private LevelPreviewRig levelPreviewRig;
   private bool titleLogoShown = true;
 
   protected void Awake()
@@ -67,6 +68,7 @@ public class MainMenuController : MonoBehaviour
     modalBlocker = GameObject.Find("ModalBlocker").GetComponent<Image>();
     levelAnimation = GameObject.Find("FullLevelSelect/Levels").GetComponent<Animation>();
     backgroundWorlds = FindObjectOfType<BackgroundWorlds>();
+    levelPreviewRig = FindObjectOfType<LevelPreviewRig>();
     var logoObject = GameObject.Find("Title_Menus/Title/Logo");
     if (logoObject != null)
       titleLogo = logoObject.GetComponent<Image>();
@@ -505,6 +507,9 @@ public class MainMenuController : MonoBehaviour
       label.text = $"World {world} - Level {number}";
       Image image = GameObject.Find(next ? "NextLevel/LevelPreview/PreviewImage" : "CurLevel/LevelPreview/PreviewImage").GetComponent<Image>();
       image.sprite = level.PreviewImage ?? DefaultLevelPreview;
+
+      if (levelPreviewRig != null)
+        levelPreviewRig.Show(next, level.name);
     }
   }
 
