@@ -13,6 +13,9 @@ public class Unlockable : MonoBehaviour
 
   public Type UnlockType = Type.Upgrade;
 
+  // False for things that are earned rather than bought (the speedrun Crown)
+  public bool Purchasable = true;
+
   private Button equipButton;
   private Button unequipButton;
   private Button buyButton;
@@ -38,7 +41,7 @@ public class Unlockable : MonoBehaviour
     if (SaveManager.save == null)
       return;
 
-    if (SaveManager.save.picolinium < price || SaveManager.save.unlocks.Contains(gameObject.name))
+    if (!Purchasable || SaveManager.save.picolinium < price || SaveManager.save.unlocks.Contains(gameObject.name))
       return;
 
     SaveManager.save.picolinium -= price;
@@ -48,13 +51,16 @@ public class Unlockable : MonoBehaviour
     foreach (Unlockable unlockable in FindObjectsOfType<Unlockable>())
       unlockable.UpdateState();
 
-    if (unlockUnlocker == null)
+    // Everything in the shop bought
+    bool all = true;
+    foreach (Unlockable unlockable in FindObjectsOfType<Unlockable>())
+      if (unlockable.Purchasable && !SaveManager.save.unlocks.Contains(unlockable.gameObject.name))
+        all = false;
+    if (all)
     {
-      unlockUnlocker = AchievementUnlocker.MakeUnlocker("allunlocks");
-      if (SaveManager.save.unlocks.Count == 13)
-      {
-        unlockUnlocker.UnlockAchievement();
-      }
+      if (unlockUnlocker == null)
+        unlockUnlocker = AchievementUnlocker.MakeUnlocker("allunlocks");
+      unlockUnlocker.UnlockAchievement();
     }
   }
 
@@ -121,7 +127,7 @@ public class Unlockable : MonoBehaviour
     else if (SaveManager.save.unlocks.Contains(gameObject.name))
       equipButtonEnabled = true;
     else
-      buyButtonEnabled = true;
+      buyButtonEnabled = Purchasable;
 
     equipButton.gameObject.SetActive(equipButtonEnabled);
     unequipButton.gameObject.SetActive(unequipButtonEnabled);
