@@ -77,9 +77,14 @@ public class TutorialCamera : MonoBehaviour
 		TutorialHeading.text = titleText;
     TutorialTextbox.text = text;
 
-		nextButton.transform.parent.gameObject.active = withButtons;
-		lastButton.transform.parent.gameObject.active = withButtons;
-		skipButton.gameObject.active = withButtons;
+		nextButton.transform.parent.gameObject.SetActive(withButtons);
+		lastButton.transform.parent.gameObject.SetActive(withButtons);
+		skipButton.gameObject.SetActive(withButtons);
+
+		// Keep the text centred: only leave room under it for the Skip button when it's shown
+		var content = TutorialTextbox.transform.parent as RectTransform;
+		if (content != null)
+			content.offsetMin = new Vector2(content.offsetMin.x, withButtons ? 88.0f : 30.0f);
 	}
 
 	public void HideTutorial()
