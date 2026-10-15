@@ -16,7 +16,6 @@ public class EditorUnlockAll : MonoBehaviour
 	static void Install()
 	{
 		var go = new GameObject("[Editor] Unlock All");
-		go.hideFlags = HideFlags.DontSave;
 		DontDestroyOnLoad(go);
 		go.AddComponent<EditorUnlockAll>();
 	}
