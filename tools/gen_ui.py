@@ -232,7 +232,7 @@ def steelify(name, tint=STEEL_TINT, keep_warm=True):
     save(out, name)
 
 for n in ('uie_resources_bg.png', 'uie_shop_item_btn.png', 'uie_shop_item_bg.png', 'uie_dropdown_background.png', 'uie_seekbar_background.png',
-          'uie_seekbar_point.png', 'uie_chkbox_background.png', 'uie_rd_background.png', 'window_scroll_bg.png', 'uie_inventory_btn.png',
+          'uie_seekbar_point.png', 'uie_chkbox_background.png', 'uie_rd_background.png', 'window_scroll_bg.png',
           'uie_inventory_talents_settings.png', 'uie_quest_icon_bg.png', 'uie_shop_item_pic_overlay.png', 'uie_lvl_bg_locked.png'):
     if n == 'uie_lvl_bg_locked.png':
         continue
@@ -254,5 +254,15 @@ for n in ('uie_chkbox_tick.png', 'uie_rd_tick.png', 'uie_swtch_tick.png', 'uie_s
           'uie_game_healthbar_filled.png', 'icon_lock.png', 'icon_pgind.png', 'uie_inventory_header.png', 'uie_game_btn.png',
           'uie_game_player_frame.png', 'uie_inventory_userpic_frame.png', 'uie_inventory_talents_bg.png'):
     orangify(n)
+
+
+# ---------------------------------------------------------------- uie_inventory_btn: teal "selected" slice -> amber, keep the rust slice
+src = os.path.join(SRC, 'uie_inventory_btn.png')
+rot = os.path.join(TMP, 'inv_rot.png'); msk = os.path.join(TMP, 'inv_mask.png'); r_ch = os.path.join(TMP, 'inv_r.png'); b_ch = os.path.join(TMP, 'inv_b.png')
+im(src, '-modulate', '105,110,8', rot)
+im(src, '-alpha', 'off', '-channel', 'R', '-separate', r_ch); im(src, '-alpha', 'off', '-channel', 'B', '-separate', b_ch)
+im(b_ch, r_ch, '-compose', 'MinusSrc', '-composite', '-threshold', '12%', msk)
+im(src, rot, msk, '-composite', os.path.join(TMP, 'inv_out.png'))
+save(os.path.join(TMP, 'inv_out.png'), 'uie_inventory_btn.png')
 
 print('written to', OUT)

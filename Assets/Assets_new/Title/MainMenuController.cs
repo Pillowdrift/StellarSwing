@@ -53,6 +53,7 @@ public class MainMenuController : MonoBehaviour
 
   // The big title logo is hidden while the Story Log is open; that panel is taller than the others
   private Image titleLogo;
+  private BackgroundWorlds backgroundWorlds;
   private bool titleLogoShown = true;
 
   protected void Awake()
@@ -65,6 +66,7 @@ public class MainMenuController : MonoBehaviour
     worldAnimator = GameObject.Find("Worlds").GetComponent<Animator>();
     modalBlocker = GameObject.Find("ModalBlocker").GetComponent<Image>();
     levelAnimation = GameObject.Find("FullLevelSelect/Levels").GetComponent<Animation>();
+    backgroundWorlds = FindObjectOfType<BackgroundWorlds>();
     var logoObject = GameObject.Find("Title_Menus/Title/Logo");
     if (logoObject != null)
       titleLogo = logoObject.GetComponent<Image>();
@@ -102,6 +104,12 @@ public class MainMenuController : MonoBehaviour
 
   protected void Start()
   {
+    if (backgroundWorlds != null)
+    {
+      bool resuming = NextStateToLoad == MainMenuState.LevelSelect || NextStateToLoad == MainMenuState.WorldSelect;
+      backgroundWorlds.ShowWorld(resuming ? worldSelected : MaxWorld(), true);
+    }
+
     switch (NextStateToLoad)
     {
       case MainMenuState.LevelSelect:
@@ -189,6 +197,9 @@ public class MainMenuController : MonoBehaviour
 
   protected void Update()
   {
+    if (backgroundWorlds != null && backgroundWorlds.CurrentWorld != worldSelected && menuState != MainMenuState.Title && menuState != MainMenuState.Menu)
+      backgroundWorlds.ShowWorld(worldSelected, false);
+
     bool wantLogo = menuState != MainMenuState.Logs;
     if (titleLogo != null && wantLogo != titleLogoShown)
     {
