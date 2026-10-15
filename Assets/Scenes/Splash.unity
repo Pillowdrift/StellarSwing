@@ -129,8 +129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 20283042}
-  - component: {fileID: 20283046}
-  - component: {fileID: 20283047}
+  - component: {fileID: 20283043}
   m_Layer: 0
   m_Name: Obo
   m_TagString: Untagged
@@ -147,14 +146,14 @@ Transform:
   m_GameObject: {fileID: 20283041}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24.07802, y: 6.752015, z: 10.572106}
+  m_LocalPosition: {x: -24.07802, y: 6.2670383, z: 10.572106}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 989016003}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &20283046
+--- !u!114 &20283043
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,38 +162,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 20283041}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5a9240de506ff842b26640d85e461e3, type: 3}
+  m_Script: {fileID: 11500000, guid: 91ab9c22bcad9461ebcd2aec3d921e57, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  Power: 75
-  Dir: {x: -0.98239756, y: 0, z: -0.18680303}
---- !u!54 &20283047
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20283041}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_EditorClassIdentifier: Assembly-CSharp::SplashDrift
+  driftPerSecond: {x: 1, y: -0.12}
 --- !u!1 &52050217
 GameObject:
   m_ObjectHideFlags: 0

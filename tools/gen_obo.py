@@ -69,14 +69,8 @@ revolve('Body')
 for sx in (-1, 1):
     t_e = 0.215; th = math.asin(0.25/body_r(t_e))*sx
     x,y,z = surf(t_e, th)
-    # flat oval eye sitting just proud of the surface (a decal with a little depth)
-    c = (x*0.985, y+0.01, z*0.985)
-    ellipsoid('Eyes', c, 0.095, 0.11, 0.045)
-    # pupil: small dark oval on the front of the eye, a touch up and inward
-    pc = (c[0]-0.012*sx, c[1]+0.02, c[2]+0.040)
-    ellipsoid('Dark', pc, 0.034, 0.042, 0.014, 12, 18)
-    # highlight: tiny white speck top-left of the pupil
-    ellipsoid('Body', (pc[0]-0.012, pc[1]+0.016, pc[2]+0.012), 0.010, 0.010, 0.006, 6, 10)
+    # eyes: plain black ovals sitting just proud of the surface, like the logo
+    ellipsoid('Dark', (x*0.99, y+0.01, z*0.99), 0.072, 0.084, 0.035, 14, 20)
 # paws: little rounded tips at the base corners
 for sx in (-1, 1):
     ellipsoid('Body', (sx*1.08, 0.10, 0.30), 0.20, 0.085, 0.17, 14, 20)
@@ -103,7 +97,7 @@ def vertex_normals():
     return res
 N = vertex_normals()
 base_faces = list(F); nbase = len(V)
-offset = {'Body':0.055,'Eyes':0.014,'Dark':0.0}
+offset = {'Body':0.055,'Dark':0.0}
 remap = {}
 for g,f in base_faces:
     d = offset[g]
