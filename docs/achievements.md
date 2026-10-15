@@ -30,7 +30,8 @@ read them from the save, so test those with a fresh save.
 ## Things to check while testing
 
 - **No Thanks**: the Steam description says level 1-6, but the barriers and checks are in
-  level 1-10. Either the description should say 1-10, or the level got moved at some point.
+  level 1-10 (the level was renumbered in 2020). The description needs to say 1-10. The
+  other level achievements (1-1, 2-3, 3-2, 4-3 and 5-3) are in the levels they name.
 - **Top Speed**: the fastest the old save ever recorded was about 130, so 300 might not be
   reachable any more (the physics changed in the Unity 6 upgrade). If you can't get it,
   the threshold is in `Assets/Scripts/PlayerMovements.cs`.
