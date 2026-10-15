@@ -170,90 +170,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 853457531}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &179866644
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 8211480980143362332, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_Name
-      value: SpeedrunUnlocker2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362333, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: AchievementIDStr
-      value: superspeedy
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4.3966727
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.9226832
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -6.4425087
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8211480980143362334, guid: 323b990478c98474e8ad6b375c5936c0,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 323b990478c98474e8ad6b375c5936c0, type: 3}
---- !u!1 &179866645 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8211480980143362332, guid: 323b990478c98474e8ad6b375c5936c0,
-    type: 3}
-  m_PrefabInstance: {fileID: 179866644}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &378671084
 GameObject:
   m_ObjectHideFlags: 0
@@ -1663,7 +1579,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpeedrunUnlockerPrefab: {fileID: 1535574252}
-  Speedrun2UnlockerPrefab: {fileID: 179866645}
   NoDeathUnlockerPrefab: {fileID: 1081462112}
 --- !u!4 &2140040814
 Transform:
@@ -1707,6 +1622,5 @@ SceneRoots:
   - {fileID: 1742125300}
   - {fileID: 2140040814}
   - {fileID: 983608649}
-  - {fileID: 179866644}
   - {fileID: 1703927575}
   - {fileID: 1894377007}

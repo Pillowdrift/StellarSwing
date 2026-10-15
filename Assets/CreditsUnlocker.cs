@@ -8,9 +8,6 @@ public class CreditsUnlocker : MonoBehaviour
   private AchievementUnlocker speedyUnlocker;
   public GameObject SpeedrunUnlockerPrefab;
 
-  private AchievementUnlocker superSpeedyUnlocker;
-  public GameObject Speedrun2UnlockerPrefab;
-
   private AchievementUnlocker noDeathUnlocker;
   public GameObject NoDeathUnlockerPrefab;
 
@@ -18,18 +15,12 @@ public class CreditsUnlocker : MonoBehaviour
   {
     speedyUnlocker = GameObject.Instantiate(SpeedrunUnlockerPrefab).GetComponent<AchievementUnlocker>();
 
-    superSpeedyUnlocker = GameObject.Instantiate(Speedrun2UnlockerPrefab).GetComponent<AchievementUnlocker>();
-
     noDeathUnlocker = GameObject.Instantiate(NoDeathUnlockerPrefab).GetComponent<AchievementUnlocker>();
 
     var minutes = SaveManager.save.playTime / 60;
     if (minutes <= 20)
     {
       speedyUnlocker.UnlockAchievement();
-    }
-    if (minutes <= 10)
-    {
-      superSpeedyUnlocker.UnlockAchievement();
     }
     if (SaveManager.save.droneCount == 0)
     {
