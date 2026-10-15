@@ -208,7 +208,7 @@ public class EndDeathScript : MonoBehaviour
       {
         SaveManager.Write();
       }
-      if (SaveManager.save.crashCount >= 3)
+      if (SaveManager.save.crashCount >= 30)
       {
         if (crashUnlocker == null)
         {
