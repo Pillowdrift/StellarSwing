@@ -2,27 +2,57 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: platformstraight
-  m_Shader: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
+  m_Shader: {fileID: 4800000, guid: 11b45e4f8aff74cb499df52d8254d34e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 8e21e51bf9872c342923e2c744081e38, type: 3}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: d077f74ef1b40415786c56dd5c9d227a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
+    - _DetailAlbedo:
+        m_Texture: {fileID: 2800000, guid: 795b93c6b2c38484ba01c10bac4aa91c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 2800000, guid: c3cb30517cfc04f2398a80289ccb3cde, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 929e6a4beb836448bbd4a3c4d95465d0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BumpScale: 0.5
+    - _DetailAlbedoStrength: 0.25
+    - _DetailNormalScale: 0.5
+    - _DetailTiling: 4
+    - _RimPower: 3
+    - _Shininess: 0.3
+    - _SpecStrength: 0.1
+    - _Wrap: 0.45
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.82, g: 0.82, b: 0.82, a: 1}
+    - _FillColor: {r: 0.07, g: 0.07, b: 0.08, a: 1}
+    - _RimColor: {r: 0.5, g: 0.5, b: 0.55, a: 0.15}
+    - _SpecTint: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

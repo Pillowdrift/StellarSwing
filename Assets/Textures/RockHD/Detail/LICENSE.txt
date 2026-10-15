@@ -1,0 +1,3 @@
+Rock035 from ambientCG (https://ambientcg.com/view?id=Rock035), CC0 1.0 Universal.
+Downscaled to 1024px; Rock035_Detail.png is a greyscale, contrast-adjusted copy of the colour map,
+used as a tiling detail layer over the original platform and asteroid textures.
