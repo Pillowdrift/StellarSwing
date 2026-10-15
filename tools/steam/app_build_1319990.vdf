@@ -1,0 +1,33 @@
+"AppBuild"
+{
+	"AppID" "1319990"
+	"Desc" "__DESC__"
+
+	// Paths are relative to this file
+	"ContentRoot" "../../Builds/"
+	"BuildOutput" "../../Builds/steam_output/"
+
+	"Depots"
+	{
+		// Windows
+		"1319991"
+		{
+			"FileMapping" { "LocalPath" "Windows/*" "DepotPath" "." "recursive" "1" }
+			"FileExclusion" "*_DoNotShip*"
+			"FileExclusion" "*.pdb"
+		}
+		// Linux
+		"1319992"
+		{
+			"FileMapping" { "LocalPath" "Linux/*" "DepotPath" "." "recursive" "1" }
+			"FileExclusion" "*_DoNotShip*"
+		}
+		// Mac
+		"1319993"
+		{
+			"FileMapping" { "LocalPath" "Mac/*" "DepotPath" "." "recursive" "1" }
+			"FileExclusion" "*_DoNotShip*"
+			"FileExclusion" ".DS_Store"
+		}
+	}
+}
