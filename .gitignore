@@ -71,3 +71,5 @@ crashlytics-build.properties
 
 # Extra stuff
 /build
+# Trello export (converted to docs/trello-board.md)
+/trello.json
