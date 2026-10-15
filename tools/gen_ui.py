@@ -37,14 +37,14 @@ def layer_from_mask(w, h, color, alpha_mask, name):
     im('-size', f'{w}x{h}', f'xc:{color}', alpha_mask, '-alpha', 'off', '-compose', 'CopyOpacity', '-composite', '-colorspace', 'sRGB', '-type', 'TrueColorAlpha', out)
     return out
 
-def brushed(w, h, top=GUN_LIGHT, bottom=GUN_DARK, seed=7, strength='28%'):
+def brushed(w, h, top=GUN_LIGHT, bottom=GUN_DARK, seed=7, strength='38%'):
     """Vertical gradient with a horizontal brushed-metal grain."""
     base = os.path.join(TMP, f'base_{w}x{h}_{seed}.png')
     im('-size', f'{w}x{h}', f'gradient:{top}-{bottom}', base)
     grain = os.path.join(TMP, f'grain_{w}x{h}_{seed}.png')
     lo = int(strength[:-1]); hi = 100 - lo
     im('-size', f'{w}x{h}', 'xc:gray50', '-seed', seed, '+noise', 'Gaussian', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor',
-       '-motion-blur', '0x18+0', '-auto-level', '-level', f'{lo}%,{hi}%', '-colorspace', 'gray', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor', grain)
+       '-motion-blur', '0x18+0', '-auto-level', '-level', f'{lo}%,{hi}%', '-blur', '0x0.8', '-colorspace', 'gray', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor', grain)
     out = os.path.join(TMP, f'brushed_{w}x{h}_{seed}.png')
     im(base, grain, '-compose', 'Overlay', '-composite', out)
     return out
@@ -65,10 +65,10 @@ def shaded_plate(w, h, mask, top=GUN_LIGHT, bottom=GUN_DARK, bevel=3, rust=0.5, 
     _plate_n[0] += 1; n = _plate_n[0]
     body = brushed(w, h, top, bottom, seed)
     bev = os.path.join(TMP, f'bevel_{n}.png')
-    im(mask, '-blur', f'0x{bevel}', '-shade', '125x35', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor', '-evaluate', 'Subtract', '7%', '-sigmoidal-contrast', '4x50%', bev)
+    im(mask, '-blur', f'0x{bevel + 1}', '-shade', '125x35', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor', '-evaluate', 'Subtract', '7%', '-sigmoidal-contrast', '3x50%', bev)
     streaks = rust_streaks(w, h, seed + 1, rust)
     ring = os.path.join(TMP, 'edge_ring.png')
-    im(mask, '-morphology', 'EdgeIn', 'Diamond:2', ring)
+    im(mask, '-morphology', 'EdgeIn', 'Diamond:1', '-blur', '0x0.5', ring)
     edge_layer = layer_from_mask(w, h, edge, ring, 'edge_layer')
     stage = os.path.join(TMP, f'stage_{n}.png')
     im(body, bev, '-compose', 'Overlay', '-composite', stage)
@@ -186,11 +186,19 @@ im('-size', f'{w}x{h}', 'xc:white', '-fill', 'black', '-draw', f'rectangle 9,9 {
 im(os.path.join(TMP, 'border_stage.png'), os.path.join(TMP, 'border_mask.png'), '-alpha', 'off', '-compose', 'CopyOpacity', '-composite', os.path.join(TMP, 'border_out.png'))
 save(os.path.join(TMP, 'border_out.png'), 'screen_border.png')
 
-# ---------------------------------------------------------------- screen_light_bottom 1920x396: warm glow instead of blue
+# ---------------------------------------------------------------- screen_light_bottom 1920x396: warm glow, transparent at the top
 w, h = 1920, 396
-im('-size', f'{w}x{h}', 'gradient:#000000-#4a2614', '(', '-size', f'{w}x{h}', '-seed', 5, 'plasma:fractal', '-colorspace', 'gray', '-blur', '0x12', '-level', '40%,100%', ')',
-   '-compose', 'SoftLight', '-composite', os.path.join(TMP, 'light_out.png'))
+glow_rgb = os.path.join(TMP, 'glow_rgb.png'); glow_a = os.path.join(TMP, 'glow_a.png')
+im('-size', f'{w}x{h}', 'gradient:#2a1a12-#8a4a22', '-type', 'TrueColor', glow_rgb)
+im('-size', f'{w}x{h}', 'gradient:black-white', '-evaluate', 'Pow', '2.2', '-evaluate', 'Multiply', '0.9', '-type', 'TrueColor', glow_a)
+im(glow_rgb, glow_a, '-alpha', 'off', '-compose', 'CopyOpacity', '-composite', os.path.join(TMP, 'light_out.png'))
 save(os.path.join(TMP, 'light_out.png'), 'screen_light_bottom.png')
+
+# ---------------------------------------------------------------- icons_simple 192x24: white glyphs on black -> transparent glyphs
+ic = os.path.join(SRC, 'icons_simple.png')
+im(ic, '-alpha', 'off', '-colorspace', 'gray', '-set', 'colorspace', 'sRGB', '-type', 'TrueColor', os.path.join(TMP, 'icons_a.png'))
+im('-size', '192x24', 'xc:white', os.path.join(TMP, 'icons_a.png'), '-alpha', 'off', '-compose', 'CopyOpacity', '-composite', os.path.join(TMP, 'icons_out.png'))
+save(os.path.join(TMP, 'icons_out.png'), 'icons_simple.png')
 
 # ---------------------------------------------------------------- steelify: desaturate blues to gunmetal, keep warm accents
 def steelify(name, tint=STEEL_TINT, keep_warm=True):
