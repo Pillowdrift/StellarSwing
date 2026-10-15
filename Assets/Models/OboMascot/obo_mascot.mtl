@@ -1,0 +1,10 @@
+newmtl OboBody
+Kd 1.000 1.000 1.000
+Ks 0.05 0.05 0.05
+newmtl OboEyes
+Kd 0.604 0.627 0.894
+Ks 0.2 0.2 0.2
+newmtl OboDark
+Kd 0.08 0.08 0.12
+newmtl OboInk
+Kd 0.0 0.0 0.0
