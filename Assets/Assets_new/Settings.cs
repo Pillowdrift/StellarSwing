@@ -26,6 +26,7 @@ public class Settings : MonoBehaviour
     public int AALevel;
     public int AnisoLevel;
     public bool VSync;
+    public int DistantAsteroids; // 0 off, 1 low, 2 high
 
     // Sound settings
     public float MasterVolume;
@@ -46,6 +47,7 @@ public class Settings : MonoBehaviour
           AALevel = 4,
           AnisoLevel = 1,
           VSync = true,
+          DistantAsteroids = 2,
           // Sound
           MasterVolume = 0.5f,
           MusicVolume = 1.0f,
@@ -70,6 +72,7 @@ public class Settings : MonoBehaviour
   public Dropdown antialiasingDropdown;
   public Dropdown filteringDropdown;
   public Dropdown vsyncDropdown;
+  public Dropdown distantAsteroidsDropdown;
   public Slider masterVolumeSlider;
   public Slider musicVolumeSlider;
   public Slider soundVolumeSlider;
@@ -103,6 +106,9 @@ public class Settings : MonoBehaviour
     QualitySettings.antiAliasing = values.AALevel;
     QualitySettings.anisotropicFiltering = values.AnisoLevel == 1 ? AnisotropicFiltering.Enable : AnisotropicFiltering.Disable;
     QualitySettings.vSyncCount = values.VSync ? 1 : 0;
+
+    // Background detail
+    global::DistantAsteroids.SetLevel(values.DistantAsteroids);
   }
 
   public void Save(GameSettings values)
@@ -118,6 +124,7 @@ public class Settings : MonoBehaviour
 			w.WriteLine("AALevel=" + values.AALevel);
 			w.WriteLine("AnisoLevel=" + values.AnisoLevel);
 			w.WriteLine("VSync=" + values.VSync);
+			w.WriteLine("DistantAsteroids=" + values.DistantAsteroids);
 			w.WriteLine("MasterVolume=" + values.MasterVolume);
 			w.WriteLine("MusicVolume=" + values.MusicVolume);
 			w.WriteLine("SoundVolume=" + values.SoundVolume);
@@ -189,6 +196,10 @@ public class Settings : MonoBehaviour
             else
               values.AnisoLevel = anisoLevel;
             break;
+          case "DistantAsteroids":
+            if (int.TryParse(value, out int distantAsteroids))
+              values.DistantAsteroids = Mathf.Clamp(distantAsteroids, 0, 2);
+            break;
           case "VSync":
             if (!bool.TryParse(value, out bool vsync))
               Debug.LogWarning("Failed to parse vsync " + line);
@@ -254,6 +265,8 @@ public class Settings : MonoBehaviour
     PopulateAA(values, antialiasingDropdown);
     PopulateFiltering(values, filteringDropdown);
     PopulateVSync(values, vsyncDropdown);
+    if (distantAsteroidsDropdown != null)
+      distantAsteroidsDropdown.value = values.DistantAsteroids;
 
     // Sounds
     masterVolumeSlider.value = values.MasterVolume;
@@ -457,6 +470,12 @@ public class Settings : MonoBehaviour
     New.AnisoLevel = option;
     UpdateConfirmButtonState();
     Debug.Log("Set aniso to " + New.AnisoLevel);
+  }
+
+  public void SetDistantAsteroids(int option)
+  {
+    New.DistantAsteroids = option;
+    UpdateConfirmButtonState();
   }
 
   public void SetVSync(int option)
