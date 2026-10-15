@@ -83,7 +83,7 @@ new(); place(W, 'planet3.png', 440, 0, 268, W); beam(W, 128, 0, 128, 92, W); sha
 
 new(); shadowed(W, 'drone_hats.png', 214, 0, 4, W); finish('deckedout', W)
 
-new(); place(W, 'rock.png', 170, 10, -46, W); beam(W, 60, 214, 120, 96, W); beam(W, 96, 226, 132, 100, W, col='#ffb04a'); shadowed(W, 'drone.png', 92, -48, 76, W); badge(W, '2', W, pos='northwest'); finish('doublegrapple', W)
+new(); place(W, 'rock.png', 170, 10, -46, W); beam(W, 92, 196, 120, 96, W); beam(W, 104, 200, 132, 100, W, col='#ffb04a'); shadowed(W, 'drone.png', 92, -48, 76, W); badge(W, '2', W, pos='northwest'); finish('doublegrapple', W)
 
 new(); m(C+'barrier.png', '-trim', '+repage', '-morphology', 'Dilate', 'Disk:1.5', '-fill', '#ff6ab0', '-colorize', '45', '(', '+clone', '-background', '#ff3a90', '-shadow', '90x5+0+0', ')', '+swap', '-background', 'none', '-layers', 'merge', '+repage', T+'barrier_t.png'); m(W, '(', T+'barrier_t.png', '-resize', '210x210', ')', '-gravity', 'center', '-composite', W); nosign(W, W); finish('world1_6', W)
 
