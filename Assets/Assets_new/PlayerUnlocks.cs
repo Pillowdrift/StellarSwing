@@ -73,6 +73,8 @@ public class PlayerUnlocks : MonoBehaviour
   private Image barFill;
   private Image[] pips;
   private Image slowTint;
+  private RectTransform hudPanel;
+  private RectTransform counterText;
 
   private void Start()
   {
@@ -348,33 +350,49 @@ public class PlayerUnlocks : MonoBehaviour
       slowTint.raycastTarget = false;
     }
 
-    var panel = UiChild(root.transform, "Panel", new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 40), new Vector2(340, 64));
+    // The power bar sits under the picolinium counter in the level HUD, styled to match
+    var rightSide = GameObject.Find("UIs/MainGUI/Content/General/Resources/Right-Side");
+    var counter = rightSide != null ? rightSide.transform.Find("Picolinium/Value/Content/Text") : null;
+    RectTransform panel;
+    if (counter != null)
+    {
+      counterText = (RectTransform)counter;
+      panel = UiChild(rightSide.transform, "Powerup", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(128, 44));
+      panel.pivot = new Vector2(1, 1);
+    }
+    else
+    {
+      panel = UiChild(root.transform, "Powerup", Vector2.one, Vector2.one, new Vector2(-40, -110), new Vector2(280, 82));
+      panel.pivot = new Vector2(1, 1);
+    }
+    hudPanel = panel;
+    float w = panel.sizeDelta.x, h = panel.sizeDelta.y, u = h / 44.0f;
     hud = panel.gameObject.AddComponent<CanvasGroup>();
     hud.alpha = 0;
     hud.blocksRaycasts = false;
 
-    hudLabel = Label(panel, "Label", TextAnchor.LowerLeft, 22, new Vector2(0, 26), new Vector2(340, 30));
-    hudLabel.text = PowerupName(currentPowerup).ToUpperInvariant();
-    hudLabel.color = Amber;
-    hudHint = Label(panel, "Hint", TextAnchor.LowerRight, 18, new Vector2(0, 26), new Vector2(340, 30));
+    hudLabel = Label(panel, "Label", TextAnchor.LowerRight, Mathf.RoundToInt(18 * u), new Vector2(0, 18 * u), new Vector2(w, 26 * u));
+    hudLabel.text = PowerupName(currentPowerup);
+    hudHint = Label(panel, "Hint", TextAnchor.UpperRight, Mathf.RoundToInt(12 * u), new Vector2(0, -16 * u), new Vector2(w, 16 * u));
     hudHint.text = "Hold right click";
-    hudHint.color = new Color(1, 1, 1, 0.6f);
+    hudHint.color = new Color(1, 1, 1, 0.7f);
 
+    var backing = new Color(0, 0, 0, 0.45f);
     if (currentPowerup == Powerup.Jump)
     {
       pips = new Image[JumpCharges];
-      float w = (340 - (JumpCharges - 1) * 8) / (float)JumpCharges;
+      float gap = 4 * u, pw = 22 * u;
       for (int i = 0; i < JumpCharges; i++)
       {
-        var back = Box(panel, "Pip", new Vector2(i * (w + 8), 4), new Vector2(w, 16), new Color(0, 0, 0, 0.55f));
-        pips[i] = Box(back, "Fill", new Vector2(2, 2), new Vector2(w - 4, 12), Amber);
+        var back = Box(panel, "Pip", new Vector2(w - (JumpCharges - i) * (pw + gap) + gap, 6 * u), new Vector2(pw, 9 * u), backing);
+        pips[i] = Box(back, "Fill", new Vector2(1.5f * u, 1.5f * u), new Vector2(pw - 3 * u, 6 * u), Amber);
       }
       hudHint.text = "Right click on a platform";
     }
     else
     {
-      var back = Box(panel, "Bar", new Vector2(0, 4), new Vector2(340, 16), new Color(0, 0, 0, 0.55f));
-      barFill = Box(back, "Fill", new Vector2(2, 2), new Vector2(336, 12), Amber);
+      var back = Box(panel, "Bar", new Vector2(0, 6 * u), new Vector2(w, 9 * u), backing);
+      barFill = Box(back, "Fill", new Vector2(1.5f * u, 1.5f * u), new Vector2(w - 3 * u, 6 * u), Amber);
       barFill.type = Image.Type.Filled;
       barFill.fillMethod = Image.FillMethod.Horizontal;
       barFill.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), Vector2.one * 0.5f);
@@ -386,12 +404,20 @@ public class PlayerUnlocks : MonoBehaviour
     if (hud == null)
       return;
 
+    // Right-aligned with the counter's number, just below it
+    if (counterText != null)
+    {
+      var corners = new Vector3[4];
+      counterText.GetWorldCorners(corners);
+      hudPanel.position = new Vector3(corners[2].x, corners[0].y - 2.0f * hudPanel.lossyScale.y, 0);
+    }
+
     bool show = usable || (GUIController.LevelStarted && PauseButton.paused);
     hud.alpha = Mathf.MoveTowards(hud.alpha, show ? 1.0f : 0.0f, Time.unscaledDeltaTime * 4.0f);
 
     // The hint fades once the powerup has been tried
     var hint = hudHint.color;
-    hint.a = Mathf.MoveTowards(hint.a, UsedThisAttempt ? 0.0f : 0.6f, Time.unscaledDeltaTime * 2.0f);
+    hint.a = Mathf.MoveTowards(hint.a, UsedThisAttempt ? 0.0f : 0.7f, Time.unscaledDeltaTime * 2.0f);
     hudHint.color = hint;
 
     bool on = active || slowed;
@@ -404,9 +430,9 @@ public class PlayerUnlocks : MonoBehaviour
     if (pips != null)
     {
       for (int i = 0; i < pips.Length; i++)
-        pips[i].color = i < jumpsLeft ? Amber : new Color(0.3f, 0.3f, 0.3f, 0.6f);
+        pips[i].color = i < jumpsLeft ? Amber : new Color(1, 1, 1, 0.12f);
     }
-    hudLabel.color = (currentPowerup == Powerup.Jump ? jumpsLeft > 0 : charge > 0) ? lit : new Color(0.5f, 0.5f, 0.5f);
+    hudLabel.color = (currentPowerup == Powerup.Jump ? jumpsLeft > 0 : charge > 0) ? Color.white : new Color(1, 1, 1, 0.45f);
 
     if (slowTint != null)
     {
@@ -467,7 +493,8 @@ public class PlayerUnlocks : MonoBehaviour
     text.alignment = align;
     text.raycastTarget = false;
     var shadow = go.AddComponent<Shadow>();
-    shadow.effectColor = new Color(0, 0, 0, 0.8f);
+    // Same shadow as the picolinium counter
+    shadow.effectColor = new Color(0, 0, 0, 0.5f);
     shadow.effectDistance = new Vector2(2, -2);
     return text;
   }
