@@ -202,7 +202,7 @@ public class EndFlagScript : MonoBehaviour
 
     // Check rewards
     int passedReward = 500;
-    int noPowerupsReward = 500;
+    int noPowerupsReward = PlayerUnlocks.UsedThisAttempt ? 0 : 500;
     int scoreReward = scoreStar ? 500 : 0;
     int timeReward = timeStar ? 500 : 0;
 
