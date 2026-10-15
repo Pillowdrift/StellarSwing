@@ -6149,7 +6149,7 @@ Light:
   serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 0.62, b: 0.25, a: 1}
-  m_Intensity: 1.6
+  m_Intensity: 0.8
   m_Range: 9
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -51785,8 +51785,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 1
-  m_Color: {r: 1, g: 0.78, b: 0.55, a: 1}
-  m_Intensity: 0.9
+  m_Color: {r: 0.95, g: 0.93, b: 0.9, a: 1}
+  m_Intensity: 0.85
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -76157,6 +76157,7 @@ MonoBehaviour:
     pivot: {fileID: 0}
     current: {fileID: 0}
     texture: {fileID: 0}
+    light: {fileID: 0}
   nextSlot:
     target: {fileID: 827569188}
     fallback: {fileID: 390393594}
@@ -76164,6 +76165,7 @@ MonoBehaviour:
     pivot: {fileID: 0}
     current: {fileID: 0}
     texture: {fileID: 0}
+    light: {fileID: 0}
   spinDegreesPerSecond: 18
   textureSize: {x: 512, y: 320}
 --- !u!4 &1273574515

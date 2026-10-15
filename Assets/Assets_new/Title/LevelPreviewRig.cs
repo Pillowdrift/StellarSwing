@@ -16,6 +16,7 @@ public class LevelPreviewRig : MonoBehaviour
 		[HideInInspector] public Transform pivot;
 		[HideInInspector] public GameObject current;
 		[HideInInspector] public RenderTexture texture;
+		[HideInInspector] public Light light;
 	}
 
 	public GameObject[] models;
@@ -65,6 +66,9 @@ public class LevelPreviewRig : MonoBehaviour
 		light.type = LightType.Directional;
 		light.intensity = 1.0f;
 		light.color = new Color(1.0f, 0.93f, 0.85f);
+		// Directional lights affect the whole scene, so this one is only on while the slot renders
+		light.enabled = false;
+		slot.light = light;
 
 		slot.texture = new RenderTexture(textureSize.x, textureSize.y, 16, RenderTextureFormat.ARGB32);
 		slot.texture.antiAliasing = 4;
@@ -96,7 +100,9 @@ public class LevelPreviewRig : MonoBehaviour
 			return;
 
 		slot.pivot.Rotate(0.0f, spinDegreesPerSecond * Time.unscaledDeltaTime, 0.0f, Space.World);
+		slot.light.enabled = true;
 		slot.camera.Render();
+		slot.light.enabled = false;
 	}
 
 	// Pull the camera back just far enough that the whole model stays in frame as it spins
