@@ -77,3 +77,5 @@ crashlytics-build.properties
 # Editor screenshots taken by Claude via the Unity CLI
 /Assets/Screenshots/
 /Assets/Screenshots.meta
+
+.DS_Store
