@@ -97,7 +97,7 @@ public class Save
       current.Score = _score.Score;
     if (_score.Speed > current.Speed)
       current.Speed = _score.Speed;
-    if (_score.Time < current.Time || current.Time == 0)
+    if (_score.Time < current.Time || current.Time <= 0)
       current.Time = _score.Time;
     if (_score.Stars > current.Stars)
       current.Stars = _score.Stars;

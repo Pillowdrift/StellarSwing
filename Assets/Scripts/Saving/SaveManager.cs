@@ -57,7 +57,7 @@ public class SaveManager : MonoBehaviour
 		
 		bool ignoreOldScore = false;
 		// if old score was null
-		if (oldScore.Time == 0)
+		if (oldScore.Time <= 0)
 			ignoreOldScore = true;
 		
 		// Get a star for winning.
