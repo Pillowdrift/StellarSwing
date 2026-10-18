@@ -62723,6 +62723,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07305c7b0a94aa740ad5218f77284d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Prelude: {fileID: 4900000, guid: da5ee18dea63847bda75149604ccac7a, type: 3}
+  Intermissions:
+  - {fileID: 4900000, guid: 4580316cc59ea4a37a3da1b27b54a6e7, type: 3}
+  - {fileID: 4900000, guid: fb8d8aeef0929460297134630832c2d7, type: 3}
+  - {fileID: 4900000, guid: f2aec0ea4d52a45c88072d2ade81b061, type: 3}
+  - {fileID: 4900000, guid: bdcb7924e933b4f9892d6bef952211c6, type: 3}
+  Epilogue: {fileID: 4900000, guid: af4570ec56e2e497abec82b32fd0c768, type: 3}
 --- !u!1 &1030564546
 GameObject:
   m_ObjectHideFlags: 0
