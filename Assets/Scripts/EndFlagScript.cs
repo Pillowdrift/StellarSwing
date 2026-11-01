@@ -225,6 +225,7 @@ public class EndFlagScript : MonoBehaviour
         SaveManager.Beaten(LevelSelectGUI.currentLevel);
         SaveManager.UpdateScore(LevelSelectGUI.currentLevel);
         SaveManager.Write();
+        WorldAchievements.CatchUp();
       }
     }
 

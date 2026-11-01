@@ -183,8 +183,6 @@ public class SaveManager : MonoBehaviour
 					LoadLevel.JustUnlocked = true;
 				}
 			}
-
-			WorldAchievements.CatchUp();
 		}
 	}
 	

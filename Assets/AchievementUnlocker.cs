@@ -10,15 +10,25 @@ public class AchievementUnlocker : MonoBehaviour
   public bool UnlockOnLoad = false;
   private bool unlocked;
 
+  static readonly Dictionary<string, AchievementUnlocker> made = new Dictionary<string, AchievementUnlocker>();
+
+  // An unlocker for code to call. This used to hand out the Resources prefab itself, which
+  // wrote the ID into the prefab asset and, with Steam not running in the editor, switched the
+  // asset off for good: every unlocker placed in a scene (the finish-world ones) then never ran.
+  // Now each ID gets its own hidden object that's never saved.
   public static AchievementUnlocker MakeUnlocker(string AchievementIDStr)
   {
-    var gameobj = Resources.Load<GameObject>("AchievementUnlocker");
-    if (gameobj == null)
-    {
-      Debug.LogError("Error -- could not fabricate AchievementUnlocker");
-    }
-    AchievementUnlocker result = gameobj.GetComponent<AchievementUnlocker>();
+    if (made.TryGetValue(AchievementIDStr, out var existing) && existing != null)
+      return existing;
+
+    // Made inactive so Awake doesn't check it before the ID is set; unlocking doesn't need it active
+    var gameobj = new GameObject("AchievementUnlocker " + AchievementIDStr);
+    gameobj.SetActive(false);
+    gameobj.hideFlags = HideFlags.HideAndDontSave;
+    DontDestroyOnLoad(gameobj);
+    var result = gameobj.AddComponent<AchievementUnlocker>();
     result.AchievementIDStr = AchievementIDStr;
+    made[AchievementIDStr] = result;
     return result;
   }
 
@@ -27,15 +37,16 @@ public class AchievementUnlocker : MonoBehaviour
     CheckActive();
   }
 
+  // Whether this can unlock anything. It doesn't switch the object off when it can't: that
+  // got saved into the prefab and broke every scene unlocker.
   bool CheckActive()
   {
-    if (!SteamManager.Initialized || AchievementIDStr == null)
+    if (string.IsNullOrEmpty(AchievementIDStr))
     {
-      gameObject.SetActive(false);
-      if (AchievementIDStr == null) Debug.LogError("AchievementIDStr not set in AchievementUnlocker!");
+      Debug.LogError("AchievementIDStr not set in AchievementUnlocker!");
       return false;
     }
-    return true;
+    return SteamManager.Initialized;
   }
 
 
