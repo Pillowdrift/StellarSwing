@@ -58,38 +58,14 @@ public static class LevelPreviewBaker
 		string name = System.IO.Path.GetFileNameWithoutExtension(scenePath);
 		var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
 
-		// Collect the solid renderers first so we can compress over-long levels
-		var solids = new List<MeshRenderer>();
-		foreach (var renderer in Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
-		{
-			var f = renderer.GetComponent<MeshFilter>();
-			if (renderer.enabled && f != null && f.sharedMesh != null && IsSolid(renderer))
-				solids.Add(renderer);
-		}
+		var solids = CollectSolids(out var spreadCentre, out var spreadScale);
 
-		// Spacing compression: levels are very long and thin, so their pieces would be specks on a card.
-		// Pull the pieces closer along any axis that spreads further than ~SpreadInSizes typical piece sizes.
-		Vector3 spreadScale = Vector3.one;
-		Vector3 spreadCentre = Vector3.zero;
-		if (solids.Count > 1)
-		{
-			var centres = new Bounds(solids[0].bounds.center, Vector3.zero);
-			var sizes = new List<float>();
-			foreach (var r in solids)
-			{
-				centres.Encapsulate(r.bounds.center);
-				sizes.Add(Mathf.Max(r.bounds.size.x, r.bounds.size.y, r.bounds.size.z));
-			}
-			sizes.Sort();
-			float typical = Mathf.Max(sizes[sizes.Count / 2], 1.0f);
-			float cap = typical * SpreadInSizes;
-			spreadCentre = centres.center;
-			for (int axis = 0; axis < 3; axis++)
-			{
-				float extent = centres.size[axis];
-				spreadScale[axis] = extent > cap ? cap / extent : 1.0f;
-			}
-		}
+		// Squashing the spacing can push copies of the same object on top of each other
+		// (World 5 Level 5's spinning platforms), which reads as a glitchy tangle: keep only one
+		var dropped = Declutter(solids, spreadCentre, spreadScale);
+		if (dropped > 0)
+			Debug.Log("LevelPreviewBaker: " + name + " -> dropped " + dropped + " overlapping copies");
+		LastDropped = dropped;
 
 		var byMaterial = new Dictionary<Material, List<CombineInstance>>();
 		foreach (var renderer in Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
@@ -160,6 +136,150 @@ public static class LevelPreviewBaker
 
 		Debug.Log("LevelPreviewBaker: " + name + " -> " + combined.vertexCount + " verts, " + materials.Count + " materials, source size " + bounds.size);
 		return true;
+	}
+
+	// The open scene's solid renderers, and how to squash their spacing (see Bake)
+	static List<MeshRenderer> CollectSolids(out Vector3 spreadCentre, out Vector3 spreadScale)
+	{
+		// Collect the solid renderers first so we can compress over-long levels
+		var solids = new List<MeshRenderer>();
+		foreach (var renderer in Object.FindObjectsByType<MeshRenderer>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+		{
+			var f = renderer.GetComponent<MeshFilter>();
+			if (renderer.enabled && f != null && f.sharedMesh != null && IsSolid(renderer))
+				solids.Add(renderer);
+		}
+
+		// Spacing compression: levels are very long and thin, so their pieces would be specks on a card.
+		// Pull the pieces closer along any axis that spreads further than ~SpreadInSizes typical piece sizes.
+		spreadScale = Vector3.one;
+		spreadCentre = Vector3.zero;
+		if (solids.Count > 1)
+		{
+			var centres = new Bounds(solids[0].bounds.center, Vector3.zero);
+			var sizes = new List<float>();
+			foreach (var r in solids)
+			{
+				centres.Encapsulate(r.bounds.center);
+				sizes.Add(Mathf.Max(r.bounds.size.x, r.bounds.size.y, r.bounds.size.z));
+			}
+			sizes.Sort();
+			float typical = Mathf.Max(sizes[sizes.Count / 2], 1.0f);
+			float cap = typical * SpreadInSizes;
+			spreadCentre = centres.center;
+			for (int axis = 0; axis < 3; axis++)
+			{
+				float extent = centres.size[axis];
+				spreadScale[axis] = extent > cap ? cap / extent : 1.0f;
+			}
+		}
+		return solids;
+	}
+
+	// Lists how many overlapping copies each level's preview would drop, without baking
+	public static string CountCopies()
+	{
+		var report = new System.Text.StringBuilder();
+		foreach (var path in EditorBuildSettings.scenes.Select(s => s.path)
+			.Where(p => Regex.IsMatch(System.IO.Path.GetFileNameWithoutExtension(p), @"^World \d+ Level \d+$")))
+		{
+			EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+			var solids = CollectSolids(out var centre, out var scale);
+			int dropped = Declutter(solids, centre, scale);
+			if (dropped > 0)
+				report.AppendLine(System.IO.Path.GetFileNameWithoutExtension(path) + ": " + dropped);
+		}
+		return report.ToString();
+	}
+
+	// How many copies the last Bake dropped
+	public static int LastDropped;
+
+	// How much of the smaller of two boxes must be covered by the other to count as on top of it
+	const float CopyOverlap = 0.5f;
+	// Only pieces at least this big in the finished 10-unit preview are dropped, as small
+	// overlapping copies don't confuse anything (same rule as the Rust port's preview)
+	const float BigPiece = 2.0f;
+
+	// Removes renderers that draw the same mesh with the same materials as an earlier one in
+	// nearly the same place once the spacing is squashed (a copy in another material, like a
+	// tinted rock, stays, or the preview's colours would change). Returns how many went.
+	static int Declutter(List<MeshRenderer> solids, Vector3 spreadCentre, Vector3 spreadScale)
+	{
+		var moved = new List<Bounds>();
+		foreach (var r in solids)
+		{
+			var b = r.bounds;
+			b.center = spreadCentre + Vector3.Scale(b.center - spreadCentre, spreadScale);
+			moved.Add(b);
+		}
+		if (moved.Count == 0)
+			return 0;
+		var all = moved[0];
+		foreach (var b in moved)
+			all.Encapsulate(b);
+		float previewScale = 10.0f / Mathf.Max(all.size.x, all.size.y, all.size.z, 1e-6f);
+
+		var kept = new List<(MeshRenderer renderer, Mesh mesh, Bounds bounds)>();
+		var survivors = new List<MeshRenderer>();
+		for (int i = 0; i < solids.Count; i++)
+		{
+			var mesh = solids[i].GetComponent<MeshFilter>().sharedMesh;
+			var bounds = moved[i];
+			bool big = bounds.size.magnitude * previewScale > BigPiece;
+			bool copy = false;
+			if (big)
+			{
+				foreach (var other in kept)
+				{
+					if (other.mesh == mesh && SameMaterials(other.renderer, solids[i]) && Overlap(bounds, other.bounds) > CopyOverlap)
+					{
+						copy = true;
+						break;
+					}
+				}
+			}
+
+			if (!copy)
+			{
+				kept.Add((solids[i], mesh, bounds));
+				survivors.Add(solids[i]);
+			}
+		}
+
+		int dropped = solids.Count - survivors.Count;
+		solids.Clear();
+		solids.AddRange(survivors);
+		return dropped;
+	}
+
+	static bool SameMaterials(MeshRenderer a, MeshRenderer b)
+	{
+		var ma = a.sharedMaterials;
+		var mb = b.sharedMaterials;
+		if (ma.Length != mb.Length)
+			return false;
+		for (int i = 0; i < ma.Length; i++)
+		{
+			if (ma[i] != mb[i])
+				return false;
+		}
+		return true;
+	}
+
+	// How much of the smaller of two boxes the other covers, 0 to 1
+	static float Overlap(Bounds a, Bounds b)
+	{
+		var shared = Vector3.Min(a.max, b.max) - Vector3.Max(a.min, b.min);
+		if (shared.x < 0 || shared.y < 0 || shared.z < 0)
+			return 0.0f;
+		return Volume(shared) / Mathf.Min(Volume(a.size), Volume(b.size));
+	}
+
+	static float Volume(Vector3 size)
+	{
+		// Flat pieces (planes, decals) still count, by treating a zero side as a sliver
+		return Mathf.Max(size.x, 1e-3f) * Mathf.Max(size.y, 1e-3f) * Mathf.Max(size.z, 1e-3f);
 	}
 
 	// Outline shaders push the outline out in object units, which are world units once the
