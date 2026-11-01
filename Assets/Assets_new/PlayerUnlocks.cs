@@ -33,6 +33,10 @@ public class PlayerUnlocks : MonoBehaviour
   public float BulletTimeSeconds = 5.0f;
   public float BulletTimeScale = 0.4f;
 
+  [Header("Hats")]
+  [Tooltip("How far each stacked hat sinks into the ones below after touching them, as a fraction of its own height")]
+  public float HatSink = 0.05f;
+
   [Header("Effects")]
   public Material ThrustMaterial;
   public Font HudFont;
@@ -54,7 +58,6 @@ public class PlayerUnlocks : MonoBehaviour
 
   private Powerup currentPowerup = Powerup.None;
   private Rigidbody _rigidbody;
-  private float hatHeight = 0.0f;
 
   private float charge = 1.0f;
   private int jumpsLeft;
@@ -532,14 +535,96 @@ public class PlayerUnlocks : MonoBehaviour
       {
         hat.SetActive(true);
 
-        // Stack em up except the mustache
+        // Stack em up except the mustache: drop each hat onto the ones below until it touches
+        // them, so it settles into a sombrero's brim or onto the slope of a police cap
         if (hat.name != "Mustache")
+          StackHat(hats, hat.transform);
+      }
+    }
+  }
+
+  // Height maps over a grid in the Hats object's space (so the stack follows the drone's up
+  // even if it starts tilted): the top of the stack so far, and the underside of a new hat
+  const int HatGrid = 64;
+  const float HatGridHalfSize = 0.6f;
+  private float[] hatStackTop;
+
+  private void StackHat(Transform hats, Transform hat)
+  {
+    var mesh = hat.GetComponent<MeshFilter>().sharedMesh;
+    if (mesh == null || !mesh.isReadable)
+      return;
+
+    var underside = NewHeightMap(float.MaxValue);
+    var top = NewHeightMap(float.MinValue);
+    RasteriseHat(hats, hat, mesh, underside, top);
+
+    if (hatStackTop == null)
+    {
+      hatStackTop = top;
+      return;
+    }
+
+    // Lowest lift that clears the stack everywhere the two overlap, then sink in a touch so
+    // it reads as resting on it; never lower than the hat would sit on a bare head
+    float lift = float.MinValue, bottom = float.MaxValue, height = 0.0f;
+    for (int c = 0; c < underside.Length; c++)
+    {
+      if (underside[c] != float.MaxValue)
+      {
+        bottom = Mathf.Min(bottom, underside[c]);
+        height = Mathf.Max(height, top[c] - bottom);
+        if (hatStackTop[c] != float.MinValue)
+          lift = Mathf.Max(lift, hatStackTop[c] - underside[c]);
+      }
+    }
+    if (lift == float.MinValue)
+      lift = 0.0f;
+    lift = Mathf.Max(0.0f, lift - HatSink * height);
+
+    hat.localPosition += Vector3.up * lift;
+    for (int c = 0; c < top.Length; c++)
+    {
+      if (top[c] != float.MinValue)
+        hatStackTop[c] = Mathf.Max(hatStackTop[c], top[c] + lift);
+    }
+  }
+
+  private static float[] NewHeightMap(float fill)
+  {
+    var map = new float[HatGrid * HatGrid];
+    for (int c = 0; c < map.Length; c++)
+      map[c] = fill;
+    return map;
+  }
+
+  // Lowest and highest surface of the hat in each grid cell, sampling across each triangle
+  private static void RasteriseHat(Transform hats, Transform hat, Mesh mesh, float[] low, float[] high)
+  {
+    var toHats = hats.worldToLocalMatrix * hat.localToWorldMatrix;
+    var verts = mesh.vertices;
+    for (int v = 0; v < verts.Length; v++)
+      verts[v] = toHats.MultiplyPoint3x4(verts[v]);
+
+    const float cell = 2.0f * HatGridHalfSize / HatGrid;
+    var tris = mesh.triangles;
+    for (int t = 0; t < tris.Length; t += 3)
+    {
+      Vector3 a = verts[tris[t]], b = verts[tris[t + 1]], c = verts[tris[t + 2]];
+      float edge = Mathf.Max((b - a).magnitude, (c - a).magnitude, (c - b).magnitude);
+      int n = Mathf.Max(1, Mathf.CeilToInt(edge / (cell * 0.5f)));
+      for (int i = 0; i <= n; i++)
+      {
+        for (int j = 0; i + j <= n; j++)
         {
-          float height = hat.GetComponent<MeshFilter>().mesh.bounds.size.y * hat.transform.lossyScale.y;
-          var pos = hat.transform.position;
-          pos.y += hatHeight;
-          hat.transform.position = pos;
-          hatHeight += height * 0.5f * 0.7f;
+          var p = a + (b - a) * ((float)i / n) + (c - a) * ((float)j / n);
+          int x = Mathf.FloorToInt((p.x + HatGridHalfSize) / cell);
+          int z = Mathf.FloorToInt((p.z + HatGridHalfSize) / cell);
+          if (x < 0 || z < 0 || x >= HatGrid || z >= HatGrid)
+            continue;
+          int k = z * HatGrid + x;
+          low[k] = Mathf.Min(low[k], p.y);
+          high[k] = Mathf.Max(high[k], p.y);
         }
       }
     }
