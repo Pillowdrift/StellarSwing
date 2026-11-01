@@ -122,6 +122,8 @@ public class MainMenuController : MonoBehaviour
 
   protected void Start()
   {
+    WorldAchievements.CatchUp();
+
     if (backgroundWorlds != null)
     {
       bool resuming = NextStateToLoad == MainMenuState.LevelSelect || NextStateToLoad == MainMenuState.WorldSelect;
