@@ -390,7 +390,7 @@ public class PlayerUnlocks : MonoBehaviour
         var back = Box(panel, "Pip", new Vector2(w - (JumpCharges - i) * (pw + gap) + gap, 6 * u), new Vector2(pw, 9 * u), backing);
         pips[i] = Box(back, "Fill", new Vector2(1.5f * u, 1.5f * u), new Vector2(pw - 3 * u, 6 * u), Amber);
       }
-      hudHint.text = "Right click on a platform";
+      hudHint.text = "Right click when landed";
     }
     else
     {
@@ -494,6 +494,8 @@ public class PlayerUnlocks : MonoBehaviour
     text.font = HudFont;
     text.fontSize = size;
     text.alignment = align;
+    // One line, spilling left out of the narrow panel rather than wrapping onto a clipped second line
+    text.horizontalOverflow = HorizontalWrapMode.Overflow;
     text.raycastTarget = false;
     var shadow = go.AddComponent<Shadow>();
     // Same shadow as the picolinium counter
