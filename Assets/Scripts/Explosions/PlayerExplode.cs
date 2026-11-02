@@ -15,17 +15,10 @@ public class PlayerExplode : MonoBehaviour
 
 		SoundManager.Play("bang");
 
-		// Stop the drone where it blew up. Grids and planets are only triggers, so
-		// otherwise it carries on flying through them after the explosion
-		var body = GetComponent<Rigidbody>();
-		if (body != null && !body.isKinematic)
-		{
-			body.linearVelocity = Vector3.zero;
-			body.angularVelocity = Vector3.zero;
-			body.constraints = RigidbodyConstraints.FreezeAll;
-		}
-
-		// Hide everything on it, not just the body: hats, glow, particles
+		// Grids and planets are only triggers, so the drone carries on flying through them
+		// after the explosion. Hide everything on it, not just the body: hats, glow,
+		// particles. Don't stop it, though: the explosion's second, expanding puff only
+		// shows while the drone keeps moving.
 		foreach (var r in GetComponentsInChildren<Renderer>())
 		{
 			if (r.enabled)
