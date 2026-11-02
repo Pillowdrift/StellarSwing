@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 // Hats and powerups bought from the Unlocks screen.
 // Powerups are held on right click and run off a charge that only refills when the
-// level is restarted or another level is started.
+// player dies, the level is restarted or another level is started.
 public class PlayerUnlocks : MonoBehaviour
 {
   public enum Powerup
@@ -98,6 +98,21 @@ public class PlayerUnlocks : MonoBehaviour
       BuildEffects();
       BuildHud();
     }
+  }
+
+  // Sent by EndDeathScript when the drone is put back at the start after dying: that's a
+  // new attempt, so refill the charge and jumps like a full restart would
+  public void Reload()
+  {
+    if (currentPowerup == Powerup.None)
+      return;
+    if (thrust != null)
+      SetActive(false);
+    SetSlow(false);
+    charge = 1.0f;
+    jumpsLeft = JumpCharges;
+    held = false;
+    UsedThisAttempt = false;
   }
 
   // Powerups only work while actually playing: not before the start click, while paused,
